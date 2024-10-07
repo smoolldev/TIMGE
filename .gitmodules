@@ -1,0 +1,3 @@
+[submodule "TIMGE/vendor/glfw"]
+	path = TIMGE/vendor/glfw
+	url = https://github.com/glfw/glfw

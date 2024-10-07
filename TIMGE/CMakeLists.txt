@@ -13,7 +13,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE) #link time optimization
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
-project(chess)
+project(TIMGE)
 
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

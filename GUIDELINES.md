@@ -118,3 +118,19 @@ void FunctionName(Type_T name);
 ```cpp
 void FunctionName(int parameterName);
 ```
+
+## Includes
+Including goes in this order:
+- C++ headers
+- Your own headers
+- Other libraries' headers
+
+Example:
+
+```cpp
+#include <iostream> // C++ libraries first
+
+#include "TIMGE/TIMGE.hpp" // Your own libraries second
+
+#include <glfw/glfw3.h> // Other libraries third
+```

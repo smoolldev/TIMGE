@@ -8,7 +8,7 @@
 
 namespace TIMGE
 {
-    Application::Application(const WindowInfo& info)
+    Application::Application(const Window::Info& info)
         : ApplicationBase(),
           mWindow(info)
     { }

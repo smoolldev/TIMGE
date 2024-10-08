@@ -5,7 +5,7 @@
 
 namespace TIMGE
 {
-    Window::Window(const WindowInfo& info)
+    Window::Window(const Window::Info& info)
         : mInfo(info),
           mWindow(nullptr)
     {
@@ -17,7 +17,7 @@ namespace TIMGE
             glfwWindowHint(mWINDOWHINTS[i], (mInfo.flags >> i) & 1);
         }
 
-        mWindow = glfwCreateWindow(mInfo.width, mInfo.height, mInfo.title.c_str(), nullptr, nullptr);
+        mWindow = glfwCreateWindow(mInfo.width, mInfo.height, mInfo.title.data(), nullptr, nullptr);
         if (!mWindow) {
             throw "Failed to create window";
         }
@@ -31,10 +31,13 @@ namespace TIMGE
         );
 
         glfwMakeContextCurrent(mWindow);
-        if (!gladLoadGL(glfwGetProcAddress)) {
+        if (!gladLoadGL()) {
             throw "Failed to initialize GLAD";
         }
 
         glViewport(0, 0, mInfo.width, mInfo.height);
     }
+
+    Window::~Window()
+    { }
 }

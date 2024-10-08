@@ -1,0 +1,12 @@
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/CMakeFiles/TIMGE.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/CMakeFiles/edit_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/CMakeFiles/rebuild_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/CMakeFiles/edit_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/CMakeFiles/rebuild_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/src/CMakeFiles/glfw.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/src/CMakeFiles/update_mappings.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/src/CMakeFiles/edit_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glfw/src/CMakeFiles/rebuild_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glad/CMakeFiles/glad.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glad/CMakeFiles/edit_cache.dir
+/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug/vendor/glad/CMakeFiles/rebuild_cache.dir

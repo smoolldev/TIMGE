@@ -2,6 +2,10 @@
 #include <cstdint>
 #include <cstdlib>
 #include <string_view>
+#include <iostream>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 class Game : public TIMGE::Application
 {
@@ -11,17 +15,38 @@ class Game : public TIMGE::Application
         {
             
         }
-        ~Game();
+        ~Game() { };
+
+        void Run();
+
+        void Update() { }
+
+        void Render() { }
 };
+
+void Game::Run()
+{
+    while (!glfwWindowShouldClose(mWindow.mWindow))
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(1, 0, 0, 1);
+        glfwSwapBuffers(mWindow.mWindow);
+        glfwPollEvents();
+    }
+}
 
 int main(int argc, char **argv)
 {
-    Game game = Game::Game("title", 1280, 720);
+    try {
+        Game game("title", 1280, 720);
 
-    if (!game)
-    { exit(-1); }
+        game.Run();
+    } catch (const char* msg) {
+        std::cout << msg << std::endl;
+    }
 
-    game.Run();
+    /*if (!game)*/
+    /*{ exit(-1); }*/
 
     return 0;
 }

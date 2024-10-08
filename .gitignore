@@ -32,5 +32,5 @@
 *.app
 
 # Directories
-build/
-.cache/
+**/build/
+**/.cache/

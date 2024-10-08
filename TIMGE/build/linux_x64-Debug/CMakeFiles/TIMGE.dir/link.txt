@@ -1,2 +1,0 @@
-/usr/bin/ar qc libTIMGE.a CMakeFiles/TIMGE.dir/src/Application.cpp.o CMakeFiles/TIMGE.dir/src/ApplicationBase.cpp.o CMakeFiles/TIMGE.dir/src/Window.cpp.o
-/usr/bin/ranlib libTIMGE.a

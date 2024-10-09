@@ -8,7 +8,7 @@ using namespace TIMGE;
 class Game : public Application
 {
     public:
-    Game() : Application("TIMGE", 720, 480) {}
+    Game() : Application("TIMGESandbox", 720, 480) {}
     ~Game() {}
     void Run();
     void Update();
@@ -17,13 +17,15 @@ class Game : public Application
 
 void Game::Run()
 {
+    //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
+    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug/resources/youtube_logo.png", 32, 32);
     while (!Application::WindowShouldClose()) {
-	Application::BeginFrame();
-	{
-	    Update();
-	    Render();
-	}
-	Application::EndFrame();
+	    Application::BeginFrame();
+	    {
+	        Update();
+	        Render();
+	    }
+	    Application::EndFrame();
     }
 }
 

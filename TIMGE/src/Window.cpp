@@ -1,8 +1,14 @@
 #include "TIMGE/Window.hpp"
-#include "GLFW/glfw3.h"
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
+#include <filesystem>
 
 namespace TIMGE
 {
@@ -93,8 +99,21 @@ namespace TIMGE
 		glfwSetWindowTitle(mWindow, title.data());
 	}
 
-	void Window::SetWindowIcon(int count, const GLFWimage* images) {
-		glfwSetWindowIcon(mWindow, count, images);
+	void Window::SetIcon(std::filesystem::path iconPath, int width, int height) {
+		unsigned char* pixels;
+		GLFWimage* image;
+
+		if (std::filesystem::exists(iconPath)) {
+			pixels = stbi_load(iconPath.string().c_str(), &width, &height, nullptr, 4);
+
+			image->pixels = pixels;
+		} else {
+			std::cout << "Image at path: " << iconPath << " does not exist\n";
+		}
+
+		glfwSetWindowIcon(mWindow, 1, image);
+
+		stbi_image_free(pixels);
 	}
 
 	void Window::SetPosition(int x, int y) {
@@ -123,5 +142,33 @@ namespace TIMGE
 
 	void Window::SetUserPointer(void* pointer) {
 		glfwSetWindowUserPointer(mWindow, pointer);
+	}
+
+	void Window::Minimize() {
+		glfwIconifyWindow(mWindow);
+	}
+
+	void Window::Restore() {
+		glfwRestoreWindow(mWindow);
+	}
+
+	void Window::Maximize() {
+		glfwMaximizeWindow(mWindow);
+	}
+
+	void Window::Show() {
+		glfwShowWindow(mWindow);
+	}
+
+	void Window::Hide() {
+		glfwHideWindow(mWindow);
+	}
+
+	void Window::Focus() {
+		glfwFocusWindow(mWindow);
+	}
+
+	void Window::RequestAttention() {
+		glfwRequestWindowAttention(mWindow);
 	}
 }

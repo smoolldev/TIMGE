@@ -45,8 +45,13 @@ namespace TIMGE
 			int GetAttribute(int attribute);
 			void* GetUserPointer();
 
+<<<<<<< HEAD
             void SetTitle(std::string_view title);
 			void SetWindowIcon(int count, const GLFWimage* images);
+=======
+			void SetTitle(std::string_view title);
+			void SetIcon(std::filesystem::path iconPath, int width, int height);
+>>>>>>> b32a844 (WIP: Add `SetIcon()` functionality)
 			void SetPosition(int x, int y);
 			void SetAspectRatio(int numerator, int denominator);
 			void SetSize(int width, int height);

@@ -44,6 +44,7 @@ namespace TIMGE
 	    virtual void EndFrame();
 
 	    bool WindowShouldClose();
+		Window mWindow;
 
 	private:
 	    using EventProcessing_T = void(*)();
@@ -52,7 +53,7 @@ namespace TIMGE
 	    static EventProcessing_T WaitEvents;
 	private:
 	    Info mInfo;
-	    Window mWindow;
+	    
     };
 }
 

@@ -45,7 +45,7 @@ namespace TIMGE
 			int GetAttribute(int attribute);
 			void* GetUserPointer();
 
-			void SetTitle(std::string_view title);
+            void SetTitle(std::string_view title);
 			void SetWindowIcon(int count, const GLFWimage* images);
 			void SetPosition(int x, int y);
 			void SetAspectRatio(int numerator, int denominator);
@@ -94,4 +94,4 @@ namespace TIMGE
 			GLFWwindow* mWindow;
     };
 }
-#endif //WINDOW_HPP
+#endif // WINDOW_HPP

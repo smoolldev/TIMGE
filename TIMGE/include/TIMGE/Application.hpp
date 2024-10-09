@@ -7,32 +7,52 @@
 
 namespace TIMGE
 {
+    struct Color
+    {
+	float r,g,b,a;
+    };
+
     class ApplicationBase
     {
 	public:
-	ApplicationBase();
-	virtual ~ApplicationBase() = 0;
-	virtual void Run() = 0;
-	virtual void Update() = 0;
-	virtual void Render() = 0;
+	    ApplicationBase();
+	    virtual ~ApplicationBase() = 0;
+	    virtual void Run() = 0;
+	    virtual void Update() = 0;
+	    virtual void Render() = 0;
     };
 
     class Application : public ApplicationBase
     {
 	public:
 
-	Application(const Window::Info& info);
-	Application(std::string_view title, uint32_t width, uint32_t height);
-	virtual ~Application() = 0;
-	virtual void Run() = 0;
-	virtual void Update() = 0;
-	virtual void Render() = 0;
+	    struct Info
+	    {
+	        Window::Info mWindowInfo; // TODO: Change Window class
+	        Color mBackground; // TODO: Vector
+	    };
 
-	Window& GetWindow();
+	    Application(const Info& info);
+	    Application(std::string_view title, uint32_t width, uint32_t height);
+	    virtual ~Application() = 0;
 
-	public:
-	
-	Window mWindow;
+	    virtual void Run() = 0;
+	    virtual void Update() = 0;
+	    virtual void Render() = 0;
+	    
+	    virtual void BeginFrame();
+	    virtual void EndFrame();
+
+	    bool WindowShouldClose();
+
+	private:
+	    using EventProcessing_T = void(*)();
+	protected:
+	    static EventProcessing_T PollEvents;
+	    static EventProcessing_T WaitEvents;
+	private:
+	    Info mInfo;
+	    Window mWindow;
     };
 }
 

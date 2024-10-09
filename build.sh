@@ -7,8 +7,11 @@ mkdir build/
 cmake -S . -B build/linux_x64-Debug/
 cmake --build build/linux_x64-Debug/ -j4
 
+rm ../Sandbox/lib/libTIMGE.a
+rm -rf ../Sandbox/include/TIMGE
+
 cp build/linux_x64-Debug/libTIMGE.a ../Sandbox/lib/
-cp -r build/linux_x64-Debug/include/TIMGE/ ../Sandbox/include/
+cp -r ./include/TIMGE/ ../Sandbox/include/
 cp build/linux_x64-Debug/compile_commands.json ./
 
 cd ../Sandbox/

@@ -1,29 +1,59 @@
-#ifndef TIMGE_APPLICATION_HPP
-#define TIMGE_APPLICATION_HPP
+#ifndef APPLICATION_HPP
+#define APPLICATION_HPP
 
+#include "TIMGE/Window.hpp"
 #include <cstdint>
 #include <string_view>
 
-#include "ApplicationBase.hpp"
-#include "Window.hpp"
-
 namespace TIMGE
 {
+    struct Color
+    {
+	float r,g,b,a;
+    };
+
+    class ApplicationBase
+    {
+	public:
+	    ApplicationBase();
+	    virtual ~ApplicationBase() = 0;
+	    virtual void Run() = 0;
+	    virtual void Update() = 0;
+	    virtual void Render() = 0;
+    };
+
     class Application : public ApplicationBase
     {
-        public:
-            Application(const Window::Info& info);
-            Application(std::string_view title, uint32_t width, uint32_t height);
-            ~Application();
+	public:
 
-            virtual void Run() = 0;
-            virtual void Update() = 0;
-            virtual void Render() = 0;
+	    struct Info
+	    {
+	        Window::Info mWindowInfo; // TODO: Change Window class
+	        Color mBackground; // TODO: Vector
+	    };
 
-            bool operator!() { return true; }
-        public:
-            Window mWindow;
+	    Application(const Info& info);
+	    Application(std::string_view title, uint32_t width, uint32_t height);
+	    virtual ~Application() = 0;
+
+	    virtual void Run() = 0;
+	    virtual void Update() = 0;
+	    virtual void Render() = 0;
+	    
+	    virtual void BeginFrame();
+	    virtual void EndFrame();
+
+	    bool WindowShouldClose();
+
+	private:
+	    using EventProcessing_T = void(*)();
+	protected:
+	    static EventProcessing_T PollEvents;
+	    static EventProcessing_T WaitEvents;
+	private:
+	    Info mInfo;
+	    Window mWindow;
     };
 }
 
-#endif // TIMGE_APPLICATION_HPP
+#endif //APPLICATION_HPP

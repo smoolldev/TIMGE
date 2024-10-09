@@ -18,4 +18,4 @@ add_library("${CMAKE_PROJECT_NAME}" STATIC)
 
 target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${LIB_SRC})
 target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw3)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw)

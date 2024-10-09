@@ -37,7 +37,7 @@ namespace TIMGE
     {
         glfwDestroyWindow(mWindow);
     }
-
+    
     GLFWwindow* Window::GetWindow()
     {
 	return mWindow;

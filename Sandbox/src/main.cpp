@@ -10,20 +10,37 @@ class Game : public Application
     public:
     Game() : Application("TIMGE", 720, 480) {}
     ~Game() {}
-    void Run() {}
-    void Update() {}
-    void Render() {}
+    void Run();
+    void Update();
+    void Render();
 };
+
+void Game::Run()
+{
+    while (!Application::WindowShouldClose()) {
+	Application::BeginFrame();
+	{
+	    Update();
+	    Render();
+	}
+	Application::EndFrame();
+    }
+}
+
+void Game::Update()
+{
+ //    if (glfwGetKey(mWindow.mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+	// glfwSetWindowShouldClose(mWindow.mWindow, 1);
+ //    }
+}
+
+void Game::Render()
+{
+
+}
 
 int main()
 {
     Game game;
-    
-    while (!glfwWindowShouldClose(game.mWindow.mWindow)) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(.1f, .1f, 1.0f, 1.0f);
-
-	glfwSwapBuffers(game.mWindow.mWindow);
-	glfwPollEvents();
-    }
+    game.Run();
 }

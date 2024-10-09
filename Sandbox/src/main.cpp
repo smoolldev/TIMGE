@@ -18,7 +18,9 @@ class Game : public Application
 void Game::Run()
 {
     //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug/resources/youtube_logo.png", 32, 32);
+    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug/resources/youtube_logo.png");
+    //mWindow.SetIcon("Default");
+    //mWindow.SetIcon();
     while (!Application::WindowShouldClose()) {
 	    Application::BeginFrame();
 	    {

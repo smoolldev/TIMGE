@@ -1,14 +1,14 @@
 #include "TIMGE/Window.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
+#include <filesystem>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-
-#include <filesystem>
 
 namespace TIMGE
 {
@@ -49,31 +49,36 @@ namespace TIMGE
 		return mWindow;
     }
 
-	Vector2D<int> Window::GetPosition(int x, int y) {
+	Vector2D<int> Window::GetPosition(int x, int y)
+	{
 		glfwGetWindowPos(mWindow, &x, &y);
 
 		return { x, y };
 	}
 
-	Vector2D<int> Window::GetSize(int width, int height) {
+	Vector2D<int> Window::GetSize(int width, int height)
+	{
 		glfwGetWindowSize(mWindow, &width, &height);
 
 		return { width, height };
 	}
 
-	Vector2D<int> Window::GetFramebufferSize(int width, int height) {
+	Vector2D<int> Window::GetFramebufferSize(int width, int height)
+	{
 		glfwGetFramebufferSize(mWindow, &width, &height);
 
 		return { width, height };
 	}
 
-	Vector4D<int> Window::GetFrameSize(int left, int top, int right, int bottom) {
+	Vector4D<int> Window::GetFrameSize(int left, int top, int right, int bottom)
+	{
 		glfwGetWindowFrameSize(mWindow, &left, &top, &right, &bottom);
 
 		return { left, top, right, bottom };
 	}
 
-	Vector2D<float> Window::GetContentScale(float x, float y) {
+	Vector2D<float> Window::GetContentScale(float x, float y)
+	{
 		glfwGetWindowContentScale(mWindow, &x, &y);
 
 		return { x, y };
@@ -99,21 +104,27 @@ namespace TIMGE
 		glfwSetWindowTitle(mWindow, title.data());
 	}
 
-	void Window::SetIcon(std::filesystem::path iconPath, int width, int height) {
-		unsigned char* pixels;
-		GLFWimage* image;
-
+	void Window::SetIcon(std::filesystem::path iconPath)
+	{
 		if (std::filesystem::exists(iconPath)) {
+			int width, height;
+			unsigned char* pixels;
+			GLFWimage* image[1];
+
 			pixels = stbi_load(iconPath.string().c_str(), &width, &height, nullptr, 4);
 
-			image->pixels = pixels;
+			image[0]->width = width;
+			image[0]->height = height;
+			image[0]->pixels = pixels;
+
+			glfwSetWindowIcon(mWindow, 1, image[0]);
+
+			stbi_image_free(pixels);
+		} else if (iconPath == "Default") {
+			glfwSetWindowIcon(mWindow, 0, nullptr);
 		} else {
 			std::cout << "Image at path: " << iconPath << " does not exist\n";
 		}
-
-		glfwSetWindowIcon(mWindow, 1, image);
-
-		stbi_image_free(pixels);
 	}
 
 	void Window::SetPosition(int x, int y) {

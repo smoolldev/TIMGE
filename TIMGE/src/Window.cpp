@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <system_error>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -27,6 +28,9 @@ namespace TIMGE
 		if (!mWindow) {
 		    throw "Failed to create window!\n";
 		}
+
+		GetSize(mSize.x, mSize.y);
+		GetPosition(mPosition.x, mPosition.y);
 		
 		glfwMakeContextCurrent(mWindow);
 		if (!gladLoadGL()) {
@@ -160,6 +164,9 @@ namespace TIMGE
 	}
 
 	void Window::Restore() {
+		SetSize(mSize.x, mSize.y);
+		SetPosition(mPosition.x, mPosition.y);
+
 		glfwRestoreWindow(mWindow);
 	}
 

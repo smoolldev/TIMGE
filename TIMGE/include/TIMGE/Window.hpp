@@ -92,6 +92,9 @@ namespace TIMGE
 
 			Info mInfo;
 			GLFWwindow* mWindow;
+
+			Vector2D<int> mSize;
+			Vector2D<int> mPosition;
     };
 }
 #endif // WINDOW_HPP

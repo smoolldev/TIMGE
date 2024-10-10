@@ -35,15 +35,13 @@ namespace TIMGE
 			~Window();
 			
 			GLFWwindow* GetWindow(); //TODO: Move to private and befriend with Application
-			Vector2D<int> GetPosition(int x, int y);
-			Vector2D<int> GetSize(int width, int height);
-			Vector2D<int> GetFramebufferSize(int width, int height);
-			Vector4D<int> GetFrameSize(int left, int top, int right, int bottom);
-			Vector2D<float> GetContentScale(float x, float y);
+			Vector2D<int> GetPosition();
+			Vector2D<int> GetSize();
+			Vector2D<int> GetFramebufferSize();
+			Vector4D<int> GetFrameSize();
+			Vector2D<float> GetContentScale();
 			float GetOpacity();
 			GLFWmonitor* GetMonitor();
-			int GetAttribute(int attribute);
-			void* GetUserPointer();
 
 			void SetTitle(std::string_view title);
 			void SetIcon(std::filesystem::path iconPath = "Default");
@@ -52,8 +50,6 @@ namespace TIMGE
 			void SetSize(int width, int height);
 			void SetOpacity(float opacity);
 			void SetMonitor(GLFWmonitor* monitor, int x, int y, int width, int height, int refreshRate);
-			void SetAttribute(int attribute, int value);
-			void SetUserPointer(void* pointer);
 
 			void Minimize();
 			void Restore();
@@ -62,6 +58,8 @@ namespace TIMGE
 			void Hide();
 			void Focus();
 			void RequestAttention();
+			void BorderlessFullscreen();
+			void Fullscreen();
 
 			static constexpr FLAGS RESIZABLE = (1 << 0);
 			static constexpr FLAGS VISIBLE = (1 << 1);
@@ -95,6 +93,8 @@ namespace TIMGE
 
 			Vector2D<int> mSize;
 			Vector2D<int> mPosition;
+
+			bool mIsFullscreen = false;
     };
 }
 #endif // WINDOW_HPP

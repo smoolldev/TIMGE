@@ -6,7 +6,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <system_error>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -29,8 +28,7 @@ namespace TIMGE
 		    throw "Failed to create window!\n";
 		}
 
-		GetSize(mSize.x, mSize.y);
-		GetPosition(mPosition.x, mPosition.y);
+		SetIcon(mInfo.mIconPath);
 		
 		glfwMakeContextCurrent(mWindow);
 		if (!gladLoadGL()) {
@@ -53,36 +51,46 @@ namespace TIMGE
 		return mWindow;
     }
 
-	Vector2D<int> Window::GetPosition(int x, int y)
+	Vector2D<int> Window::GetPosition()
 	{
+		int x, y;
+
 		glfwGetWindowPos(mWindow, &x, &y);
 
 		return { x, y };
 	}
 
-	Vector2D<int> Window::GetSize(int width, int height)
+	Vector2D<int> Window::GetSize()
 	{
+		int width, height;
+
 		glfwGetWindowSize(mWindow, &width, &height);
 
 		return { width, height };
 	}
 
-	Vector2D<int> Window::GetFramebufferSize(int width, int height)
+	Vector2D<int> Window::GetFramebufferSize()
 	{
+		int width, height;
+
 		glfwGetFramebufferSize(mWindow, &width, &height);
 
 		return { width, height };
 	}
 
-	Vector4D<int> Window::GetFrameSize(int left, int top, int right, int bottom)
+	Vector4D<int> Window::GetFrameSize()
 	{
+		int left, top, right, bottom;
+
 		glfwGetWindowFrameSize(mWindow, &left, &top, &right, &bottom);
 
 		return { left, top, right, bottom };
 	}
 
-	Vector2D<float> Window::GetContentScale(float x, float y)
+	Vector2D<float> Window::GetContentScale()
 	{
+		float x, y;
+
 		glfwGetWindowContentScale(mWindow, &x, &y);
 
 		return { x, y };
@@ -94,14 +102,6 @@ namespace TIMGE
 
 	GLFWmonitor* Window::GetMonitor() {
 		return glfwGetWindowMonitor(mWindow);
-	}
-
-	int Window::GetAttribute(int attribute) {
-		return glfwGetWindowAttrib(mWindow, attribute);
-	}
-
-	void* Window::GetUserPointer() {
-		return glfwGetWindowUserPointer(mWindow);
 	}
 
 	void Window::SetTitle(std::string_view title) {
@@ -151,14 +151,6 @@ namespace TIMGE
 		glfwSetWindowMonitor(mWindow, monitor, x, y, width, height, refreshRate);
 	}
 
-	void Window::SetAttribute(int attribute, int value) {
-		glfwSetWindowAttrib(mWindow, attribute, value);
-	}
-
-	void Window::SetUserPointer(void* pointer) {
-		glfwSetWindowUserPointer(mWindow, pointer);
-	}
-
 	void Window::Minimize() {
 		glfwIconifyWindow(mWindow);
 	}
@@ -171,6 +163,9 @@ namespace TIMGE
 	}
 
 	void Window::Maximize() {
+		mSize = GetSize();
+		mPosition = GetPosition();
+
 		glfwMaximizeWindow(mWindow);
 	}
 
@@ -188,5 +183,48 @@ namespace TIMGE
 
 	void Window::RequestAttention() {
 		glfwRequestWindowAttention(mWindow);
+	}
+
+	void Window::BorderlessFullscreen()
+	{
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		if (!mIsFullscreen)
+		{
+			mSize = GetSize();
+			mPosition = GetPosition();
+
+			glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
+			SetSize(mode->width, mode->height);
+			SetPosition(0, 0);
+		} else
+		{
+			glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
+			SetSize(mSize.x, mSize.y);
+			SetPosition(mPosition.x, mPosition.y);
+		}
+
+		mIsFullscreen = !mIsFullscreen;
+	}
+
+	void Window::Fullscreen()
+	{
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		if (!mIsFullscreen)
+		{
+			mSize = GetSize();
+			mPosition = GetPosition();
+
+			SetMonitor(monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+		} else {
+			SetMonitor(NULL, mPosition.x, mPosition.y, mSize.x, mSize.y, 0);
+		}
+
+		mIsFullscreen = !mIsFullscreen;
 	}
 }

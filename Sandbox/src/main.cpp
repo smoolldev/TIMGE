@@ -19,10 +19,7 @@ class Game : public Application
 void Game::Run()
 {
     //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-<<<<<<< HEAD
-=======
-    mWindow.SetIcon("./resources/youtube_logo.png");
->>>>>>> 95619f16ea688a9160a4295eafed4d995e0fc761
+    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/resources/youtube_logo.png");
     //mWindow.SetIcon("Default");
     //mWindow.SetIcon();
     //system("pwd");
@@ -38,20 +35,32 @@ void Game::Run()
 
 void Game::Update()
 {
+    //mWindow.SetAspectRatio(21, 9);
     if (glfwGetKey(mWindow.mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-	glfwSetWindowShouldClose(mWindow.mWindow, 1);
-    }
-    else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F11) == GLFW_PRESS) {
-	static bool isMaximized = false;
-	if (!isMaximized) {
-	    mWindow.Maximize();
-	} else {
-	    mWindow.Restore();
-	}
+	    glfwSetWindowShouldClose(mWindow.mWindow, 1);
+    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F11) == GLFW_PRESS)
+    {
+	    static bool isMaximized = false;
+	    if (!isMaximized) {
+	        mWindow.Maximize();
+	    } else {
+	        mWindow.Restore();
+	    }
 
-	isMaximized = !isMaximized;
-    }
+	    isMaximized = !isMaximized;
+    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F8) == GLFW_PRESS)
+    {
+        static bool isHidden = false;
+        if (!isHidden) {
+            mWindow.Hide();
+        } else {
+            mWindow.Show();
+        }
 
+        isHidden = !isHidden;
+    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
+        mWindow.BorderlessFullscreen();
+    }
 }
 
 void Game::Render()

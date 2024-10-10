@@ -1,5 +1,6 @@
 #include <TIMGE/TIMGE.hpp>
 
+#include <cstdlib>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -18,9 +19,10 @@ class Game : public Application
 void Game::Run()
 {
     //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug/resources/youtube_logo.png");
+    mWindow.SetIcon("./resources/youtube_logo.png");
     //mWindow.SetIcon("Default");
     //mWindow.SetIcon();
+    //system("pwd");
     while (!Application::WindowShouldClose()) {
 	    Application::BeginFrame();
 	    {

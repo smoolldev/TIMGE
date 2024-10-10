@@ -47,8 +47,8 @@ namespace TIMGE
         glfwDestroyWindow(mWindow);
     }
 
-	GLFWwindow* Window::GetWindow() {
-		return mWindow;
+	  GLFWwindow* Window::GetWindow() {
+		  return mWindow;
     }
 
 	Vector2D<int> Window::GetPosition()

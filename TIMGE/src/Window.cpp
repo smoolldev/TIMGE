@@ -47,11 +47,11 @@ namespace TIMGE
         glfwDestroyWindow(mWindow);
     }
 
-	  GLFWwindow* Window::GetWindow() {
+	GLFWwindow* Window::GetWindow() const {
 		  return mWindow;
     }
 
-	Vector2D<int> Window::GetPosition()
+	Vector2D<int> Window::GetPosition() const
 	{
 		int x, y;
 
@@ -60,7 +60,7 @@ namespace TIMGE
 		return { x, y };
 	}
 
-	Vector2D<int> Window::GetSize()
+	Vector2D<int> Window::GetSize() const
 	{
 		int width, height;
 
@@ -69,7 +69,7 @@ namespace TIMGE
 		return { width, height };
 	}
 
-	Vector2D<int> Window::GetFramebufferSize()
+	Vector2D<int> Window::GetFramebufferSize() const
 	{
 		int width, height;
 
@@ -78,7 +78,7 @@ namespace TIMGE
 		return { width, height };
 	}
 
-	Vector4D<int> Window::GetFrameSize()
+	Vector4D<int> Window::GetFrameSize() const
 	{
 		int left, top, right, bottom;
 
@@ -87,7 +87,7 @@ namespace TIMGE
 		return { left, top, right, bottom };
 	}
 
-	Vector2D<float> Window::GetContentScale()
+	Vector2D<float> Window::GetContentScale() const
 	{
 		float x, y;
 
@@ -96,11 +96,11 @@ namespace TIMGE
 		return { x, y };
 	}
 
-	float Window::GetOpacity() {
+	float Window::GetOpacity() const {
 		return glfwGetWindowOpacity(mWindow);
 	}
 
-	GLFWmonitor* Window::GetMonitor() {
+	GLFWmonitor* Window::GetMonitor() const {
 		return glfwGetWindowMonitor(mWindow);
 	}
 

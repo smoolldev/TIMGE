@@ -18,7 +18,7 @@ class Game : public Application
 void Game::Run()
 {
     //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug/resources/youtube_logo.png");
+    mWindow.SetIcon("./rocket.png");
     //mWindow.SetIcon("Default");
     //mWindow.SetIcon();
     while (!Application::WindowShouldClose()) {
@@ -33,9 +33,20 @@ void Game::Run()
 
 void Game::Update()
 {
- //    if (glfwGetKey(mWindow.mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-	// glfwSetWindowShouldClose(mWindow.mWindow, 1);
- //    }
+    if (glfwGetKey(mWindow.mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+	glfwSetWindowShouldClose(mWindow.mWindow, 1);
+    }
+    else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F11) == GLFW_PRESS) {
+	static bool isMaximized = false;
+	if (!isMaximized) {
+	    mWindow.Maximize();
+	} else {
+	    mWindow.Restore();
+	}
+
+	isMaximized = !isMaximized;
+    }
+
 }
 
 void Game::Render()

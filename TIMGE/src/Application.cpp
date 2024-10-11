@@ -32,7 +32,8 @@ namespace TIMGE
     	        Window::RESIZABLE | Window::VISIBLE | Window::DECORATED |
     	        Window::FOCUSED | Window::AUTO_ICONIFY | Window::CENTER_CURSOR |
     	        Window::FOCUS_ON_SHOW,
-    	        "Default"
+    	        "Default",
+                false
     	    },
             Color{0.0f, 0.0f, 0.0f, 1.0f}
         }

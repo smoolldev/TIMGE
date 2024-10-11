@@ -23,11 +23,13 @@ namespace TIMGE
 		    glfwWindowHint(mWINDOWHINTS[i], (mInfo.mFlags >> i) & 1);
     	}
 
-		mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), nullptr, nullptr);
+		mIsFullscreen = mInfo.mIsFullscreen;
+
+		mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
 		if (!mWindow) {
 		    throw "Failed to create window!\n";
 		}
-
+		
 		SetIcon(mInfo.mIconPath);
 		
 		glfwMakeContextCurrent(mWindow);
@@ -218,7 +220,7 @@ namespace TIMGE
 
 			SetMonitor(monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 		} else {
-			SetMonitor(NULL, mPosition.x, mPosition.y, mSize.x, mSize.y, 0);
+			SetMonitor(nullptr, mPosition.x, mPosition.y, mSize.x, mSize.y, 0);
 		}
 
 		mIsFullscreen = !mIsFullscreen;

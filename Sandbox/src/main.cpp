@@ -59,7 +59,7 @@ void Game::Update()
 
         isHidden = !isHidden;
     } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
-        mWindow.BorderlessFullscreen();
+        mWindow.Fullscreen();
     }
 }
 

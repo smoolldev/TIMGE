@@ -29,6 +29,7 @@ namespace TIMGE
 			    uint32_t mOpenGLVersionMinor;
 			    FLAGS mFlags;
 			    std::filesystem::path mIconPath;
+				bool mIsFullscreen;
 			};
 
 			Window(const Info& info);
@@ -94,7 +95,7 @@ namespace TIMGE
 			Vector2D<int> mSize;
 			Vector2D<int> mPosition;
 
-			bool mIsFullscreen = false;
+			bool mIsFullscreen;
     };
 }
 #endif // WINDOW_HPP

@@ -34,14 +34,14 @@ namespace TIMGE
 			Window(const Info& info);
 			~Window();
 			
-			GLFWwindow* GetWindow(); //TODO: Move to private and befriend with Application
-			Vector2D<int> GetPosition();
-			Vector2D<int> GetSize();
-			Vector2D<int> GetFramebufferSize();
-			Vector4D<int> GetFrameSize();
-			Vector2D<float> GetContentScale();
-			float GetOpacity();
-			GLFWmonitor* GetMonitor();
+			GLFWwindow* GetWindow() const; //TODO: Move to private and befriend with Application
+			Vector2D<int> GetPosition() const;
+			Vector2D<int> GetSize() const;
+			Vector2D<int> GetFramebufferSize() const;
+			Vector4D<int> GetFrameSize() const;
+			Vector2D<float> GetContentScale() const;
+			float GetOpacity() const;
+			GLFWmonitor* GetMonitor() const;
 
 			void SetTitle(std::string_view title);
 			void SetIcon(std::filesystem::path iconPath = "Default");

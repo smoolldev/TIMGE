@@ -43,14 +43,14 @@ namespace TIMGE
 	    virtual void EndFrame();
 
 	    bool WindowShouldClose();
-		  Window mWindow;
 	private:
 	    using EventProcessing_T = void(*)();
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
-	private:
+	public:
 	    Info mInfo;
+      	Window mWindow;
     };
 }
 

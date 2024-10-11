@@ -19,7 +19,7 @@ class Game : public Application
 void Game::Run()
 {
     //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-    mWindow.SetIcon("/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/resources/youtube_logo.png");
+    mWindow.SetIcon("resource/youtube_logo.png");
     //mWindow.SetIcon("Default");
     //mWindow.SetIcon();
     //system("pwd");

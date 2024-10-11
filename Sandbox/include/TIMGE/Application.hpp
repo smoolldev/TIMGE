@@ -50,6 +50,7 @@ namespace TIMGE
 	    static EventProcessing_T WaitEvents;
 	private:
 	    Info mInfo;
+<<<<<<< HEAD
 	    Window mWindow;
 	    static Application* mInstance;
 
@@ -74,6 +75,9 @@ namespace TIMGE
             friend void Callback::DropCallback(GLFWwindow* window, int pathCount, const char* path[]);
             friend void Callback::MonitorCallback(GLFWmonitor* monitor, int event);
             friend void Callback::JoystickCallback(int jid, int event);
+=======
+		Window mWindow;
+>>>>>>> 1e3c2f3 (WIP: Add Keyboard Input Handling #12)
 	};
 }
 

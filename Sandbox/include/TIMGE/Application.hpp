@@ -38,7 +38,7 @@ namespace TIMGE
 	    virtual void Run() = 0;
 	    virtual void Update() = 0;
 	    virtual void Render() = 0;
-	    
+
 	    virtual void BeginFrame();
 	    virtual void EndFrame();
 
@@ -50,8 +50,8 @@ namespace TIMGE
 	    static EventProcessing_T WaitEvents;
 	public:
 	    Info mInfo;
-      	Window mWindow;
-    };
+		Window mWindow;
+	};
 }
 
 #endif //APPLICATION_HPP

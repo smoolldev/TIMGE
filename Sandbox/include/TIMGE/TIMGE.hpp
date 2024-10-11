@@ -3,5 +3,6 @@
 
 #include "Application.hpp"
 #include "Window.hpp"
+#include "Keyboard.hpp"
 
 #endif //TIMGE_HPP

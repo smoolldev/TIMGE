@@ -25,7 +25,6 @@ namespace TIMGE
     class Application : public ApplicationBase
     {
 	public:
-
 	    struct Info
 	    {
 	        Window::Info mWindowInfo; // TODO: Change Window class
@@ -39,20 +38,19 @@ namespace TIMGE
 	    virtual void Run() = 0;
 	    virtual void Update() = 0;
 	    virtual void Render() = 0;
-	    
+
 	    virtual void BeginFrame();
 	    virtual void EndFrame();
 
 	    bool WindowShouldClose();
-
 	private:
 	    using EventProcessing_T = void(*)();
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
-	private:
+	public:
 	    Info mInfo;
-	    Window mWindow;
+      	Window mWindow;
     };
 }
 

@@ -1,8 +1,8 @@
 [
 {
-  "directory": "/home/marcel/Dev/C++/TIMGE/Sandbox/build/linux_x64-Debug",
-  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/Sandbox/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGESandbox.dir/src/main.cpp.o -c /home/marcel/Dev/C++/TIMGE/Sandbox/src/main.cpp",
-  "file": "/home/marcel/Dev/C++/TIMGE/Sandbox/src/main.cpp",
+  "directory": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/build/linux_x64-Debug",
+  "command": "/usr/bin/c++  -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGESandbox.dir/src/main.cpp.o -c /home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/src/main.cpp",
+  "file": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/Sandbox/src/main.cpp",
   "output": "CMakeFiles/TIMGESandbox.dir/src/main.cpp.o"
 }
 ]

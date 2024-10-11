@@ -48,10 +48,10 @@ namespace TIMGE
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
-	public:
+	private:
 	    Info mInfo;
-      	Window mWindow;
-    };
+		Window mWindow;
+	};
 }
 
 #endif //APPLICATION_HPP

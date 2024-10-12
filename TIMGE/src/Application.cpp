@@ -95,10 +95,13 @@ namespace TIMGE
         return mWindow;
     }
 
+<<<<<<< HEAD
     Application* Application::GetInstance() {
         return Application::mInstance;
     }
 
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;
     Application::EventProcessing_T Application::WaitEvents = &glfwWaitEvents;
     Application* Application::mInstance = nullptr;

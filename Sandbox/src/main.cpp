@@ -64,7 +64,16 @@ Game* Game::GetInstance() {
 }
 void Game::Run()
 {
+<<<<<<< HEAD
    while (!Application::WindowShouldClose()) {
+=======
+    //GetWindow().mInfo.mIconPath = "./resources/youtube_logo.png";
+    //GetWindow().SetIcon("resource/youtube_logo.png");
+    //GetWindow().SetIcon("Default");
+    //GetWindow().SetIcon();
+    //system("pwd");
+    while (!Application::WindowShouldClose()) {
+>>>>>>> 9f5873d (Fix: use new vector template and more)
         Application::BeginFrame();
         {
             Update();
@@ -77,6 +86,7 @@ void Game::Run()
 void Game::Update()
 {
     //GetWindow().SetAspectRatio(21, 9);
+<<<<<<< HEAD
     // if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     //     glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
     // } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
@@ -102,6 +112,33 @@ void Game::Update()
     // } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
     //     GetWindow().Fullscreen();
     // }
+=======
+    if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
+    } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
+    {
+        static bool isMaximized = false;
+        if (!isMaximized) {
+        Application::GetWindow().Maximize();
+        } else {
+            GetWindow().Restore();
+        }
+
+        isMaximized = !isMaximized;
+    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F8) == GLFW_PRESS)
+    {
+        static bool isHidden = false;
+        if (!isHidden) {
+            GetWindow().Hide();
+        } else {
+            GetWindow().Show();
+        }
+
+        isHidden = !isHidden;
+    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
+        GetWindow().Fullscreen();
+    }
+>>>>>>> 9f5873d (Fix: use new vector template and more)
 }
 
 void Game::Render()

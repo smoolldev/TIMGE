@@ -2,14 +2,20 @@
 #define APPLICATION_HPP
 
 #include "TIMGE/Window.hpp"
+<<<<<<< HEAD
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/CallbackDefs.hpp"
+=======
+#include "TIMGE/Mouse.hpp"
+#include "TIMGE/Utils/Vector.hpp"
+>>>>>>> 9f5873d (Fix: use new vector template and more)
 
 #include <cstdint>
 #include <string_view>
 
 namespace TIMGE
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -43,6 +49,12 @@ namespace TIMGE
 =======
     class ApplicationBase
 >>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
+=======
+    class ApplicationBase
+=======
+   class ApplicationBase
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+>>>>>>> bbd11c1 (Fix: use new vector template and more)
     {
 	public:
 	    ApplicationBase();
@@ -59,7 +71,10 @@ namespace TIMGE
 	    {
 	        Window::Info mWindowInfo; // TODO: Change Window class
 	        Vector<float, 4> mBackground;
+<<<<<<< HEAD
 		Callback::Callbacks mCallbacks;
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
 	    };
 
 	    Application(const Info& info);
@@ -83,6 +98,7 @@ namespace TIMGE
 	public:
 	    Info mInfo;
 	    Window mWindow;
+<<<<<<< HEAD
 	    static Application* mInstance;
 
 	    static Application* GetInstance(); 
@@ -106,6 +122,8 @@ namespace TIMGE
             friend void Callback::DropCallback(GLFWwindow* window, int pathCount, const char* path[]);
             friend void Callback::MonitorCallback(GLFWmonitor* monitor, int event);
             friend void Callback::JoystickCallback(int jid, int event);
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
 	};
 }
 

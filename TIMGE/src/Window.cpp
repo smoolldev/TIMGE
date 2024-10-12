@@ -13,6 +13,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //#define STB_IMAGE_IMPLEMENTATION
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
@@ -37,6 +38,11 @@
 =======
 //#define STB_IMAGE_IMPLEMENTATION
 >>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
+=======
+//#define STB_IMAGE_IMPLEMENTATION
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+>>>>>>> bbd11c1 (Fix: use new vector template and more)
 #include <stb_image/stb_image.h>
 
 namespace TIMGE
@@ -54,7 +60,10 @@ namespace TIMGE
 
         mIsFullscreen = mInfo.mIsFullscreen;
 
+<<<<<<< HEAD
         //Wiesz, że jak mIsFullScreen jest równe `true` i jednocześnie mInfo.mWidth/mHeight nie są równe wymiarom monitora to rozdzielczość się popsuje?
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
         mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";

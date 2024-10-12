@@ -18,48 +18,48 @@ class Game : public Application
 
 void Game::Run()
 {
-    //mWindow.mInfo.mIconPath = "./resources/youtube_logo.png";
-    mWindow.SetIcon("resource/youtube_logo.png");
-    //mWindow.SetIcon("Default");
-    //mWindow.SetIcon();
+    //GetWindow().mInfo.mIconPath = "./resources/youtube_logo.png";
+    //GetWindow().SetIcon("resource/youtube_logo.png");
+    //GetWindow().SetIcon("Default");
+    //GetWindow().SetIcon();
     //system("pwd");
     while (!Application::WindowShouldClose()) {
-	    Application::BeginFrame();
-	    {
-	        Update();
-	        Render();
-	    }
-	    Application::EndFrame();
+        Application::BeginFrame();
+        {
+            Update();
+            Render();
+        }
+        Application::EndFrame();
     }
 }
 
 void Game::Update()
 {
-    //mWindow.SetAspectRatio(21, 9);
-    if (glfwGetKey(mWindow.mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-	    glfwSetWindowShouldClose(mWindow.mWindow, 1);
-    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F11) == GLFW_PRESS)
+    //GetWindow().SetAspectRatio(21, 9);
+    if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
+    } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
     {
-	    static bool isMaximized = false;
-	    if (!isMaximized) {
-	        mWindow.Maximize();
-	    } else {
-	        mWindow.Restore();
-	    }
+        static bool isMaximized = false;
+        if (!isMaximized) {
+        Application::GetWindow().Maximize();
+        } else {
+            GetWindow().Restore();
+        }
 
-	    isMaximized = !isMaximized;
-    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F8) == GLFW_PRESS)
+        isMaximized = !isMaximized;
+    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F8) == GLFW_PRESS)
     {
         static bool isHidden = false;
         if (!isHidden) {
-            mWindow.Hide();
+            GetWindow().Hide();
         } else {
-            mWindow.Show();
+            GetWindow().Show();
         }
 
         isHidden = !isHidden;
-    } else if (glfwGetKey(mWindow.mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
-        mWindow.Fullscreen();
+    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
+        GetWindow().Fullscreen();
     }
 }
 

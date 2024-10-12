@@ -10,11 +10,7 @@
 
 namespace TIMGE
 {
-<<<<<<< HEAD
-    class ApplicationBase
-=======
    class ApplicationBase
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
     {
 	public:
 	    ApplicationBase();
@@ -51,7 +47,7 @@ namespace TIMGE
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
-	public:
+	private:
 	    Info mInfo;
 	    Window mWindow;
 	};

@@ -7,7 +7,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+<<<<<<< HEAD
 //#define STB_IMAGE_IMPLEMENTATION
+=======
+>>>>>>> 3ed8b4d (Fix: use new vector template and more)
 #include <stb_image/stb_image.h>
 
 namespace TIMGE

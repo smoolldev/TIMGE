@@ -2,15 +2,24 @@
 #define APPLICATION_HPP
 
 #include "TIMGE/Window.hpp"
+<<<<<<< HEAD
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/CallbackDefs.hpp"
+=======
+#include "TIMGE/Mouse.hpp"
+#include "TIMGE/Utils/Vector.hpp"
+>>>>>>> 86d0e57 (Fix: use new vector template and more)
 
 #include <cstdint>
 #include <string_view>
 
 namespace TIMGE
 {
+<<<<<<< HEAD
     class ApplicationBase
+=======
+   class ApplicationBase
+>>>>>>> 86d0e57 (Fix: use new vector template and more)
     {
 	public:
 	    ApplicationBase();
@@ -27,7 +36,10 @@ namespace TIMGE
 	    {
 	        Window::Info mWindowInfo; // TODO: Change Window class
 	        Vector<float, 4> mBackground;
+<<<<<<< HEAD
 		Callback::Callbacks mCallbacks;
+=======
+>>>>>>> 86d0e57 (Fix: use new vector template and more)
 	    };
 
 	    Application(const Info& info);
@@ -50,6 +62,7 @@ namespace TIMGE
 	    static EventProcessing_T WaitEvents;
 	private:
 	    Info mInfo;
+<<<<<<< HEAD
 <<<<<<< HEAD
 	    Window mWindow;
 	    static Application* mInstance;
@@ -78,6 +91,9 @@ namespace TIMGE
 =======
 		Window mWindow;
 >>>>>>> 1e3c2f3 (WIP: Add Keyboard Input Handling #12)
+=======
+	    Window mWindow;
+>>>>>>> 86d0e57 (Fix: use new vector template and more)
 	};
 }
 

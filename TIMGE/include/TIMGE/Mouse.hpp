@@ -16,6 +16,7 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1f7c929 (Add Mouse Input Handling #11)
 =======
@@ -56,6 +57,8 @@ namespace TIMGE
 >>>>>>> 0bd3e2b (Fix: use new vector template and more)
 =======
 >>>>>>> fe6ef85 (Add Mouse Input Handling #11)
+=======
+>>>>>>> 3ed8b4d (Fix: use new vector template and more)
     enum class StandardCursor
     {
 	ARROW_CURSOR = GLFW_ARROW_CURSOR,

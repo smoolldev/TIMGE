@@ -10,35 +10,7 @@
 
 namespace TIMGE
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    class ApplicationBase
-=======
    class ApplicationBase
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
-=======
-    class ApplicationBase
->>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
-=======
-=======
->>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
-    class ApplicationBase
-=======
-   class ApplicationBase
->>>>>>> 9f5873d (Fix: use new vector template and more)
-<<<<<<< HEAD
->>>>>>> 0bd3e2b (Fix: use new vector template and more)
-=======
-=======
-    class ApplicationBase
->>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
->>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
-=======
-   class ApplicationBase
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
     {
 	public:
 	    ApplicationBase();
@@ -75,7 +47,7 @@ namespace TIMGE
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
-	public:
+	private:
 	    Info mInfo;
 	    Window mWindow;
 	};

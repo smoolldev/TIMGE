@@ -19,6 +19,11 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 042ecf6 (Add Mouse Input Handling #11)
+>>>>>>> 0db8b6c (Add Mouse Input Handling #11)
 =======
 >>>>>>> bbd11c1 (Fix: use new vector template and more)
 =======
@@ -52,10 +57,13 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fe6ef85 (Add Mouse Input Handling #11)
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
 =======
+=======
+>>>>>>> 0db8b6c (Add Mouse Input Handling #11)
 >>>>>>> 3356953 (Add Mouse Input Handling #11)
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -63,6 +71,7 @@ namespace TIMGE
 =======
 =======
 >>>>>>> 9f5873d (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 0bd3e2b (Fix: use new vector template and more)
 =======
 >>>>>>> fe6ef85 (Add Mouse Input Handling #11)
@@ -75,6 +84,11 @@ namespace TIMGE
 =======
 >>>>>>> 9f5873d (Fix: use new vector template and more)
 >>>>>>> bbd11c1 (Fix: use new vector template and more)
+=======
+=======
+>>>>>>> fe6ef85 (Add Mouse Input Handling #11)
+>>>>>>> 042ecf6 (Add Mouse Input Handling #11)
+>>>>>>> 0db8b6c (Add Mouse Input Handling #11)
     enum class StandardCursor
     {
 	ARROW_CURSOR = GLFW_ARROW_CURSOR,

@@ -11,6 +11,27 @@
 
 namespace TIMGE
 {
+<<<<<<< HEAD
+=======
+    template<typename Type_T, uint32_t DIMENSIONS>
+    struct Vector
+    {
+	Type_T mData[DIMENSIONS];
+	Type_T& operator[](uint32_t index);
+	const Type_T& operator[](uint32_t index) const;
+    };
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Type_T& Vector<Type_T, DIMENSIONS>::operator[](uint32_t index) {
+	return mData[index];
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    const Type_T& Vector<Type_T, DIMENSIONS>::operator[](uint32_t index) const {
+	return mData[index];
+    }
+
+>>>>>>> fe6ef85 (Add Mouse Input Handling #11)
     enum class StandardCursor
     {
 	ARROW_CURSOR = GLFW_ARROW_CURSOR,

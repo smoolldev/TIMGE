@@ -35,7 +35,7 @@ namespace TIMGE
     	        "Default",
                 false
     	    },
-            Color{0.0f, 0.0f, 0.0f, 1.0f}
+            Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f}
         }
     )
     {}
@@ -47,10 +47,10 @@ namespace TIMGE
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(
-            mInfo.mBackground.r, 
-            mInfo.mBackground.g, 
-            mInfo.mBackground.b, 
-            mInfo.mBackground.a 
+            mInfo.mBackground[V4f::R], 
+            mInfo.mBackground[V4f::G], 
+            mInfo.mBackground[V4f::B], 
+            mInfo.mBackground[V4f::A] 
         );
     }
 
@@ -62,6 +62,10 @@ namespace TIMGE
 
     bool Application::WindowShouldClose() {
         return glfwWindowShouldClose(mWindow.GetWindow());
+    }
+
+    Window& Application::GetWindow() {
+        return mWindow;
     }
 
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;

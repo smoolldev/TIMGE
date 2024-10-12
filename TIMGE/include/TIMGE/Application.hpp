@@ -12,6 +12,7 @@ namespace TIMGE
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     class ApplicationBase
 =======
    class ApplicationBase
@@ -19,6 +20,12 @@ namespace TIMGE
 =======
     class ApplicationBase
 >>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
+=======
+    class ApplicationBase
+=======
+   class ApplicationBase
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+>>>>>>> 0bd3e2b (Fix: use new vector template and more)
     {
 	public:
 	    ApplicationBase();

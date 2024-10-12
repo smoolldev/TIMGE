@@ -14,8 +14,11 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1f7c929 (Add Mouse Input Handling #11)
+=======
+>>>>>>> 0bd3e2b (Fix: use new vector template and more)
 =======
     template<typename Type_T, uint32_t DIMENSIONS>
     struct Vector
@@ -41,7 +44,12 @@ namespace TIMGE
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
 =======
 >>>>>>> 3356953 (Add Mouse Input Handling #11)
+<<<<<<< HEAD
 >>>>>>> 1f7c929 (Add Mouse Input Handling #11)
+=======
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+>>>>>>> 0bd3e2b (Fix: use new vector template and more)
     enum class StandardCursor
     {
 	ARROW_CURSOR = GLFW_ARROW_CURSOR,

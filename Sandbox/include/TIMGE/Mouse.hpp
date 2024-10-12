@@ -21,9 +21,12 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 2ce42e4 (Fix: use new vector template and more)
+=======
+>>>>>>> 71f1d99 (Add Mouse Input Handling #11)
 =======
 >>>>>>> 042ecf6 (Add Mouse Input Handling #11)
 >>>>>>> 0db8b6c (Add Mouse Input Handling #11)
@@ -43,7 +46,14 @@ namespace TIMGE
 =======
 >>>>>>> 86d0e57 (Fix: use new vector template and more)
 =======
+<<<<<<< HEAD
 >>>>>>> 2ce42e4 (Fix: use new vector template and more)
+=======
+=======
+>>>>>>> 1f7c929 (Add Mouse Input Handling #11)
+>>>>>>> 777a099 (Add Mouse Input Handling #11)
+=======
+>>>>>>> 71f1d99 (Add Mouse Input Handling #11)
     template<typename Type_T, uint32_t DIMENSIONS>
     struct Vector
     {
@@ -66,12 +76,15 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fe6ef85 (Add Mouse Input Handling #11)
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
 =======
 =======
 >>>>>>> 0db8b6c (Add Mouse Input Handling #11)
+=======
+>>>>>>> 71f1d99 (Add Mouse Input Handling #11)
 >>>>>>> 3356953 (Add Mouse Input Handling #11)
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -94,6 +107,8 @@ namespace TIMGE
 >>>>>>> bbd11c1 (Fix: use new vector template and more)
 =======
 =======
+=======
+>>>>>>> 777a099 (Add Mouse Input Handling #11)
 >>>>>>> fe6ef85 (Add Mouse Input Handling #11)
 <<<<<<< HEAD
 >>>>>>> 042ecf6 (Add Mouse Input Handling #11)
@@ -103,8 +118,17 @@ namespace TIMGE
 =======
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 86d0e57 (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 2ce42e4 (Fix: use new vector template and more)
+=======
+=======
+=======
+>>>>>>> 3356953 (Add Mouse Input Handling #11)
+>>>>>>> 1f7c929 (Add Mouse Input Handling #11)
+>>>>>>> 777a099 (Add Mouse Input Handling #11)
+>>>>>>> 71f1d99 (Add Mouse Input Handling #11)
     enum class StandardCursor
     {
 	ARROW_CURSOR = GLFW_ARROW_CURSOR,

@@ -1,13 +1,19 @@
 [
 {
   "directory": "/home/marcel/Dev/C++/TIMGE/TIMGE/build/linux_x64-Debug",
-  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glfw/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Application.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/src/Application.cpp",
+  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glfw/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Application.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/src/Application.cpp",
   "file": "/home/marcel/Dev/C++/TIMGE/TIMGE/src/Application.cpp",
   "output": "CMakeFiles/TIMGE.dir/src/Application.cpp.o"
 },
 {
   "directory": "/home/marcel/Dev/C++/TIMGE/TIMGE/build/linux_x64-Debug",
-  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glfw/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Window.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/src/Window.cpp",
+  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glfw/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Mouse.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/src/Mouse.cpp",
+  "file": "/home/marcel/Dev/C++/TIMGE/TIMGE/src/Mouse.cpp",
+  "output": "CMakeFiles/TIMGE.dir/src/Mouse.cpp.o"
+},
+{
+  "directory": "/home/marcel/Dev/C++/TIMGE/TIMGE/build/linux_x64-Debug",
+  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glfw/include -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Window.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/src/Window.cpp",
   "file": "/home/marcel/Dev/C++/TIMGE/TIMGE/src/Window.cpp",
   "output": "CMakeFiles/TIMGE.dir/src/Window.cpp.o"
 },
@@ -172,5 +178,11 @@
   "command": "/usr/bin/cc  -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/include -flto=auto -fno-fat-lto-objects -o CMakeFiles/glad.dir/src/glad.c.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/src/glad.c",
   "file": "/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/glad/src/glad.c",
   "output": "vendor/glad/CMakeFiles/glad.dir/src/glad.c.o"
+},
+{
+  "directory": "/home/marcel/Dev/C++/TIMGE/TIMGE/build/linux_x64-Debug/vendor/stb_image",
+  "command": "/usr/bin/c++  -I/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/stb_image.dir/src/stb_image.cpp.o -c /home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/src/stb_image.cpp",
+  "file": "/home/marcel/Dev/C++/TIMGE/TIMGE/vendor/stb_image/src/stb_image.cpp",
+  "output": "vendor/stb_image/CMakeFiles/stb_image.dir/src/stb_image.cpp.o"
 }
 ]

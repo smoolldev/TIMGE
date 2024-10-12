@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
+add_subdirectory(vendor/stb_image)
 
 file(GLOB_RECURSE LIB_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
@@ -18,4 +19,4 @@ add_library("${CMAKE_PROJECT_NAME}" STATIC)
 
 target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${LIB_SRC})
 target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw stb_image)

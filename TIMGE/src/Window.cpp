@@ -10,6 +10,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //#define STB_IMAGE_IMPLEMENTATION
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
@@ -21,6 +22,14 @@
 =======
 >>>>>>> 9f5873d (Fix: use new vector template and more)
 >>>>>>> 0bd3e2b (Fix: use new vector template and more)
+=======
+//#define STB_IMAGE_IMPLEMENTATION
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+=======
+//#define STB_IMAGE_IMPLEMENTATION
+>>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
 #include <stb_image/stb_image.h>
 
 namespace TIMGE

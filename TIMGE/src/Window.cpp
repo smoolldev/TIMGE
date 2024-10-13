@@ -18,6 +18,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //#define STB_IMAGE_IMPLEMENTATION
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
@@ -36,6 +37,8 @@
 >>>>>>> 955e532 (Fix TIMGESandbox stb_image linker error)
 =======
 >>>>>>> 2e36d52 (Fix: use new vector template and more)
+=======
+>>>>>>> 70166fb (Fix TIMGESandbox stb_image linker error)
 //#define STB_IMAGE_IMPLEMENTATION
 =======
 >>>>>>> 9f5873d (Fix: use new vector template and more)
@@ -74,6 +77,8 @@
 =======
 =======
 >>>>>>> c09d665 (Fix: use new vector template and more)
+=======
+>>>>>>> 3faba0a (Fix TIMGESandbox stb_image linker error)
 //#define STB_IMAGE_IMPLEMENTATION
 =======
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
@@ -91,8 +96,22 @@
 =======
 >>>>>>> 9f5873d (Fix: use new vector template and more)
 >>>>>>> 0bd3e2b (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> c09d665 (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 2e36d52 (Fix: use new vector template and more)
+=======
+=======
+=======
+//#define STB_IMAGE_IMPLEMENTATION
+=======
+>>>>>>> 9f5873d (Fix: use new vector template and more)
+=======
+//#define STB_IMAGE_IMPLEMENTATION
+>>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 3faba0a (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 70166fb (Fix TIMGESandbox stb_image linker error)
 #include <stb_image/stb_image.h>
 
 namespace TIMGE

@@ -24,6 +24,7 @@ namespace TIMGE
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     class ApplicationBase
 =======
    class ApplicationBase
@@ -38,6 +39,8 @@ namespace TIMGE
 >>>>>>> 0fe6a1b (Fix TIMGESandbox stb_image linker error)
 =======
 >>>>>>> 2ce42e4 (Fix: use new vector template and more)
+=======
+>>>>>>> 955e532 (Fix TIMGESandbox stb_image linker error)
     class ApplicationBase
 =======
    class ApplicationBase
@@ -70,12 +73,23 @@ namespace TIMGE
 >>>>>>> 0fe6a1b (Fix TIMGESandbox stb_image linker error)
 =======
 =======
+=======
+>>>>>>> 74efa8a (Fix TIMGESandbox stb_image linker error)
     class ApplicationBase
 =======
    class ApplicationBase
 >>>>>>> 3ed8b4d (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 86d0e57 (Fix: use new vector template and more)
+<<<<<<< HEAD
 >>>>>>> 2ce42e4 (Fix: use new vector template and more)
+=======
+=======
+=======
+    class ApplicationBase
+>>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 74efa8a (Fix TIMGESandbox stb_image linker error)
+>>>>>>> 955e532 (Fix TIMGESandbox stb_image linker error)
     {
 	public:
 	    ApplicationBase();

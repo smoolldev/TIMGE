@@ -10,7 +10,7 @@
 
 namespace TIMGE
 {
-   class ApplicationBase
+    class ApplicationBase
     {
 	public:
 	    ApplicationBase();

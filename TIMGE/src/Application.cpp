@@ -105,6 +105,14 @@ namespace TIMGE
         return Application::mInstance;
     }
 
+    void Application::mSetCursorPosition(double xPosition, double yPosition) {
+        mMosue.mPosition = { xPosition, yPosition };
+    }
+
+    void Application::mSetScrollOffset(double xOffset, double yOffset) {
+        mMosue.mOffset = { xOffset, yOffset };
+    }
+
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;
     Application::EventProcessing_T Application::WaitEvents = &glfwWaitEvents;
     Application* Application::mInstance = nullptr;

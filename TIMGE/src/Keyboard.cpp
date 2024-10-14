@@ -8,7 +8,7 @@ namespace TIMGE
      : mWindow{window}
     {}
 
-    bool Keyboard::Pressed(const Key& key) const {
+    bool Keyboard::Pressed(Key key) const {
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(key)) == GLFW_PRESS;
     }
 
@@ -16,7 +16,7 @@ namespace TIMGE
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(modifier)) == GLFW_PRESS;
     }
 
-    bool Keyboard::Released(const Key& key) const {
+    bool Keyboard::Released(Key key) const {
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(key)) == GLFW_RELEASE;
     }
 
@@ -24,7 +24,7 @@ namespace TIMGE
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(modifier)) == GLFW_RELEASE;
     }
 
-    bool Keyboard::Repeat(const Key& key) const {
+    bool Keyboard::Repeat(Key key) const {
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(key)) == GLFW_REPEAT;
     }
 
@@ -32,7 +32,7 @@ namespace TIMGE
         return glfwGetKey(mWindow.GetWindow(), static_cast<int>(modifier)) == GLFW_REPEAT;
     }
 
-    int Keyboard::GetScancode(const Key& key) const {
+    int Keyboard::GetScancode(Key key) const {
         return glfwGetKeyScancode(static_cast<int>(key));
     }
 }

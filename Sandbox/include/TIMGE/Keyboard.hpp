@@ -132,13 +132,6 @@ namespace TIMGE
 		LAST = GLFW_KEY_LAST
 	};
 
-	enum class Action
-	{
-		PRESSED = GLFW_PRESS,
-		RELEASED = GLFW_RELEASE,
-		REPEATED = GLFW_REPEAT
-	};
-
 	enum class Modifier
 	{
 		SHIFT = GLFW_MOD_SHIFT,
@@ -152,16 +145,23 @@ namespace TIMGE
 	class Keyboard
 	{
 		public:
+			enum class Action
+			{
+				PRESSED = GLFW_PRESS,
+				RELEASED = GLFW_RELEASE,
+				REPEATED = GLFW_REPEAT
+			};
+
 			Keyboard(Window& window);
 
-			bool Pressed(const Key& key) const;
+			bool Pressed(Key key) const;
 			bool Pressed(Modifier modifier) const;
-			bool Released(const Key& key) const;
+			bool Released(Key key) const;
 			bool Released(Modifier modifier) const;
-			bool Repeat(const Key& key) const;
+			bool Repeat(Key key) const;
 			bool Repeat(Modifier modifier) const;
 
-			int GetScancode(const Key& key) const;
+			int GetScancode(Key key) const;
 		private:
 			Window& mWindow;
 	};

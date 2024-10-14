@@ -26,6 +26,14 @@ namespace TIMGE
         }
     }
 
+    bool Mouse::Pressed(Button button) const {
+        return glfwGetMouseButton(mWindow.GetWindow(), static_cast<int>(button)) == GLFW_PRESS;
+    }
+
+	bool Mouse::Released(Button button) const {
+        return glfwGetMouseButton(mWindow.GetWindow(), static_cast<int>(button)) == GLFW_RELEASE;
+    }
+
     void Mouse::Disable() const {
         glfwSetInputMode(mWindow.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
@@ -107,6 +115,10 @@ namespace TIMGE
 
     const Vector<double, 2>& Mouse::GetPosition() const {
         return mPosition;
+    }
+
+    const Vector<double, 2>& Mouse::GetOffset() const {
+        return mOffset;
     }
 
     std::vector<Cursor*> Mouse::GetCursors()

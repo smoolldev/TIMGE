@@ -60,49 +60,24 @@ namespace TIMGE
           return mWindow;
     }
 
-    Vector<int, 2> Window::GetPosition() const
-    {
-        int x, y;
-
-        glfwGetWindowPos(mWindow, &x, &y);
-
-        return { x, y };
+    const Vector<int, 2>& Window::GetPosition() const {
+        return mPosition;
     }
 
-    Vector<int, 2> Window::GetSize() const
-    {
-        int width, height;
-
-        glfwGetWindowSize(mWindow, &width, &height);
-
-        return { width, height };
+    const Vector<int, 2>& Window::GetSize() const {
+        return mSize;
     }
 
-    Vector<int, 2> Window::GetFramebufferSize() const
-    {
-        int width, height;
-
-        glfwGetFramebufferSize(mWindow, &width, &height);
-
-        return { width, height };
+    const Vector<int, 2>& Window::GetFramebufferSize() const {
+        return mFramebufferSize;
     }
 
-    Vector<int, 4> Window::GetFrameSize() const
-    {
-        int left, top, right, bottom;
-
-        glfwGetWindowFrameSize(mWindow, &left, &top, &right, &bottom);
-
-        return { left, top, right, bottom };
+    const Vector<int, 4>& Window::GetFrameSize() const {
+        return mFrameSize;
     }
 
-    Vector<float, 2> Window::GetContentScale() const
-    {
-        float x, y;
-
-        glfwGetWindowContentScale(mWindow, &x, &y);
-
-        return { x, y };
+    const Vector<float, 2>& Window::GetContentScale() const {
+        return mContentScale;
     }
 
     float Window::GetOpacity() const {

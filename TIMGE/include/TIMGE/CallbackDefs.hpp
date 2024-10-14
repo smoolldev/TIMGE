@@ -2,6 +2,8 @@
 #define CALLBACKDEFS_HPP
 
 #include "TIMGE/Keyboard.hpp"
+#include "TIMGE/Mouse.hpp"
+
 #include <GLFW/glfw3.h>
 
 namespace TIMGE::Callback
@@ -16,11 +18,11 @@ namespace TIMGE::Callback
     using WindowMaximize_t = void (*)(int maximized);
     using FramebufferSize_t = void (*)(int width, int height);
     using WindowContentScale_t = void (*)(float xScale, float yScale);
-    using MouseButton_t = void (*)(int button, int action, int mods);
+    using MouseButton_t = void (*)(Button button, Mouse::Action action, Modifier mods);
     using CursorPos_t = void (*)(double xPos, double yPos);
     using CursorEnter_t = void (*)(int entered);
     using Scroll_t = void (*)(double xOffset, double yOffset);
-    using Key_t = void (*)(Key key, int scancode, Action action, Modifier mods);
+    using Key_t = void (*)(Key key, int scancode, Keyboard::Action action, Modifier mods);
     using Char_t = void (*)(unsigned int codepoint);
     using Charmods_t = void (*)(unsigned int codepoint, int mods);
     using Drop_t = void (*)(int pathCount, const char* paths[]);

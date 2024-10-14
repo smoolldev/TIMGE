@@ -23,7 +23,8 @@ class Game : public Application
     void Render();
 
     friend void CursorPosCallback(double xPos, double yPos);
-    friend void KeyCallback(Key key, int scancode, Action action, Modifier mods);
+    friend void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
+    friend void DropCallback(int pathCount, const char* path[]);
 
     private:
         static Game* mInstance;
@@ -31,7 +32,8 @@ class Game : public Application
 };
 
 void CursorPosCallback(double xPos, double yPos);
-void KeyCallback(Key key, int scancode, Action action, Modifier mods);
+void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
+void DropCallback(int pathCount, const char* path[]);
 
 Window::Info win_info = 
 {
@@ -146,6 +148,7 @@ int main()
 {
     callbacks.mCursorPos = CursorPosCallback;
     callbacks.mKey = KeyCallback;
+    callbacks.mDrop = DropCallback;
     Game game;
 
     try {
@@ -160,7 +163,7 @@ void CursorPosCallback(double xPos, double yPos)
     Game::GetInstance()->GetWindow().SetTitle(std::format("x = {}, y = {}", xPos, yPos));
 }
 
-void KeyCallback(Key key, int scancode, Action action, Modifier mods)
+void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods)
 {
     Game* game = Game::GetInstance();
     Window& window = game->GetWindow();
@@ -202,5 +205,13 @@ void KeyCallback(Key key, int scancode, Action action, Modifier mods)
 
     if (key == TIMGE::Key::R && mods == TIMGE::Modifier::SHIFT) {
         mouse.Restore();
+    }
+}
+
+void DropCallback(int pathCount, const char* path[]) {
+    printf("Paths: %d\n\n", pathCount);
+
+    for (int i = 0; i < pathCount; i++) {
+        printf("Path: %s\n", path[i]);
     }
 }

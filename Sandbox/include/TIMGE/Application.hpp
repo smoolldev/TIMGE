@@ -60,6 +60,9 @@ namespace TIMGE
 
 	    static Application* mInstance;
 
+		void mSetCursorPosition(double xPosition, double yPosition);
+		void mSetScrollOffset(double xOffset, double yOffset);
+
 	    static Application* GetInstance(); 
 	    friend void Callback::ErrorCallback(int errorCode, const char* description);
         friend void Callback::WindowPosCallback(GLFWwindow* window, int xPos, int yPos);

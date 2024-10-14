@@ -77,12 +77,13 @@ namespace TIMGE::Callback
     {
         Application* app = Application::GetInstance();
         if (auto func = app->mInfo.mCallbacks.mMouseButton; func != nullptr) {
-            func(button, action, mods);
+            func(static_cast<Button>(button), static_cast<Mouse::Action>(action), static_cast<Modifier>(mods));
         }
     }
     void CursorPosCallback(GLFWwindow* window, double xPos, double yPos)
     {
         Application* app = Application::GetInstance();
+        app->mSetCursorPosition(xPos, yPos);
         if (auto func = app->mInfo.mCallbacks.mCursorPos; func != nullptr) {
             func(xPos, yPos);
         }
@@ -97,6 +98,7 @@ namespace TIMGE::Callback
     void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
     {
         Application* app = Application::GetInstance();
+        app->mSetScrollOffset(xOffset, yOffset);
         if (auto func = app->mInfo.mCallbacks.mScroll; func != nullptr) {
             func(xOffset, yOffset);
         }
@@ -105,7 +107,7 @@ namespace TIMGE::Callback
     {
         Application* app = Application::GetInstance();
         if (auto func = app->mInfo.mCallbacks.mKey; func != nullptr) {
-            func(static_cast<Key>(key), scancode, static_cast<Action>(action), static_cast<Modifier>(mods));
+            func(static_cast<Key>(key), scancode, static_cast<Keyboard::Action>(action), static_cast<Modifier>(mods));
         }
     }
     void CharCallback(GLFWwindow* window, unsigned int codepoint)

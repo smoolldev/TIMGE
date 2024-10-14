@@ -25,6 +25,22 @@ namespace TIMGE
 	NOT_ALLOWED_CURSOR = GLFW_NOT_ALLOWED_CURSOR,
     };
 
+	enum class Button
+	{
+		ONE = GLFW_MOUSE_BUTTON_1,
+		TWO = GLFW_MOUSE_BUTTON_2,
+		THREE = GLFW_MOUSE_BUTTON_3,
+		FOUR = GLFW_MOUSE_BUTTON_4,
+		FIVE = GLFW_MOUSE_BUTTON_5,
+		SIX = GLFW_MOUSE_BUTTON_6,
+		SEVEN = GLFW_MOUSE_BUTTON_7,
+		EIGHT = GLFW_MOUSE_BUTTON_8,
+		LAST = GLFW_MOUSE_BUTTON_LAST,
+		LEFT = GLFW_MOUSE_BUTTON_LEFT,
+		RIGHT = GLFW_MOUSE_BUTTON_RIGHT,
+		MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE,
+	};
+
     struct Cursor
     {
 	friend class Mouse;
@@ -36,6 +52,12 @@ namespace TIMGE
     class Mouse
     {
 	public:
+		enum class Action
+		{
+			PRESSED = GLFW_PRESS,
+			RELEASED = GLFW_RELEASE
+		};
+
 	    struct Info
 	    {
 		std::vector<std::filesystem::path> mCursorPaths;
@@ -43,6 +65,9 @@ namespace TIMGE
 
 	    Mouse(const Info& info, Window& window);
 	    ~Mouse();
+
+		bool Pressed(Button button) const;
+		bool Released(Button button) const;
 
 	    void Disable() const;
 	    void Hide() const;
@@ -59,6 +84,8 @@ namespace TIMGE
 	    void ResetCursor();
 
 	    const Vector<double, 2>& GetPosition() const;
+		const Vector<double, 2>& GetOffset() const;
+
 	    std::vector<Cursor*> GetCursors();
 	private:
 	    using RawMouseMotionSupported_t = int(*)();
@@ -66,8 +93,13 @@ namespace TIMGE
 	    static RawMouseMotionSupported_t IsRawMouseMotionSupported;
 	private:
 	    Window& mWindow;
+
 	    Vector<double, 2> mPosition;
+		Vector<double, 2> mOffset;
+
 	    std::vector<std::pair<GLFWcursor*, Cursor>> mCursors;
+
+		friend class Application;
     };
 }
 

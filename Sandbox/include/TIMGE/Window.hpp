@@ -9,6 +9,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+
+
 namespace TIMGE
 {
     class Window
@@ -34,7 +36,7 @@ namespace TIMGE
 
             Window(const Info& info);
             ~Window();
-            
+
             GLFWwindow* GetWindow(); //TODO: Move to private and befriend with Application
             Vector<int, 2> GetPosition() const;
             Vector<int, 2> GetSize() const;

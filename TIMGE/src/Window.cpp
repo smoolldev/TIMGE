@@ -54,6 +54,7 @@ namespace TIMGE
 
         mIsFullscreen = mInfo.mIsFullscreen;
 
+        //Wiesz, że jak mIsFullScreen jest równe `true` i jednocześnie mInfo.mWidth/mHeight nie są równe wymiarom monitora to rozdzielczość się popsuje?
         mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";

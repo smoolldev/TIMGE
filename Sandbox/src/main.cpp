@@ -1,11 +1,15 @@
+#include "TIMGE/Keyboard.hpp"
+#include "TIMGE/Mouse.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 #include <TIMGE/CallbackDefs.hpp>
 #include <TIMGE/TIMGE.hpp>
 
+#include <GLFW/glfw3.h>
+
 #include <cstdio>
 #include <format>
 #include <cstdlib>
-#include <GLFW/glfw3.h>
+#include <filesystem>
 
 using namespace TIMGE;
 
@@ -41,8 +45,16 @@ Window::Info win_info =
     3, /*mOpenGLVersionMajor*/
     3, /*mOpenGLVersionMinor*/
     671, /*mFlags*/
-    "/home/marcel/Dev/C++/TIMGE/Sandbox/resources/youtube_logo.png", /*mIconPath*/
+    "resources/youtube_logo.png", /*mIconPath*/
     false, /*mIsFullscreen*/
+};
+
+Mouse::Info mouse_info =
+{
+    {
+        "resources/cursor (1).png",
+        "resources/cursor.png"
+    }
 };
 
 Vector<float, 4> color = {1.0f, 0.63f, 0.1f, 1.0f};
@@ -58,6 +70,23 @@ Game::Game()
         throw "Only one instance of Game is allowed!\n";
     }
     mInstance = this;
+
+    Mouse& mouse = GetMouse();
+
+    mouse.AddCursor("resources/cursor.png");
+    mouse.AddCursor("resources/cursor (1).png");
+    mouse.AddCursor(TIMGE::StandardCursor::IBEAM_CURSOR);
+    mouse.AddCursor(TIMGE::StandardCursor::NOT_ALLOWED_CURSOR);
+
+    auto cursors = mouse.GetCursors();
+
+    mouse.DeleteCursor(*cursors[1]);
+
+    cursors = mouse.GetCursors();
+
+    mouse.DeleteCursor(*cursors[1]);
+
+    mouse.SetCursor(*cursors[1]);
 }
 
 Game* Game::GetInstance() {
@@ -118,7 +147,12 @@ int main()
     callbacks.mCursorPos = CursorPosCallback;
     callbacks.mKey = KeyCallback;
     Game game;
-    game.Run();
+
+    try {
+        game.Run();
+    } catch (const char* e) {
+        printf("Something went wront: %s", e);
+    }
 }
 
 void CursorPosCallback(double xPos, double yPos)
@@ -131,8 +165,42 @@ void KeyCallback(Key key, int scancode, Action action, Modifier mods)
     Game* game = Game::GetInstance();
     Window& window = game->GetWindow();
     Keyboard& keyboard = game->GetKeyboard();
+    Mouse& mouse = game->GetMouse();
+    auto cursors = mouse.GetCursors();
 
     if (keyboard.Pressed(TIMGE::Key::ESCAPE)) {
         window.SetShouldClose(true);
+    }
+
+    if (keyboard.Pressed(TIMGE::Key::ZERO)) {
+        mouse.ResetCursor();
+    }
+
+    if (keyboard.Pressed(TIMGE::Key::ONE)) {
+        mouse.SetCursor(*cursors[0]);
+    }
+
+    if (keyboard.Pressed(TIMGE::Key::TWO)) {
+        mouse.SetCursor(*cursors[1]);
+    }
+
+    if (keyboard.Pressed(TIMGE::Key::THREE)) {
+        mouse.SetCursor(*cursors[2]);
+    }
+
+    if (key == TIMGE::Key::D && mods == TIMGE::Modifier::SHIFT) {
+        mouse.Disable();
+    }
+
+    if (key == TIMGE::Key::H && mods == TIMGE::Modifier::SHIFT) {
+        mouse.Hide();
+    }
+
+    if (key == TIMGE::Key::C && mods == TIMGE::Modifier::SHIFT) {
+        mouse.Capture();
+    }
+
+    if (key == TIMGE::Key::R && mods == TIMGE::Modifier::SHIFT) {
+        mouse.Restore();
     }
 }

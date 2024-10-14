@@ -92,7 +92,7 @@ namespace TIMGE
                 mCursors[i].second.mID -= 1;
             }
         }
-        if (mCursors.erase(mCursors.begin() + cursor.mID) != mCursors.end()) {
+        if (mCursors.erase(mCursors.begin() + cursor.mID) == mCursors.end()) {
             throw "Fucking std::vector!\n";
         }
     }

@@ -155,8 +155,11 @@ namespace TIMGE
 			Keyboard(Window& window);
 
 			bool Pressed(const Key& key) const;
+			bool Pressed(Modifier modifier) const;
 			bool Released(const Key& key) const;
+			bool Released(Modifier modifier) const;
 			bool Repeat(const Key& key) const;
+			bool Repeat(Modifier modifier) const;
 
 			int GetScancode(const Key& key) const;
 		private:

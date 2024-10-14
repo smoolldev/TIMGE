@@ -1,3 +1,4 @@
+#include "TIMGE/Utils/Vector.hpp"
 #include <TIMGE/CallbackDefs.hpp>
 #include <TIMGE/TIMGE.hpp>
 
@@ -18,7 +19,7 @@ class Game : public Application
     void Render();
 
     friend void CursorPosCallback(double xPos, double yPos);
-    friend void KeyCallback(int key, int scancode, int action, int mods);
+    friend void KeyCallback(Key key, int scancode, Action action, Modifier mods);
 
     private:
         static Game* mInstance;
@@ -26,7 +27,7 @@ class Game : public Application
 };
 
 void CursorPosCallback(double xPos, double yPos);
-void KeyCallback(int key, int scancode, int action, int mods);
+void KeyCallback(Key key, int scancode, Action action, Modifier mods);
 
 Window::Info win_info = 
 {
@@ -51,7 +52,7 @@ Callback::Callbacks callbacks{};
 Game* Game::mInstance = nullptr;
 
 Game::Game()
- : Application({win_info, color, callbacks})
+ : Application({win_info, {}, color, callbacks})
 {
     if (Game::mInstance) {
         throw "Only one instance of Game is allowed!\n";
@@ -64,29 +65,22 @@ Game* Game::GetInstance() {
 }
 void Game::Run()
 {
-<<<<<<< HEAD
-   while (!Application::WindowShouldClose()) {
-=======
-    //GetWindow().mInfo.mIconPath = "./resources/youtube_logo.png";
-    //GetWindow().SetIcon("resource/youtube_logo.png");
-    //GetWindow().SetIcon("Default");
-    //GetWindow().SetIcon();
-    //system("pwd");
-    while (!Application::WindowShouldClose()) {
->>>>>>> 9f5873d (Fix: use new vector template and more)
-        Application::BeginFrame();
-        {
-            Update();
-            Render();
-        }
-        Application::EndFrame();
+    Window& window = GetWindow();
+
+    while (!window.ShouldClose()) {
+         Application::BeginFrame();
+         {
+             Update();
+             V2i32 size = window.GetSize();
+             printf("width = %d, height = %d\r", size[V2i32::WIDTH], size[V2i32::HEIGHT]);
+             Render();
+         }
+         Application::EndFrame();
     }
 }
 
 void Game::Update()
 {
-    //GetWindow().SetAspectRatio(21, 9);
-<<<<<<< HEAD
     // if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     //     glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
     // } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
@@ -112,33 +106,6 @@ void Game::Update()
     // } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
     //     GetWindow().Fullscreen();
     // }
-=======
-    if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
-    } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
-    {
-        static bool isMaximized = false;
-        if (!isMaximized) {
-        Application::GetWindow().Maximize();
-        } else {
-            GetWindow().Restore();
-        }
-
-        isMaximized = !isMaximized;
-    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F8) == GLFW_PRESS)
-    {
-        static bool isHidden = false;
-        if (!isHidden) {
-            GetWindow().Hide();
-        } else {
-            GetWindow().Show();
-        }
-
-        isHidden = !isHidden;
-    } else if (glfwGetKey(GetWindow().mWindow, GLFW_KEY_F12) == GLFW_PRESS) {
-        GetWindow().Fullscreen();
-    }
->>>>>>> 9f5873d (Fix: use new vector template and more)
 }
 
 void Game::Render()
@@ -159,9 +126,13 @@ void CursorPosCallback(double xPos, double yPos)
     Game::GetInstance()->GetWindow().SetTitle(std::format("x = {}, y = {}", xPos, yPos));
 }
 
-void KeyCallback(int key, int scancode, int action, int mods)
+void KeyCallback(Key key, int scancode, Action action, Modifier mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(Game::GetInstance()->GetWindow().GetWindow(), 1);
+    Game* game = Game::GetInstance();
+    Window& window = game->GetWindow();
+    Keyboard& keyboard = game->GetKeyboard();
+
+    if (keyboard.Pressed(TIMGE::Key::ESCAPE)) {
+        window.SetShouldClose(true);
     }
 }

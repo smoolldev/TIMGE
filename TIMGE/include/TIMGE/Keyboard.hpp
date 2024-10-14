@@ -132,6 +132,23 @@ namespace TIMGE
 		LAST = GLFW_KEY_LAST
 	};
 
+	enum class Action
+	{
+		PRESSED = GLFW_PRESS,
+		RELEASED = GLFW_RELEASE,
+		REPEATED = GLFW_REPEAT
+	};
+
+	enum class Modifier
+	{
+		SHIFT = GLFW_MOD_SHIFT,
+		CONTROL = GLFW_MOD_CONTROL,
+		ALT = GLFW_MOD_ALT,
+		SUPER = GLFW_MOD_SUPER,
+		CAPS_LOCK = GLFW_MOD_CAPS_LOCK,
+		NUM_LOCK = GLFW_MOD_NUM_LOCK,
+	};
+
 	class Keyboard
 	{
 		public:
@@ -139,6 +156,9 @@ namespace TIMGE
 
 			bool Pressed(const Key& key) const;
 			bool Released(const Key& key) const;
+			bool Repeat(const Key& key) const;
+
+			int GetScancode(const Key& key) const;
 		private:
 			Window& mWindow;
 	};

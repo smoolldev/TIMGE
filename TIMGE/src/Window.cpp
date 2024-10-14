@@ -7,118 +7,21 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
->>>>>>> 0bd3e2b (Fix: use new vector template and more)
-=======
-=======
->>>>>>> 2ce42e4 (Fix: use new vector template and more)
-=======
->>>>>>> 955e532 (Fix TIMGESandbox stb_image linker error)
-=======
->>>>>>> 2e36d52 (Fix: use new vector template and more)
-=======
->>>>>>> 70166fb (Fix TIMGESandbox stb_image linker error)
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
-<<<<<<< HEAD
->>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
-=======
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
->>>>>>> bbd11c1 (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
->>>>>>> 0fe6a1b (Fix TIMGESandbox stb_image linker error)
-=======
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
->>>>>>> 86d0e57 (Fix: use new vector template and more)
-<<<<<<< HEAD
->>>>>>> 2ce42e4 (Fix: use new vector template and more)
-=======
-=======
-=======
->>>>>>> c09d665 (Fix: use new vector template and more)
-=======
->>>>>>> 3faba0a (Fix TIMGESandbox stb_image linker error)
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 3ed8b4d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 976dddf (Fix TIMGESandbox stb_image linker error)
-<<<<<<< HEAD
->>>>>>> 74efa8a (Fix TIMGESandbox stb_image linker error)
-<<<<<<< HEAD
->>>>>>> 955e532 (Fix TIMGESandbox stb_image linker error)
-=======
-=======
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
->>>>>>> 0bd3e2b (Fix: use new vector template and more)
-<<<<<<< HEAD
->>>>>>> c09d665 (Fix: use new vector template and more)
-<<<<<<< HEAD
->>>>>>> 2e36d52 (Fix: use new vector template and more)
-=======
-=======
-=======
-//#define STB_IMAGE_IMPLEMENTATION
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
-=======
-//#define STB_IMAGE_IMPLEMENTATION
->>>>>>> 4a45749 (Fix TIMGESandbox stb_image linker error)
->>>>>>> 4c6a536 (Fix TIMGESandbox stb_image linker error)
->>>>>>> 3faba0a (Fix TIMGESandbox stb_image linker error)
->>>>>>> 70166fb (Fix TIMGESandbox stb_image linker error)
 #include <stb_image/stb_image.h>
 
 namespace TIMGE
 {
-    Window::Window(const Window::Info& info)
+    Window* Window::mInstance = nullptr;
+
+    Window::Window(Window::Info& info)
      : mInfo{info}, mWindow{nullptr}
     {
+        if (mInstance) {
+            throw "Only one instance of Window is allowed!\n";
+        }
+
+        mInstance = this;
+
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, mInfo.mOpenGLVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, mInfo.mOpenGLVersionMinor);
@@ -129,10 +32,6 @@ namespace TIMGE
 
         mIsFullscreen = mInfo.mIsFullscreen;
 
-<<<<<<< HEAD
-        //Wiesz, że jak mIsFullScreen jest równe `true` i jednocześnie mInfo.mWidth/mHeight nie są równe wymiarom monitora to rozdzielczość się popsuje?
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
         mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";
@@ -257,6 +156,10 @@ namespace TIMGE
         glfwSetWindowMonitor(mWindow, monitor, x, y, width, height, refreshRate);
     }
 
+    void Window::SetShouldClose(bool shouldClose) {
+        glfwSetWindowShouldClose(mWindow, shouldClose);
+    }
+
     void Window::Minimize() {
         glfwIconifyWindow(mWindow);
     }
@@ -332,5 +235,9 @@ namespace TIMGE
         }
 
         mIsFullscreen = !mIsFullscreen;
+    }
+
+    bool Window::ShouldClose() {
+        return glfwWindowShouldClose(mWindow);
     }
 }

@@ -17,8 +17,8 @@ namespace TIMGE
         glfwTerminate();
     }
 
-    Application::Application(const Info& info)
-     : ApplicationBase(), mInfo{info}, mWindow{info.mWindowInfo}
+    Application::Application(Info info)
+     : ApplicationBase(), mInfo{info}, mWindow{info.mWindowInfo}, mMosue{info.mMouseInfo, mWindow}, mKeybaord{mWindow}
     {
         if (Application::mInstance) {
             throw "Only one instance of Application is allowed!\n";
@@ -49,7 +49,7 @@ namespace TIMGE
 
     Application::Application(std::string_view title, uint32_t width, uint32_t height)
      : Application(
-        {
+        Application::Info{
             Window::Info{
     	        title,
     	        width,
@@ -62,7 +62,9 @@ namespace TIMGE
     	        "Default",
                 false
     	    },
-            Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f}
+            Mouse::Info{},
+            Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f},
+            Callback::Callbacks{}
         }
     )
     {}
@@ -87,21 +89,22 @@ namespace TIMGE
         glfwSwapBuffers(mWindow.GetWindow());
     }
 
-    bool Application::WindowShouldClose() {
-        return glfwWindowShouldClose(mWindow.GetWindow());
-    }
-
     Window& Application::GetWindow() {
         return mWindow;
     }
 
-<<<<<<< HEAD
+    Mouse& Application::GetMouse() {
+        return mMosue;
+    }
+
+    Keyboard& Application::GetKeyboard() {
+        return mKeybaord;
+    }
+
     Application* Application::GetInstance() {
         return Application::mInstance;
     }
 
-=======
->>>>>>> 9f5873d (Fix: use new vector template and more)
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;
     Application::EventProcessing_T Application::WaitEvents = &glfwWaitEvents;
     Application* Application::mInstance = nullptr;

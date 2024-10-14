@@ -105,7 +105,7 @@ namespace TIMGE::Callback
     {
         Application* app = Application::GetInstance();
         if (auto func = app->mInfo.mCallbacks.mKey; func != nullptr) {
-            func(key, scancode, action, mods);
+            func(static_cast<Key>(key), scancode, static_cast<Action>(action), static_cast<Modifier>(mods));
         }
     }
     void CharCallback(GLFWwindow* window, unsigned int codepoint)

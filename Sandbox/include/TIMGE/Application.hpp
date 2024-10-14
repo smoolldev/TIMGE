@@ -2,28 +2,17 @@
 #define APPLICATION_HPP
 
 #include "TIMGE/Window.hpp"
-<<<<<<< HEAD
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/CallbackDefs.hpp"
-=======
 #include "TIMGE/Mouse.hpp"
-#include "TIMGE/Utils/Vector.hpp"
->>>>>>> 86d0e57 (Fix: use new vector template and more)
+#include "TIMGE/Keyboard.hpp"
 
 #include <cstdint>
 #include <string_view>
 
 namespace TIMGE
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     class ApplicationBase
-=======
-   class ApplicationBase
->>>>>>> 86d0e57 (Fix: use new vector template and more)
-=======
-    class ApplicationBase
->>>>>>> 74efa8a (Fix TIMGESandbox stb_image linker error)
     {
 	public:
 	    ApplicationBase();
@@ -38,15 +27,13 @@ namespace TIMGE
 	public:
 	    struct Info
 	    {
-	        Window::Info mWindowInfo; // TODO: Change Window class
+	        Window::Info mWindowInfo;
+			Mouse::Info mMouseInfo;
 	        Vector<float, 4> mBackground;
-<<<<<<< HEAD
-		Callback::Callbacks mCallbacks;
-=======
->>>>>>> 86d0e57 (Fix: use new vector template and more)
+		    Callback::Callbacks mCallbacks;
 	    };
 
-	    Application(const Info& info);
+	    Application(Info info);
 	    Application(std::string_view title, uint32_t width, uint32_t height);
 	    virtual ~Application() = 0;
 
@@ -57,8 +44,9 @@ namespace TIMGE
 	    virtual void BeginFrame();
 	    virtual void EndFrame();
 
-	    bool WindowShouldClose();
 	    Window& GetWindow();
+		Mouse& GetMouse();
+		Keyboard& GetKeyboard();
 	private:
 	    using EventProcessing_T = void(*)();
 	protected:
@@ -66,38 +54,33 @@ namespace TIMGE
 	    static EventProcessing_T WaitEvents;
 	private:
 	    Info mInfo;
-<<<<<<< HEAD
-<<<<<<< HEAD
 	    Window mWindow;
+		Mouse mMosue;
+		Keyboard mKeybaord;
+
 	    static Application* mInstance;
 
 	    static Application* GetInstance(); 
 	    friend void Callback::ErrorCallback(int errorCode, const char* description);
-            friend void Callback::WindowPosCallback(GLFWwindow* window, int xPos, int yPos);
-            friend void Callback::WindowSizeCallback(GLFWwindow* window, int width, int height);
-            friend void Callback::WindowCloseCallback(GLFWwindow* window);
+        friend void Callback::WindowPosCallback(GLFWwindow* window, int xPos, int yPos);
+        friend void Callback::WindowSizeCallback(GLFWwindow* window, int width, int height);
+        friend void Callback::WindowCloseCallback(GLFWwindow* window);
 	    friend void Callback::WindowRefreshCallback(GLFWwindow *window);
-            friend void Callback::WindowFocusCallback(GLFWwindow* window, int focused);
-            friend void Callback::WindowIconifyCallback(GLFWwindow* window, int iconified);
-            friend void Callback::WindowMaximizeCallback(GLFWwindow* window, int maximized);
-            friend void Callback::FramebufferSizeCallback(GLFWwindow* window, int width, int height);
-            friend void Callback::WindowContentScaleCallback(GLFWwindow* window, float xScale, float yScale);
-            friend void Callback::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-            friend void Callback::CursorPosCallback(GLFWwindow* window, double xPos, double yPos);
-            friend void Callback::CursorEnterCallback(GLFWwindow* window, int entered);
-            friend void Callback::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
-            friend void Callback::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-            friend void Callback::CharCallback(GLFWwindow* window, unsigned int codepoint);
-            friend void Callback::CharModsCallback(GLFWwindow* window, unsigned int codepoint, int mods);
-            friend void Callback::DropCallback(GLFWwindow* window, int pathCount, const char* path[]);
-            friend void Callback::MonitorCallback(GLFWmonitor* monitor, int event);
-            friend void Callback::JoystickCallback(int jid, int event);
-=======
-		Window mWindow;
->>>>>>> 1e3c2f3 (WIP: Add Keyboard Input Handling #12)
-=======
-	    Window mWindow;
->>>>>>> 86d0e57 (Fix: use new vector template and more)
+        friend void Callback::WindowFocusCallback(GLFWwindow* window, int focused);
+        friend void Callback::WindowIconifyCallback(GLFWwindow* window, int iconified);
+        friend void Callback::WindowMaximizeCallback(GLFWwindow* window, int maximized);
+        friend void Callback::FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+        friend void Callback::WindowContentScaleCallback(GLFWwindow* window, float xScale, float yScale);
+        friend void Callback::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+        friend void Callback::CursorPosCallback(GLFWwindow* window, double xPos, double yPos);
+        friend void Callback::CursorEnterCallback(GLFWwindow* window, int entered);
+        friend void Callback::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+        friend void Callback::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        friend void Callback::CharCallback(GLFWwindow* window, unsigned int codepoint);
+        friend void Callback::CharModsCallback(GLFWwindow* window, unsigned int codepoint, int mods);
+        friend void Callback::DropCallback(GLFWwindow* window, int pathCount, const char* path[]);
+        friend void Callback::MonitorCallback(GLFWmonitor* monitor, int event);
+        friend void Callback::JoystickCallback(int jid, int event);
 	};
 }
 

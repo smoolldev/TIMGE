@@ -13,6 +13,7 @@ namespace TIMGE::Callback
     void WindowPosCallback(GLFWwindow* window, int xPos, int yPos)
     {
         Application* app = Application::GetInstance();
+        app->mSetPosition(xPos, yPos);
         if (auto func = app->mInfo.mCallbacks.mWindowPos; func != nullptr) {
             func(xPos, yPos);
         }
@@ -20,6 +21,7 @@ namespace TIMGE::Callback
     void WindowSizeCallback(GLFWwindow* window, int width, int height)
     {
         Application* app = Application::GetInstance();
+        app->mSetSize(width, height);
         if (auto func = app->mInfo.mCallbacks.mWindowSize; func != nullptr) {
             func(width, height);
         }
@@ -62,6 +64,7 @@ namespace TIMGE::Callback
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
         Application* app = Application::GetInstance();
+        app->mSetFramebufferSize(width, height);
         if (auto func = app->mInfo.mCallbacks.mFramebufferSize; func != nullptr) {
             func(width, height);
         }
@@ -69,6 +72,7 @@ namespace TIMGE::Callback
     void WindowContentScaleCallback(GLFWwindow* window, float xScale, float yScale)
     {
         Application* app = Application::GetInstance();
+        app->mSetContentScale(xScale, yScale);
         if (auto func = app->mInfo.mCallbacks.mWindowContentScale; func != nullptr) {
             func(xScale, yScale);
         }

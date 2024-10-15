@@ -1,3 +1,4 @@
+#include "TIMGE/Application.hpp"
 #include "TIMGE/Keyboard.hpp"
 #include "TIMGE/Mouse.hpp"
 #include "TIMGE/Utils/Vector.hpp"
@@ -102,8 +103,8 @@ void Game::Run()
          Application::BeginFrame();
          {
              Update();
-             V2i32 size = window.GetSize();
-             printf("width = %d, height = %d\r", size[V2i32::WIDTH], size[V2i32::HEIGHT]);
+             printf("width = %d, height = %d\r", windowSize[V2i32::WIDTH], windowSize[V2i32::HEIGHT]);
+             printf("x = %d, y = %d\r\n", windowPosition[V2i32::X], windowPosition[V2i32::Y]);
              Render();
          }
          Application::EndFrame();

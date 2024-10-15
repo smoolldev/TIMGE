@@ -1,5 +1,6 @@
 #include "TIMGE/Application.hpp"
 #include "TIMGE/CallbackDefs.hpp"
+#include "TIMGE/Utils/Vector.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -18,7 +19,23 @@ namespace TIMGE
     }
 
     Application::Application(Info info)
-     : ApplicationBase(), mInfo{info}, mWindow{info.mWindowInfo}, mMosue{info.mMouseInfo, mWindow}, mKeybaord{mWindow}
+     : ApplicationBase(),
+       mInfo{info},
+       mWindow{info.mWindowInfo},
+       mMouse{info.mMouseInfo, mWindow},
+       mKeyboard{mWindow},
+       mDeltaTime{0},
+       window{mWindow},
+       mouse{mMouse},
+       keyboard{mKeyboard},
+       windowPosition{mWindow.GetPosition()},
+       windowSize{mWindow.GetSize()},
+       windowFramebufferSize{mWindow.GetFramebufferSize()},
+       windowFrameSize{mWindow.GetFrameSize()},
+       windowContentScale{mWindow.GetContentScale()},
+       cursorPosition{mMouse.GetPosition()},
+       cursorScrollOffset{mMouse.GetOffset()},
+       deltaTime{GetDeltaTime()}
     {
         if (Application::mInstance) {
             throw "Only one instance of Application is allowed!\n";
@@ -74,6 +91,8 @@ namespace TIMGE
 
     void Application::BeginFrame()
     {
+        mStartTime = GetTime();
+
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(
             mInfo.mBackground[V4f::R], 
@@ -85,7 +104,10 @@ namespace TIMGE
 
     void Application::EndFrame()
     {
+        mDeltaTime = GetTime() - mStartTime;
+
         PollEvents();
+
         glfwSwapBuffers(mWindow.GetWindow());
     }
 
@@ -94,11 +116,15 @@ namespace TIMGE
     }
 
     Mouse& Application::GetMouse() {
-        return mMosue;
+        return mMouse;
     }
 
     Keyboard& Application::GetKeyboard() {
-        return mKeybaord;
+        return mKeyboard;
+    }
+
+    const Application::Time& Application::GetDeltaTime() {
+        return mDeltaTime;
     }
 
     Application* Application::GetInstance() {
@@ -106,14 +132,38 @@ namespace TIMGE
     }
 
     void Application::mSetCursorPosition(double xPosition, double yPosition) {
-        mMosue.mPosition = { xPosition, yPosition };
+        mMouse.mPosition = { xPosition, yPosition };
     }
 
     void Application::mSetScrollOffset(double xOffset, double yOffset) {
-        mMosue.mOffset = { xOffset, yOffset };
+        mMouse.mOffset = { xOffset, yOffset };
+    }
+
+    void Application::mSetPosition(int x, int y) {
+        mWindow.mPosition = { x, y };
+    }
+
+	void Application::mSetSize(int width, int height) {
+        mWindow.mSize = { width, height };
+    }
+
+	void Application::mSetFramebufferSize(int width, int height) {
+       mWindow.mFramebufferSize = { width, height }; 
+    }
+
+    void Application::mSetFrameSize(int top, int left, int right, int bottom) {
+        mWindow.mFrameSize = { top, left, right, bottom };
+    }
+
+	void Application::mSetContentScale(float xScale, float yScale) {
+        mWindow.mContentScale = { xScale, yScale };
     }
 
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;
     Application::EventProcessing_T Application::WaitEvents = &glfwWaitEvents;
+
+    Application::GetTime_T Application::GetTime = &glfwGetTime;
+    Application::SetTime_T Application::SetTime = &glfwSetTime;
+
     Application* Application::mInstance = nullptr;
 }

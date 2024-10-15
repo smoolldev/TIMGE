@@ -10,6 +10,9 @@
 #include <cstdint>
 #include <string_view>
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 namespace TIMGE
 {
     class ApplicationBase
@@ -25,6 +28,8 @@ namespace TIMGE
     class Application : public ApplicationBase
     {
 	public:
+		using Time = double;
+
 	    struct Info
 	    {
 	        Window::Info mWindowInfo;
@@ -37,6 +42,21 @@ namespace TIMGE
 	    Application(std::string_view title, uint32_t width, uint32_t height);
 	    virtual ~Application() = 0;
 
+		Window& window;
+		Mouse& mouse;
+		Keyboard& keyboard;
+
+		const Time& deltaTime;
+
+		const Vector<int, 2>& windowPosition;
+		const Vector<int, 2>& windowSize;
+		const Vector<int, 2>& windowFramebufferSize;
+		const Vector<int, 4>& windowFrameSize;
+		const Vector<float, 2>& windowContentScale;
+
+		const Vector<double, 2>& cursorPosition;
+		const Vector<double, 2>& cursorScrollOffset;
+
 	    virtual void Run() = 0;
 	    virtual void Update() = 0;
 	    virtual void Render() = 0;
@@ -47,23 +67,38 @@ namespace TIMGE
 	    Window& GetWindow();
 		Mouse& GetMouse();
 		Keyboard& GetKeyboard();
+		const Time& GetDeltaTime();
 	private:
-	    using EventProcessing_T = void(*)();
+	    using EventProcessing_T = decltype(&glfwPollEvents);
+		using GetTime_T = decltype(&glfwGetTime);
+		using SetTime_T = decltype(&glfwSetTime);
 	protected:
 	    static EventProcessing_T PollEvents;
 	    static EventProcessing_T WaitEvents;
+		static GetTime_T GetTime;
+		static SetTime_T SetTime;
 	private:
 	    Info mInfo;
 	    Window mWindow;
-		Mouse mMosue;
-		Keyboard mKeybaord;
+		Mouse mMouse;
+		Keyboard mKeyboard;
+
+		Time mDeltaTime;
+		Time mStartTime;
 
 	    static Application* mInstance;
 
 		void mSetCursorPosition(double xPosition, double yPosition);
 		void mSetScrollOffset(double xOffset, double yOffset);
 
-	    static Application* GetInstance(); 
+		void mSetPosition(int x, int y);
+		void mSetSize(int width, int height);
+		void mSetFramebufferSize(int width, int height);
+        void mSetFrameSize(int top, int left, int right, int bottom);
+		void mSetContentScale(float xScale, float yScale);
+	private:
+	    static Application* GetInstance();
+
 	    friend void Callback::ErrorCallback(int errorCode, const char* description);
         friend void Callback::WindowPosCallback(GLFWwindow* window, int xPos, int yPos);
         friend void Callback::WindowSizeCallback(GLFWwindow* window, int width, int height);

@@ -9,8 +9,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-
-
 namespace TIMGE
 {
     class Window
@@ -106,6 +104,8 @@ namespace TIMGE
             bool mIsFullscreen;
 
             static Window* mInstance;
+
+            friend class Application;
     };
 }
 #endif // WINDOW_HPP

@@ -21,6 +21,7 @@ namespace TIMGE
     Application::Application(Info info)
      : ApplicationBase(),
        mInfo{info},
+       mMonitor{*Monitor::GetPrimaryMonitor()},
        mWindow{info.mWindowInfo},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
@@ -28,14 +29,14 @@ namespace TIMGE
        window{mWindow},
        mouse{mMouse},
        keyboard{mKeyboard},
+       deltaTime{GetDeltaTime()},
        windowPosition{mWindow.GetPosition()},
        windowSize{mWindow.GetSize()},
        windowFramebufferSize{mWindow.GetFramebufferSize()},
        windowFrameSize{mWindow.GetFrameSize()},
        windowContentScale{mWindow.GetContentScale()},
        cursorPosition{mMouse.GetPosition()},
-       cursorScrollOffset{mMouse.GetOffset()},
-       deltaTime{GetDeltaTime()}
+       cursorScrollOffset{mMouse.GetOffset()}
     {
         if (Application::mInstance) {
             throw "Only one instance of Application is allowed!\n";
@@ -157,6 +158,14 @@ namespace TIMGE
 
 	void Application::mSetContentScale(float xScale, float yScale) {
         mWindow.mContentScale = { xScale, yScale };
+    }
+
+    void Application::mConnectMonitor(GLFWmonitor* monitor) {
+        Monitor::Connect(monitor);
+    }
+
+	void Application::mDisconnectMonitor(GLFWmonitor* monitor) {
+        Monitor::Disconnect(monitor);
     }
 
     Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;

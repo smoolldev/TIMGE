@@ -1,6 +1,9 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Application.hpp"
 
+#include <GLFW/glfw3.h>
+#include <iostream>
+
 namespace TIMGE::Callback
 {
     void ErrorCallback(int errorCode, const char* description)
@@ -138,6 +141,16 @@ namespace TIMGE::Callback
     void MonitorCallback(GLFWmonitor* monitor, int event)
     {
         Application* app = Application::GetInstance();
+
+        if (event == GLFW_CONNECTED) {
+            Application::mConnectMonitor(monitor);
+            std::cout << "Monitor " << app->mMonitor.GetName() << " connected\n";
+        }
+        else if (event == GLFW_DISCONNECTED) {
+            Application::mDisconnectMonitor(monitor);
+            std::cout << "Monitor " << app->mMonitor.GetName() << " disconnected\n";
+        }
+
         if (auto func = app->mInfo.mCallbacks.mMonitor; func != nullptr) {
             func(event);
         }

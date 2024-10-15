@@ -6,6 +6,7 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Mouse.hpp"
 #include "TIMGE/Keyboard.hpp"
+#include "TIMGE/Monitor.hpp"
 
 #include <cstdint>
 #include <string_view>
@@ -42,21 +43,6 @@ namespace TIMGE
 	    Application(std::string_view title, uint32_t width, uint32_t height);
 	    virtual ~Application() = 0;
 
-		Window& window;
-		Mouse& mouse;
-		Keyboard& keyboard;
-
-		const Time& deltaTime;
-
-		const Vector<int, 2>& windowPosition;
-		const Vector<int, 2>& windowSize;
-		const Vector<int, 2>& windowFramebufferSize;
-		const Vector<int, 4>& windowFrameSize;
-		const Vector<float, 2>& windowContentScale;
-
-		const Vector<double, 2>& cursorPosition;
-		const Vector<double, 2>& cursorScrollOffset;
-
 	    virtual void Run() = 0;
 	    virtual void Update() = 0;
 	    virtual void Render() = 0;
@@ -79,6 +65,7 @@ namespace TIMGE
 		static SetTime_T SetTime;
 	private:
 	    Info mInfo;
+		Monitor mMonitor;
 	    Window mWindow;
 		Mouse mMouse;
 		Keyboard mKeyboard;
@@ -96,6 +83,24 @@ namespace TIMGE
 		void mSetFramebufferSize(int width, int height);
         void mSetFrameSize(int top, int left, int right, int bottom);
 		void mSetContentScale(float xScale, float yScale);
+
+		static void mConnectMonitor(GLFWmonitor* monitor);
+		static void mDisconnectMonitor(GLFWmonitor* monitor);
+	public:
+		Window& window;
+		Mouse& mouse;
+		Keyboard& keyboard;
+
+		const Time& deltaTime;
+
+		const Vector<int, 2>& windowPosition;
+		const Vector<int, 2>& windowSize;
+		const Vector<int, 2>& windowFramebufferSize;
+		const Vector<int, 4>& windowFrameSize;
+		const Vector<float, 2>& windowContentScale;
+
+		const Vector<double, 2>& cursorPosition;
+		const Vector<double, 2>& cursorScrollOffset;
 	private:
 	    static Application* GetInstance();
 

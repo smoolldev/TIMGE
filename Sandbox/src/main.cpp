@@ -36,6 +36,8 @@ void CursorPosCallback(double xPos, double yPos);
 void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
 void DropCallback(int pathCount, const char* path[]);
 
+Game game;
+
 Window::Info win_info = 
 {
     "Callbacks", /*mTitle*/
@@ -50,6 +52,7 @@ Window::Info win_info =
     671, /*mFlags*/
     "resources/youtube_logo.png", /*mIconPath*/
     false, /*mIsFullscreen*/
+    *Monitor::GetPrimaryMonitor(),
 };
 
 Mouse::Info mouse_info =
@@ -79,7 +82,7 @@ Game::Game()
     mouse.AddCursor("resources/cursor.png");
     mouse.AddCursor("resources/cursor (1).png");
     mouse.AddCursor(TIMGE::StandardCursor::IBEAM_CURSOR);
-    mouse.AddCursor(TIMGE::StandardCursor::NOT_ALLOWED_CURSOR);
+    mouse.AddCursor(TIMGE::StandardCursor::POINTING_HAND_CURSOR);
 
     auto cursors = mouse.GetCursors();
 
@@ -150,7 +153,6 @@ int main()
     callbacks.mCursorPos = CursorPosCallback;
     callbacks.mKey = KeyCallback;
     callbacks.mDrop = DropCallback;
-    Game game;
 
     try {
         game.Run();

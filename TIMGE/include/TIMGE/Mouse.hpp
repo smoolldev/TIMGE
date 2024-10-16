@@ -4,10 +4,9 @@
 #include <cstdint>
 #include <filesystem>
 
-#include <GLFW/glfw3.h>
 #include <vector>
 
-#include "TIMGE/Window.hpp"
+#include "Window.hpp"
 
 namespace TIMGE
 {

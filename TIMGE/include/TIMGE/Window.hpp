@@ -1,13 +1,12 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include "TIMGE/Utils/Vector.hpp"
+#include "Utils/Vector.hpp"
+#include "Monitor.hpp"
+
 #include <cstdint>
 #include <filesystem>
 #include <string_view>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 
 namespace TIMGE
 {
@@ -30,6 +29,7 @@ namespace TIMGE
                 FLAGS mFlags;
                 std::filesystem::path mIconPath;
                 bool mIsFullscreen;
+                Monitor monitor;
             };
 
             Window(Info& info);

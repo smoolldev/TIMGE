@@ -3,6 +3,7 @@
 
 #include "Utils/Vector.hpp"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <string_view>
@@ -54,6 +55,7 @@ namespace TIMGE
 			static bool mMonitorsRetrieved;
 
 			friend class Application;
+			friend class Window;
 	};
 }
 

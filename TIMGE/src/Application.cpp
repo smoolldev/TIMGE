@@ -2,7 +2,6 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace TIMGE
@@ -21,7 +20,6 @@ namespace TIMGE
     Application::Application(Info info)
      : ApplicationBase(),
        mInfo{info},
-       mMonitor{*Monitor::GetPrimaryMonitor()},
        mWindow{info.mWindowInfo},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
@@ -78,7 +76,8 @@ namespace TIMGE
     	        Window::FOCUSED | Window::AUTO_ICONIFY | Window::CENTER_CURSOR |
     	        Window::FOCUS_ON_SHOW,
     	        "Default",
-                false
+                false,
+                *Monitor::GetPrimaryMonitor()
     	    },
             Mouse::Info{},
             Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f},

@@ -3,8 +3,6 @@
 
 #include <filesystem>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 
 #include <stb_image/stb_image.h>
@@ -32,13 +30,17 @@ namespace TIMGE
 
         mIsFullscreen = mInfo.mIsFullscreen;
 
-        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
+        mWindow = glfwCreateWindow(mInfo.mWidth,
+                                   mInfo.mHeight,
+                                   mInfo.mTitle.data(),
+                                   mIsFullscreen ? mInfo.monitor.mGetMonitor() : nullptr,
+                                   nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";
         }
-        
+
         SetIcon(mInfo.mIconPath);
-        
+
         glfwMakeContextCurrent(mWindow);
         if (!gladLoadGL()) {
             throw "Failed to load OpenGL!\n";
@@ -171,7 +173,7 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        GLFWmonitor* monitor = mInfo.monitor.mGetMonitor();
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -195,7 +197,7 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        GLFWmonitor* monitor = mInfo.monitor.mGetMonitor();
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 

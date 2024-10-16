@@ -11,9 +11,6 @@
 #include <cstdint>
 #include <string_view>
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
 namespace TIMGE
 {
     class ApplicationBase
@@ -65,7 +62,6 @@ namespace TIMGE
 		static SetTime_T SetTime;
 	private:
 	    Info mInfo;
-		Monitor mMonitor;
 	    Window mWindow;
 		Mouse mMouse;
 		Keyboard mKeyboard;

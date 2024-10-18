@@ -1,14 +1,24 @@
 #ifndef UTILS_VECTOR_HPP
 #define UTILS_VECTOR_HPP
 
+#include <initializer_list>
+#include <stdexcept>
 #include <cstddef>
 #include <cstdint>
 
 namespace TIMGE
 {
-    template <typename Type_T, uint32_t DIMENSIONS> struct Vector 
+    template <typename Type_T, uint32_t DIMENSIONS> class Vector 
     {
-        Type_T mData[DIMENSIONS];
+      public:
+        Vector();
+        Vector(const Vector<Type_T, DIMENSIONS>& vector);
+        Vector(Vector<Type_T, DIMENSIONS>&& vector);
+        Vector(const std::initializer_list<Type_T>& list);
+        ~Vector();
+        Vector<Type_T, DIMENSIONS>& operator=(const Vector<Type_T, DIMENSIONS>& vector);
+        Vector<Type_T, DIMENSIONS>& operator=(Vector<Type_T, DIMENSIONS>&& vector);
+
         [[nodiscard]] Type_T &operator[](std::size_t index);
         [[nodiscard]] const Type_T &operator[](std::size_t index) const;
 
@@ -26,7 +36,93 @@ namespace TIMGE
         static constexpr std::size_t DEPTH = 2;
         static constexpr std::size_t W = 3;
         static constexpr std::size_t A = 3;
+      private:
+        Type_T* mData;
     };
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector()
+     : mData{new Type_T[DIMENSIONS]{}}
+    {}
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(const Vector<Type_T, DIMENSIONS>& vector)
+    {
+      for (int i = 0; i < DIMENSIONS; i++) {
+        mData[i] = vector.mData[i];
+      }
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(Vector<Type_T, DIMENSIONS>&& vector)
+     : mData{vector.mData} {
+      vector.mData = nullptr;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(const std::initializer_list<Type_T>& list)
+    {
+      // if (list.empty()) {
+      //   for (int i = 0; i < DIMENSIONS; i++) {
+      //     mData[i] = {};
+      //   }
+      // }
+      // if (list.size() < DIMENSIONS) {
+      //   for (int i = 0; i < list.size(); i++) {
+      //     mData[i] = *(list.begin() + i);
+      //   }
+      //   for (int i = list.size(); i < DIMENSIONS; i++) {
+      //     mData[i] = {};
+      //   }
+      // }
+      // if (list.size() == DIMENSIONS) {
+      //   for (int i = 0; i < DIMENSIONS; i++) {
+      //     mData[i] = *(list.begin() + i);
+      //   }
+      // }
+      // if (list.size() > DIMENSIONS) {
+      //   throw std::out_of_range("Ur mom is as big as the size of this vector... Too big!");
+      // }
+
+      if (list.size() > DIMENSIONS) {
+        throw std::out_of_range("Ur mom is as big as the size of this vector... Too big!");
+      }
+
+      mData = new Type_T[DIMENSIONS];
+
+      int i = 0;
+      for (i = 0; i < list.size(); i++) {
+        mData[i] = *(list.begin() + i);
+      }
+      for (; i < DIMENSIONS; i++) {
+        mData[i] = {};
+      }
+    }
+    
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::~Vector() {
+      delete[] mData;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>& Vector<Type_T, DIMENSIONS>::operator=(const Vector<Type_T, DIMENSIONS>& vector)
+    {
+      for (int i = 0; i < DIMENSIONS; i++) {
+        mData[i] = vector.mData[i];
+      }
+
+      return *this;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>& Vector<Type_T, DIMENSIONS>::operator=(Vector<Type_T, DIMENSIONS>&& vector) {
+      mData = vector.mData;
+
+      delete[] vector.mData;
+      vector.mData = nullptr;
+
+      return *this;
+    }
 
     template <typename Type_T, uint32_t DIMENSIONS>
     Type_T &Vector<Type_T, DIMENSIONS>::operator[](std::size_t index) {

@@ -47,6 +47,7 @@ namespace TIMGE
 
     template<typename Type_T, uint32_t DIMENSIONS>
     Vector<Type_T, DIMENSIONS>::Vector(const Vector<Type_T, DIMENSIONS>& vector)
+     : mData{new Type_T[DIMENSIONS]{}}
     {
       for (int i = 0; i < DIMENSIONS; i++) {
         mData[i] = vector.mData[i];

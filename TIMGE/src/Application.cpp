@@ -77,7 +77,6 @@ namespace TIMGE
     	        Window::FOCUS_ON_SHOW,
     	        "Default",
                 false,
-                *Monitor::GetPrimaryMonitor()
     	    },
             Mouse::Info{},
             Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f},

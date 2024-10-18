@@ -29,7 +29,6 @@ namespace TIMGE
                 FLAGS mFlags;
                 std::filesystem::path mIconPath;
                 bool mIsFullscreen;
-                Monitor monitor;
             };
 
             Window(Info& info);

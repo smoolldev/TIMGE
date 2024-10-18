@@ -144,11 +144,9 @@ namespace TIMGE::Callback
 
         if (event == GLFW_CONNECTED) {
             Application::mConnectMonitor(monitor);
-            std::cout << "Monitor " << app->mInfo.mWindowInfo.monitor.GetName() << " connected\n";
         }
         else if (event == GLFW_DISCONNECTED) {
             Application::mDisconnectMonitor(monitor);
-            std::cout << "Monitor " << app->mInfo.mWindowInfo.monitor.GetName() << " disconnected\n";
         }
 
         if (auto func = app->mInfo.mCallbacks.mMonitor; func != nullptr) {

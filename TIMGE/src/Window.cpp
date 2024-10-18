@@ -33,7 +33,7 @@ namespace TIMGE
         mWindow = glfwCreateWindow(mInfo.mWidth,
                                    mInfo.mHeight,
                                    mInfo.mTitle.data(),
-                                   mIsFullscreen ? mInfo.monitor.mGetMonitor() : nullptr,
+                                   mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr,
                                    nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";
@@ -173,7 +173,7 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        GLFWmonitor* monitor = mInfo.monitor.mGetMonitor();
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -197,8 +197,7 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        GLFWmonitor* monitor = mInfo.monitor.mGetMonitor();
-
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
         if (!mIsFullscreen)

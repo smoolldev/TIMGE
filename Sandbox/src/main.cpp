@@ -58,7 +58,6 @@ Game::Game()
                 671, /*mFlags*/
                 "resources/youtube_logo.png", /*mIconPath*/
                 false, /*mIsFullscreen*/
-                *Monitor::GetPrimaryMonitor()
             },
             {
                 {

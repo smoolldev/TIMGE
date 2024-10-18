@@ -36,33 +36,6 @@ void CursorPosCallback(double xPos, double yPos);
 void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
 void DropCallback(int pathCount, const char* path[]);
 
-Game game;
-
-Window::Info win_info = 
-{
-    "Callbacks", /*mTitle*/
-    1000, /*mWidth*/
-    500, /*mHeight*/
-    200, /*mMinWidth*/
-    100, /*mMinHeight*/
-    0, /*mMaxWidth*/
-    0, /*mMaxHeight*/
-    3, /*mOpenGLVersionMajor*/
-    3, /*mOpenGLVersionMinor*/
-    671, /*mFlags*/
-    "resources/youtube_logo.png", /*mIconPath*/
-    false, /*mIsFullscreen*/
-    *Monitor::GetPrimaryMonitor(),
-};
-
-Mouse::Info mouse_info =
-{
-    {
-        "resources/cursor (1).png",
-        "resources/cursor.png"
-    }
-};
-
 Vector<float, 4> color = {1.0f, 0.63f, 0.1f, 1.0f};
 
 Callback::Callbacks callbacks{};
@@ -70,7 +43,34 @@ Callback::Callbacks callbacks{};
 Game* Game::mInstance = nullptr;
 
 Game::Game()
- : Application({win_info, {}, color, callbacks})
+ : Application(
+         {
+            {
+                "Callbacks", /*mTitle*/
+                1000, /*mWidth*/
+                500, /*mHeight*/
+                200, /*mMinWidth*/
+                100, /*mMinHeight*/
+                0, /*mMaxWidth*/
+                0, /*mMaxHeight*/
+                3, /*mOpenGLVersionMajor*/
+                3, /*mOpenGLVersionMinor*/
+                671, /*mFlags*/
+                "resources/youtube_logo.png", /*mIconPath*/
+                false, /*mIsFullscreen*/
+                *Monitor::GetPrimaryMonitor()
+            },
+            {
+                {
+                    "resources/cursor (1).png",
+                    "resources/cursor.png"
+                }
+            },
+            {
+                1.0f, 0.63f, 0.1f, 1.0f
+            },
+            callbacks
+         })
 {
     if (Game::mInstance) {
         throw "Only one instance of Game is allowed!\n";
@@ -155,6 +155,7 @@ int main()
     callbacks.mDrop = DropCallback;
 
     try {
+        Game game;
         game.Run();
     } catch (const char* e) {
         printf("Something went wront: %s", e);

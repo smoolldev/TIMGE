@@ -7,10 +7,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include <stdexcept>
 #include <cstdio>
-#include <format>
-#include <cstdlib>
-#include <filesystem>
+#include <iostream>
 
 using namespace TIMGE;
 
@@ -60,10 +59,10 @@ Game::Game()
                 false, /*mIsFullscreen*/
             },
             {
-                {
-                    "resources/cursor (1).png",
-                    "resources/cursor.png"
-                }
+                // {
+                //     "resources/nice.png",
+                //     "resources/empty.png"
+                // }
             },
             {
                 1.0f, 0.63f, 0.1f, 1.0f
@@ -78,20 +77,20 @@ Game::Game()
 
     Mouse& mouse = GetMouse();
 
-    mouse.AddCursor("resources/cursor.png");
-    mouse.AddCursor("resources/cursor (1).png");
-    mouse.AddCursor(TIMGE::StandardCursor::IBEAM_CURSOR);
-    mouse.AddCursor(TIMGE::StandardCursor::POINTING_HAND_CURSOR);
-
-    auto cursors = mouse.GetCursors();
-
-    mouse.DeleteCursor(*cursors[1]);
-
-    cursors = mouse.GetCursors();
-
-    mouse.DeleteCursor(*cursors[1]);
-
-    mouse.SetCursor(*cursors[1]);
+    // mouse.AddCursor("resources/cursor.png");
+    // mouse.AddCursor("resources/cursor (1).png");
+    // mouse.AddCursor(TIMGE::StandardCursor::IBEAM_CURSOR);
+    // mouse.AddCursor(TIMGE::StandardCursor::POINTING_HAND_CURSOR);
+    //
+    // auto cursors = mouse.GetCursors();
+    //
+    // mouse.DeleteCursor(*cursors[1]);
+    //
+    // cursors = mouse.GetCursors();
+    //
+    // mouse.DeleteCursor(*cursors[1]);
+    //
+    // mouse.SetCursor(*cursors[1]);
 }
 
 Game* Game::GetInstance() {
@@ -105,8 +104,6 @@ void Game::Run()
          Application::BeginFrame();
          {
              Update();
-             printf("width = %d, height = %d\r", windowSize[V2i32::WIDTH], windowSize[V2i32::HEIGHT]);
-             printf("x = %d, y = %d\r\n", windowPosition[V2i32::X], windowPosition[V2i32::Y]);
              Render();
          }
          Application::EndFrame();
@@ -156,14 +153,15 @@ int main()
     try {
         Game game;
         game.Run();
+    } catch (const std::out_of_range& oor) {
+        std::cerr << "Something went wront: " << oor.what() << "!\n";
     } catch (const char* e) {
-        printf("Something went wront: %s", e);
+        std::cerr << "Something went wront: " << e << "!\n";
     }
 }
 
 void CursorPosCallback(double xPos, double yPos)
 {
-    Game::GetInstance()->GetWindow().SetTitle(std::format("x = {}, y = {}", xPos, yPos));
 }
 
 void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods)
@@ -178,21 +176,21 @@ void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier
         window.SetShouldClose(true);
     }
 
-    if (keyboard.Pressed(TIMGE::Key::ZERO)) {
-        mouse.ResetCursor();
-    }
-
-    if (keyboard.Pressed(TIMGE::Key::ONE)) {
-        mouse.SetCursor(*cursors[0]);
-    }
-
-    if (keyboard.Pressed(TIMGE::Key::TWO)) {
-        mouse.SetCursor(*cursors[1]);
-    }
-
-    if (keyboard.Pressed(TIMGE::Key::THREE)) {
-        mouse.SetCursor(*cursors[2]);
-    }
+    // if (keyboard.Pressed(TIMGE::Key::ZERO)) {
+    //     mouse.ResetCursor();
+    // }
+    //
+    // if (keyboard.Pressed(TIMGE::Key::ONE)) {
+    //     mouse.SetCursor(*cursors[0]);
+    // }
+    //
+    // if (keyboard.Pressed(TIMGE::Key::TWO)) {
+    //     mouse.SetCursor(*cursors[1]);
+    // }
+    //
+    // if (keyboard.Pressed(TIMGE::Key::THREE)) {
+    //     mouse.SetCursor(*cursors[2]);
+    // }
 
     if (key == TIMGE::Key::D && mods == TIMGE::Modifier::SHIFT) {
         mouse.Disable();

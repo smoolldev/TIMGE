@@ -20,7 +20,8 @@ namespace TIMGE
     Application::Application(Info info)
      : ApplicationBase(),
        mInfo{info},
-       mWindow{info.mWindowInfo},
+       mMonitor{*Monitor::GetPrimaryMonitor()},
+       mWindow{info.mWindowInfo, mMonitor},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
        mDeltaTime{0},

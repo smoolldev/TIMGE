@@ -47,7 +47,7 @@ namespace TIMGE
 
     template<typename Type_T, uint32_t DIMENSIONS>
     Vector<Type_T, DIMENSIONS>::Vector(const Vector<Type_T, DIMENSIONS>& vector)
-     : mData{new Type_T[DIMENSIONS]{}}
+     : mData{new Type_T[DIMENSIONS]}
     {
       for (int i = 0; i < DIMENSIONS; i++) {
         mData[i] = vector.mData[i];
@@ -62,7 +62,7 @@ namespace TIMGE
 
     template<typename Type_T, uint32_t DIMENSIONS>
     Vector<Type_T, DIMENSIONS>::Vector(const std::initializer_list<Type_T>& list)
-    {
+     : mData{new Type_T[DIMENSIONS]{}}{
       // if (list.empty()) {
       //   for (int i = 0; i < DIMENSIONS; i++) {
       //     mData[i] = {};
@@ -86,10 +86,8 @@ namespace TIMGE
       // }
 
       if (list.size() > DIMENSIONS) {
-        throw std::out_of_range("Ur mom is as big as the size of this vector... Too big!");
+        throw std::out_of_range("Ur mom is as big as the size of this vector... Too big!\n");
       }
-
-      mData = new Type_T[DIMENSIONS];
 
       int i = 0;
       for (i = 0; i < list.size(); i++) {
@@ -117,9 +115,10 @@ namespace TIMGE
 
     template<typename Type_T, uint32_t DIMENSIONS>
     Vector<Type_T, DIMENSIONS>& Vector<Type_T, DIMENSIONS>::operator=(Vector<Type_T, DIMENSIONS>&& vector) {
+      Type_T* tmp = mData;
       mData = vector.mData;
 
-      delete[] vector.mData;
+      delete[] tmp; 
       vector.mData = nullptr;
 
       return *this;

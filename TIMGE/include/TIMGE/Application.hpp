@@ -62,6 +62,7 @@ namespace TIMGE
 		static SetTime_T SetTime;
 	private:
 	    Info mInfo;
+	    Monitor mMonitor;
 	    Window mWindow;
 		Mouse mMouse;
 		Keyboard mKeyboard;

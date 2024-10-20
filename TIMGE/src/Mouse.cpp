@@ -3,7 +3,6 @@
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>
 #include <filesystem>
-#include <format>
 
 namespace TIMGE
 {
@@ -20,7 +19,6 @@ namespace TIMGE
 
     Mouse::~Mouse()
     {
-        glfwSetCursor(mWindow.GetWindow(), nullptr);
         for (auto& cursor : mCursors) {
             glfwDestroyCursor(cursor.first);
         }
@@ -61,19 +59,19 @@ namespace TIMGE
     Cursor& Mouse::AddCursor(const std::filesystem::path& image)
     {
         if (!std::filesystem::exists(image)) {
-            throw std::format("Path '{}' doesn't exist!\n", image.c_str()).c_str();
+            throw "Some path to cursor image doesn't exist!\n";
         }
         GLFWimage icon;
-        icon.pixels = stbi_load(image.c_str(), &icon.width, &icon.height, nullptr, 4);
+        icon.pixels = stbi_load(image.string().c_str(), &icon.width, &icon.height, nullptr, 4);
         if (!icon.pixels) {
-            throw std::format("Something went wrong while loading '{}'!\n", image.c_str()).c_str();
+            throw "Something went wrong while loading cursor image!\n";
         }
         std::pair<GLFWcursor*, Cursor> cursor{
             glfwCreateCursor(&icon, 0, 0),
             mCursors.size()
         };
         if (!cursor.first) {
-            throw std::format("Something went wront while creating cursor: '{}'!\n", image.c_str()).c_str();
+            throw "Something went wront while creating cursor!\n";
         }
         mCursors.push_back(cursor);
         return mCursors.back().second;

@@ -31,7 +31,7 @@ namespace TIMGE
                 bool mIsFullscreen;
             };
 
-            Window(Info& info);
+            Window(Info& info, Monitor& monitor);
             ~Window();
 
             GLFWwindow* GetWindow(); //TODO: Move to private and befriend with Application
@@ -92,6 +92,7 @@ namespace TIMGE
             };
 
             Info& mInfo;
+            Monitor& mMonitor;
             GLFWwindow* mWindow;
 
             Vector<int, 2> mSize;

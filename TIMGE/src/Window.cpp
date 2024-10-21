@@ -2,19 +2,23 @@
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <filesystem>
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <iostream>
 
-//#define STB_IMAGE_IMPLEMENTATION
+#include "GLFW/glfw3.h"
 #include <stb_image/stb_image.h>
 
 namespace TIMGE
 {
-    Window::Window(const Window::Info& info)
-     : mInfo{info}, mWindow{nullptr}
+    Window *Window::mInstance = nullptr;
+
+    Window::Window(Window::Info &info, Monitor& monitor) : mInfo{info}, mMonitor{monitor}, mWindow{nullptr}
     {
+        if (mInstance) {
+            throw "Only one instance of Window is allowed!\n";
+        }
+
+        mInstance = this;
+
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, mInfo.mOpenGLVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, mInfo.mOpenGLVersionMinor);
@@ -25,20 +29,20 @@ namespace TIMGE
 
         mIsFullscreen = mInfo.mIsFullscreen;
 
-        //Wiesz, że jak mIsFullScreen jest równe `true` i jednocześnie mInfo.mWidth/mHeight nie są równe wymiarom monitora to rozdzielczość się popsuje?
-        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
+        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
         if (!mWindow) {
             throw "Failed to create window!\n";
         }
-        
+
         SetIcon(mInfo.mIconPath);
-        
+
         glfwMakeContextCurrent(mWindow);
         if (!gladLoadGL()) {
             throw "Failed to load OpenGL!\n";
         }
 
-        glfwSetWindowSizeLimits(mWindow,
+        glfwSetWindowSizeLimits(
+            mWindow,
             static_cast<int>((mInfo.mMinWidth == 0) ? GLFW_DONT_CARE : mInfo.mMinWidth),
             static_cast<int>((mInfo.mMinHeight == 0) ? GLFW_DONT_CARE : mInfo.mMinHeight),
             static_cast<int>((mInfo.mMaxWidth == 0) ? GLFW_DONT_CARE : mInfo.mMaxWidth),
@@ -50,61 +54,32 @@ namespace TIMGE
         glfwDestroyWindow(mWindow);
     }
 
-    GLFWwindow* Window::GetWindow() {
-          return mWindow;
+    [[nodiscard]] const V2i32& Window::GetPosition() const {
+        return mPosition;
     }
 
-    Vector<int, 2> Window::GetPosition() const
-    {
-        int x, y;
-
-        glfwGetWindowPos(mWindow, &x, &y);
-
-        return { x, y };
+    [[nodiscard]] const V2i32& Window::GetSize() const {
+        return mSize;
     }
 
-    Vector<int, 2> Window::GetSize() const
-    {
-        int width, height;
-
-        glfwGetWindowSize(mWindow, &width, &height);
-
-        return { width, height };
+    [[nodiscard]] const V2i32& Window::GetFramebufferSize() const {
+        return mFramebufferSize;
     }
 
-    Vector<int, 2> Window::GetFramebufferSize() const
-    {
-        int width, height;
-
-        glfwGetFramebufferSize(mWindow, &width, &height);
-
-        return { width, height };
+    [[nodiscard]] const V4i32& Window::GetFrameSize() const {
+        return mFrameSize;
     }
 
-    Vector<int, 4> Window::GetFrameSize() const
-    {
-        int left, top, right, bottom;
-
-        glfwGetWindowFrameSize(mWindow, &left, &top, &right, &bottom);
-
-        return { left, top, right, bottom };
+    [[nodiscard]] const V2f& Window::GetContentScale() const {
+        return mContentScale;
     }
 
-    Vector<float, 2> Window::GetContentScale() const
-    {
-        float x, y;
-
-        glfwGetWindowContentScale(mWindow, &x, &y);
-
-        return { x, y };
-    }
-
-    float Window::GetOpacity() const {
+    [[nodiscard]] float Window::GetOpacity() const {
         return glfwGetWindowOpacity(mWindow);
     }
 
-    GLFWmonitor* Window::GetMonitor() const {
-        return glfwGetWindowMonitor(mWindow);
+    [[nodiscard]] bool Window::GetFullscreen() const {
+        return mIsFullscreen;
     }
 
     void Window::SetTitle(std::string_view title) {
@@ -113,16 +88,15 @@ namespace TIMGE
 
     void Window::SetIcon(std::filesystem::path iconPath)
     {
-        if (std::filesystem::exists(iconPath)) {
+        if (std::filesystem::exists(iconPath))
+        {
             GLFWimage image;
 
-            image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);;
+            image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);
 
             glfwSetWindowIcon(mWindow, 1, &image);
 
             stbi_image_free(image.pixels);
-        } else if (iconPath == "Default") {
-            glfwSetWindowIcon(mWindow, 0, nullptr);
         } else {
             std::cout << "Image at path: " << iconPath << " does not exist.\n";
             std::cout << "Setting icon to OS default..." << "\n";
@@ -130,24 +104,28 @@ namespace TIMGE
         }
     }
 
-    void Window::SetPosition(int x, int y) {
-        glfwSetWindowPos(mWindow, x, y);
+    void Window::SetPosition(V2i32 position) {
+        glfwSetWindowPos(mWindow, position[V2i32::X], position[V2i32::Y]);
     }
 
-    void Window::SetAspectRatio(int numerator, int denominator) {
-        glfwSetWindowAspectRatio(mWindow, numerator, denominator);
+    void Window::SetAspectRatio(V2i32 aspectRatio) {
+        glfwSetWindowAspectRatio(mWindow, aspectRatio[V2i32::A], aspectRatio[V2i32::B]);
     }
 
-    void Window::SetSize(int width, int height) {
-        glfwSetWindowSize(mWindow, width, height);
+    void Window::SetSize(V2i32 size) {
+        glfwSetWindowSize(mWindow, size[V2i32::WIDTH], size[V2i32::HEIGHT]);
     }
 
     void Window::SetOpacity(float opacity) {
         glfwSetWindowOpacity(mWindow, opacity);
     }
 
-    void Window::SetMonitor(GLFWmonitor* monitor, int x, int y, int width, int height, int refreshRate) {
-        glfwSetWindowMonitor(mWindow, monitor, x, y, width, height, refreshRate);
+    void Window::SetShouldClose(bool shouldClose) {
+        glfwSetWindowShouldClose(mWindow, shouldClose);
+    }
+
+    void Window::ResetIcon() {
+        glfwSetWindowIcon(mWindow, 0, nullptr);
     }
 
     void Window::Minimize() {
@@ -155,8 +133,8 @@ namespace TIMGE
     }
 
     void Window::Restore() {
-        SetSize(mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT]);
-        SetPosition(mPosition[V2i32::X], mPosition[V2i32::Y]);
+        SetSize({ mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT] });
+        SetPosition({ mPosition[V2i32::X], mPosition[V2i32::Y] });
 
         glfwRestoreWindow(mWindow);
     }
@@ -186,7 +164,7 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        GLFWmonitor* monitor = mMonitor.mGetMonitor();
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -196,13 +174,13 @@ namespace TIMGE
             mPosition = GetPosition();
 
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
-            SetSize(mode->width, mode->height);
-            SetPosition(0, 0);
+            SetSize({ mode->width, mode->height} );
+            SetPosition({ 0, 0 });
         } else
         {
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
-            SetSize(mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT]);
-            SetPosition(mPosition[V2i32::X], mPosition[V2i32::Y]);
+            SetSize({ mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT] });
+            SetPosition({ mPosition[V2i32::X], mPosition[V2i32::Y] });
         }
 
         mIsFullscreen = !mIsFullscreen;
@@ -210,7 +188,7 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        GLFWmonitor* monitor = mMonitor.mGetMonitor();
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -219,11 +197,19 @@ namespace TIMGE
             mSize = GetSize();
             mPosition = GetPosition();
 
-            SetMonitor(monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            glfwSetWindowMonitor(mWindow, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
         } else {
-            SetMonitor(nullptr, mPosition[V2i32::X], mPosition[V2i32::Y], mSize[V2i32::WIDTH],mSize[V2i32::HEIGHT], 0);
+            glfwSetWindowMonitor(mWindow, nullptr, mPosition[V2i32::X], mPosition[V2i32::Y], mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT], 0);
         }
 
         mIsFullscreen = !mIsFullscreen;
     }
-}
+
+    [[nodiscard]] bool Window::ShouldClose() {
+        return glfwWindowShouldClose(mWindow);
+    }
+
+    GLFWwindow *Window::mGetWindow() {
+        return mWindow;
+    }
+} // namespace TIMGE

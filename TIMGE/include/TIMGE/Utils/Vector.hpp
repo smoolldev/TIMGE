@@ -1,41 +1,117 @@
 #ifndef UTILS_VECTOR_HPP
 #define UTILS_VECTOR_HPP
 
+#include <initializer_list>
+#include <stdexcept>
 #include <cstddef>
 #include <cstdint>
 
 namespace TIMGE
 {
-    template <typename Type_T, uint32_t DIMENSIONS> struct Vector 
+    template <typename Type_T, uint32_t DIMENSIONS> class Vector 
     {
-        Type_T mData[DIMENSIONS];
-        [[nodiscard]] Type_T &operator[](std::size_t index);
-        [[nodiscard]] const Type_T &operator[](std::size_t index) const;
+        public:
+            Vector();
+            Vector(const Vector<Type_T, DIMENSIONS>& vector);
+            Vector(Vector<Type_T, DIMENSIONS>&& vector);
+            Vector(const std::initializer_list<Type_T>& list);
+            ~Vector();
+            Vector<Type_T, DIMENSIONS>& operator=(const Vector<Type_T, DIMENSIONS>& vector);
+            Vector<Type_T, DIMENSIONS>& operator=(Vector<Type_T, DIMENSIONS>&& vector);
 
-        static constexpr std::size_t X = 0;
-        static constexpr std::size_t R = 0;
-        static constexpr std::size_t U = 0;
-        static constexpr std::size_t WIDTH = 0;
-        static constexpr std::size_t Y = 1;
-        static constexpr std::size_t G = 1;
-        static constexpr std::size_t V = 1;
-        static constexpr std::size_t HEIGHT = 1;
-        static constexpr std::size_t Z = 2;
-        static constexpr std::size_t B = 2;
-        static constexpr std::size_t Q = 2;
-        static constexpr std::size_t DEPTH = 2;
-        static constexpr std::size_t W = 3;
-        static constexpr std::size_t A = 3;
+            [[nodiscard]] Type_T &operator[](std::size_t index);
+            [[nodiscard]] const Type_T &operator[](std::size_t index) const;
+
+            static constexpr std::size_t X = 0;
+            static constexpr std::size_t R = 0;
+            static constexpr std::size_t U = 0;
+            static constexpr std::size_t WIDTH = 0;
+            static constexpr std::size_t Y = 1;
+            static constexpr std::size_t G = 1;
+            static constexpr std::size_t V = 1;
+            static constexpr std::size_t HEIGHT = 1;
+            static constexpr std::size_t Z = 2;
+            static constexpr std::size_t B = 2;
+            static constexpr std::size_t Q = 2;
+            static constexpr std::size_t DEPTH = 2;
+            static constexpr std::size_t W = 3;
+            static constexpr std::size_t A = 3;
+        private:
+            Type_T* mData;
     };
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector()
+     : mData{new Type_T[DIMENSIONS]{}}
+    {}
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(const Vector<Type_T, DIMENSIONS>& vector)
+     : mData{new Type_T[DIMENSIONS]}
+    {
+        for (int i = 0; i < DIMENSIONS; i++) {
+            mData[i] = vector.mData[i];
+        }
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(Vector<Type_T, DIMENSIONS>&& vector)
+     : mData{vector.mData} {
+        vector.mData = nullptr;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::Vector(const std::initializer_list<Type_T>& list)
+     : mData{new Type_T[DIMENSIONS]{}}
+    {
+        if (list.size() > DIMENSIONS) {
+            throw std::out_of_range("Ur mom is as big as the size of this vector... Too big!\n");
+        }
+
+        int i = 0;
+        for (i = 0; i < list.size(); i++) {
+            mData[i] = *(list.begin() + i);
+        }
+        for (; i < DIMENSIONS; i++) {
+            mData[i] = {};
+        }
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>::~Vector() {
+        delete[] mData;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>& Vector<Type_T, DIMENSIONS>::operator=(const Vector<Type_T, DIMENSIONS>& vector)
+    {
+        for (int i = 0; i < DIMENSIONS; i++) {
+            mData[i] = vector.mData[i];
+        }
+
+        return *this;
+    }
+
+    template<typename Type_T, uint32_t DIMENSIONS>
+    Vector<Type_T, DIMENSIONS>& Vector<Type_T, DIMENSIONS>::operator=(Vector<Type_T, DIMENSIONS>&& vector)
+    {
+        Type_T* tmp = mData;
+        mData = vector.mData;
+
+        delete[] tmp; 
+        vector.mData = nullptr;
+
+        return *this;
+    }
 
     template <typename Type_T, uint32_t DIMENSIONS>
     Type_T &Vector<Type_T, DIMENSIONS>::operator[](std::size_t index) {
-      return mData[index];
+        return mData[index];
     }
 
     template <typename Type_T, uint32_t DIMENSIONS>
     const Type_T &Vector<Type_T, DIMENSIONS>::operator[](std::size_t index) const {
-      return mData[index];
+        return mData[index];
     }
 
     using V2f = Vector<float, 2>;

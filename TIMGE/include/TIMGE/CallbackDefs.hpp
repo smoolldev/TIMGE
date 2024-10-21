@@ -1,25 +1,31 @@
 #ifndef CALLBACKDEFS_HPP
 #define CALLBACKDEFS_HPP
 
+#include "TIMGE/Keyboard.hpp"
+#include "TIMGE/Mouse.hpp"
+#include "TIMGE/Utils/Vector.hpp"
+
+#include <string_view>
+
 #include <GLFW/glfw3.h>
 
 namespace TIMGE::Callback
 {
-    using Error_t = void (*)(int errorCode, const char* description);
-    using WindowPos_t = void (*)(int xPos, int yPos);
-    using WindowSize_t = void (*)(int width, int height);
+    using Error_t = void (*)(int errorCode, std::string_view description);
+    using WindowPos_t = void (*)(const V2i32& position);
+    using WindowSize_t = void (*)(const V2i32& size);
     using WindowClose_t = void (*)();
     using WindowRefresh_t = void (*)();
-    using WindowFocus_t = void (*)(int focused);
-    using WindowIconify_t = void (*)(int iconified);
-    using WindowMaximize_t = void (*)(int maximized);
-    using FramebufferSize_t = void (*)(int width, int height);
-    using WindowContentScale_t = void (*)(float xScale, float yScale);
-    using MouseButton_t = void (*)(int button, int action, int mods);
-    using CursorPos_t = void (*)(double xPos, double yPos);
-    using CursorEnter_t = void (*)(int entered);
-    using Scroll_t = void (*)(double xOffset, double yOffset);
-    using Key_t = void (*)(int key, int scancode, int action, int mods);
+    using WindowFocus_t = void (*)(bool focused);
+    using WindowIconify_t = void (*)(bool iconified);
+    using WindowMaximize_t = void (*)(bool maximized);
+    using FramebufferSize_t = void (*)(const V2i32& framebufferSize);
+    using WindowContentScale_t = void (*)(const V2f& contentScale);
+    using MouseButton_t = void (*)(Button button, Mouse::Action action, Modifier mods);
+    using CursorPos_t = void (*)(const V2d& cursorPosition);
+    using CursorEnter_t = void (*)(bool entered);
+    using Scroll_t = void (*)(const V2d& cursorScrollOffset);
+    using Key_t = void (*)(Key key, int scancode, Keyboard::Action action, Modifier mods);
     using Char_t = void (*)(unsigned int codepoint);
     using Charmods_t = void (*)(unsigned int codepoint, int mods);
     using Drop_t = void (*)(int pathCount, const char* paths[]);

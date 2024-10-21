@@ -1,9 +1,10 @@
 #include "TIMGE/Mouse.hpp"
 #include "TIMGE/Window.hpp"
-#include <GLFW/glfw3.h>
-#include <stb_image/stb_image.h>
+
 #include <filesystem>
-#include <format>
+
+#include <stb_image/stb_image.h>
+#include <GLFW/glfw3.h>
 
 namespace TIMGE
 {
@@ -14,66 +15,77 @@ namespace TIMGE
             AddCursor(path);
         }
         if (!mCursors.empty()) {
-            glfwSetCursor(window.GetWindow(), mCursors[0].first);
+            glfwSetCursor(window.mGetWindow(), mCursors[0].first);
         }
     }
 
     Mouse::~Mouse()
     {
-        glfwSetCursor(mWindow.GetWindow(), nullptr);
         for (auto& cursor : mCursors) {
             glfwDestroyCursor(cursor.first);
         }
     }
 
+    [[nodiscard]] bool Mouse::Pressed(Button button) const {
+        return glfwGetMouseButton(mWindow.mGetWindow(), static_cast<int>(button)) == GLFW_PRESS;
+    }
+
+	[[nodiscard]] bool Mouse::Released(Button button) const {
+        return glfwGetMouseButton(mWindow.mGetWindow(), static_cast<int>(button)) == GLFW_RELEASE;
+    }
+
     void Mouse::Disable() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void Mouse::Hide() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
     void Mouse::Capture() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
     }
 
     void Mouse::Restore() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
+    Mouse::RawMouseMotionSupported_t Mouse::IsRawMouseMotionSupported = glfwRawMouseMotionSupported;
+
     void Mouse::EnableRawMouseMotion() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
 
     void Mouse::DisableRawMouseMotion() const {
-        glfwSetInputMode(mWindow.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+        glfwSetInputMode(mWindow.mGetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
     }
 
-    Cursor& Mouse::AddCursor(const std::filesystem::path& image)
+    [[maybe_unused]] Cursor& Mouse::AddCursor(const std::filesystem::path& image)
     {
         if (!std::filesystem::exists(image)) {
-            throw std::format("Path '{}' doesn't exist!\n", image.c_str()).c_str();
+            throw "Some path to cursor image doesn't exist!\n";
         }
         GLFWimage icon;
-        icon.pixels = stbi_load(image.c_str(), &icon.width, &icon.height, nullptr, 4);
+        icon.pixels = stbi_load(image.string().c_str(), &icon.width, &icon.height, nullptr, 4);
         if (!icon.pixels) {
-            throw std::format("Something went wrong while loading '{}'!\n", image.c_str()).c_str();
+            throw "Something went wrong while loading cursor image!\n";
         }
-        std::pair<GLFWcursor*, Cursor> cursor{
+        std::pair<GLFWcursor*, Cursor> cursor
+        {
             glfwCreateCursor(&icon, 0, 0),
             mCursors.size()
         };
         if (!cursor.first) {
-            throw std::format("Something went wront while creating cursor: '{}'!\n", image.c_str()).c_str();
+            throw "Something went wront while creating cursor!\n";
         }
         mCursors.push_back(cursor);
         return mCursors.back().second;
     }
 
-    Cursor& Mouse::AddCursor(StandardCursor shape)
+    [[maybe_unused]] Cursor& Mouse::AddCursor(StandardCursor shape)
     {
-        std::pair<GLFWcursor*, Cursor> cursor {
+        std::pair<GLFWcursor*, Cursor> cursor
+        {
             glfwCreateStandardCursor(static_cast<int>(shape)),
             mCursors.size()
         };
@@ -92,24 +104,28 @@ namespace TIMGE
                 mCursors[i].second.mID -= 1;
             }
         }
-        if (mCursors.erase(mCursors.begin() + cursor.mID) != mCursors.end()) {
+        if (mCursors.erase(mCursors.begin() + cursor.mID) == mCursors.end()) {
             throw "Fucking std::vector!\n";
         }
     }
 
     void Mouse::SetCursor(const Cursor& cursor) {
-        glfwSetCursor(mWindow.GetWindow(), mCursors[cursor.mID].first);
+        glfwSetCursor(mWindow.mGetWindow(), mCursors[cursor.mID].first);
     }
 
     void Mouse::ResetCursor() {
-        glfwSetCursor(mWindow.GetWindow(), nullptr);
+        glfwSetCursor(mWindow.mGetWindow(), nullptr);
     }
 
-    const Vector<double, 2>& Mouse::GetPosition() const {
+    [[nodiscard]] const V2d& Mouse::GetPosition() const {
         return mPosition;
     }
 
-    std::vector<Cursor*> Mouse::GetCursors()
+    [[nodiscard]] const V2d& Mouse::GetOffset() const {
+        return mOffset;
+    }
+
+    [[nodiscard]] std::vector<Cursor*> Mouse::GetCursors()
     {
         std::vector<Cursor*> result;
         for (auto& cursor: mCursors) {
@@ -117,6 +133,4 @@ namespace TIMGE
         }
         return result;
     }
-
-    Mouse::RawMouseMotionSupported_t Mouse::IsRawMouseMotionSupported = glfwRawMouseMotionSupported;
 }

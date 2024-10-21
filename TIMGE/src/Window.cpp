@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <iostream>
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>
 
 namespace TIMGE

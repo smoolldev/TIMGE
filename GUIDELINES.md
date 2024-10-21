@@ -121,16 +121,16 @@ void FunctionName(int parameterName);
 
 ## Includes
 Including goes in this order:
-- C++ headers
 - Your own headers
+- C++ headers
 - Other libraries' headers
 
 Example:
 
 ```cpp
-#include <iostream> // C++ libraries first
+#include "TIMGE/TIMGE.hpp" // Your own libraries first
 
-#include "TIMGE/TIMGE.hpp" // Your own libraries second
+#include <iostream> // C++ libraries second
 
 #include <glfw/glfw3.h> // Other libraries third
 ```

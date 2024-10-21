@@ -1,7 +1,7 @@
 #ifndef KEYBOARD_HPP
 #define KEYBOARD_HPP
 
-#include "TIMGE/Window.hpp"
+#include "Window.hpp"
 
 #include <GLFW/glfw3.h>
 

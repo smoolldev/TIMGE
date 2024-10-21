@@ -1,9 +1,9 @@
 #ifndef CALLBACKDEFS_HPP
 #define CALLBACKDEFS_HPP
 
-#include "TIMGE/Keyboard.hpp"
-#include "TIMGE/Mouse.hpp"
-#include "TIMGE/Utils/Vector.hpp"
+#include "Keyboard.hpp"
+#include "Mouse.hpp"
+#include "Utils/Vector.hpp"
 
 #include <string_view>
 

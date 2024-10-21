@@ -1,12 +1,12 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include "TIMGE/Window.hpp"
-#include "TIMGE/Utils/Vector.hpp"
-#include "TIMGE/CallbackDefs.hpp"
-#include "TIMGE/Mouse.hpp"
-#include "TIMGE/Keyboard.hpp"
-#include "TIMGE/Monitor.hpp"
+#include "Window.hpp"
+#include "Utils/Vector.hpp"
+#include "CallbackDefs.hpp"
+#include "Mouse.hpp"
+#include "Keyboard.hpp"
+#include "Monitor.hpp"
 
 #include <cstdint>
 #include <string_view>

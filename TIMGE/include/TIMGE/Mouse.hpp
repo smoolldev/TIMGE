@@ -1,7 +1,7 @@
 #ifndef MOUSE_HPP
 #define MOUSE_HPP
 
-#include "TIMGE/Utils/Vector.hpp"
+#include "Utils/Vector.hpp"
 #include "Window.hpp"
 
 #include <cstdint>

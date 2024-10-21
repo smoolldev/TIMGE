@@ -2,9 +2,9 @@
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <algorithm>
+#include <vector>
 
 #include <GLFW/glfw3.h>
-#include <vector>
 
 namespace TIMGE
 {

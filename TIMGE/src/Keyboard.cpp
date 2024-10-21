@@ -1,6 +1,7 @@
 #include "TIMGE/Keyboard.hpp"
-#include "GLFW/glfw3.h"
 #include "TIMGE/Window.hpp"
+
+#include <GLFW/glfw3.h>
 
 namespace TIMGE
 {

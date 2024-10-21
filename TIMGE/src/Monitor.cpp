@@ -8,9 +8,9 @@
 
 namespace TIMGE
 {
-    bool Monitor::mMonitorsRetrieved = false;
-
     std::vector<Monitor> Monitor::mMonitors;
+
+    bool Monitor::mMonitorsRetrieved = false;
 
     Monitor::Monitor(GLFWmonitor* monitor)
      : mMonitor{monitor},
@@ -25,7 +25,7 @@ namespace TIMGE
 
     Monitor::~Monitor() {}
 
-    std::vector<Monitor*> Monitor::GetMonitors()
+    [[nodiscard]] const std::vector<Monitor>& Monitor::GetMonitors()
     {
         if (!mMonitorsRetrieved)
         {
@@ -33,16 +33,10 @@ namespace TIMGE
             mRetrieveMonitors();
         }
 
-        std::vector<Monitor*> retVal;
-
-        for (auto& monitor : mMonitors) {
-            retVal.push_back(&monitor);
-        }
-
-        return retVal;
+        return mMonitors;
     }
 
-    Monitor* Monitor::GetPrimaryMonitor()
+    const Monitor& Monitor::GetPrimaryMonitor()
     {
         if (!mMonitorsRetrieved)
         {
@@ -51,41 +45,41 @@ namespace TIMGE
         }
 
         if (mMonitors.empty()) {
-            return nullptr;
+            throw "no monitor for you fat fuck!\n";
         }
 
-        return &mMonitors[0];
+        return mMonitors[0];
     }
 
-    const Vector<int, 2>& Monitor::GetPhysicalSize() const {
+    [[nodiscard]] const V2i32& Monitor::GetPhysicalSize() const {
         return mPhysicalSize;
     }
 
-	const Vector<float, 2>& Monitor::GetContentScale() const {
+	[[nodiscard]] const V2f& Monitor::GetContentScale() const {
         return mContentScale;
     }
 
-	const Vector<int, 2>& Monitor::GetVirtualPosition() const {
+	[[nodiscard]] const V2i32& Monitor::GetVirtualPosition() const {
         return mVirtualPosition;
     }
 
-	const Vector<int, 4>& Monitor::GetWorkarea() const {
+	[[nodiscard]] const V4i32& Monitor::GetWorkarea() const {
         return mWorkarea;
     }
 
-    const std::string_view& Monitor::GetName() const {
+    [[nodiscard]] const std::string_view& Monitor::GetName() const {
         return mName;
     }
 
-	const float& Monitor::GetGamma() const {
+	[[nodiscard]] const float& Monitor::GetGamma() const {
         return mGamma;
     }
 
-	void Monitor::SetGamma(float gamma) {
+	void Monitor::SetGamma(float gamma) const {
         glfwSetGamma(mMonitor, (mGamma = gamma));
     }
 
-    void Monitor::Connect(GLFWmonitor* monitor) {
+    void Monitor::mConnect(GLFWmonitor* monitor) {
         for (auto& _monitor : mMonitors)
         {
             if (_monitor.mMonitor == monitor) {
@@ -96,13 +90,13 @@ namespace TIMGE
         mMonitors.push_back(static_cast<Monitor>(monitor));
     }
 
-    void Monitor::Disconnect(GLFWmonitor* monitor) {
+    void Monitor::mDisconnect(GLFWmonitor* monitor) {
         if (auto res = std::find_if(mMonitors.begin(), mMonitors.end(), [monitor](Monitor& m){ return m.mMonitor == monitor; }); res != mMonitors.end()) {
             mMonitors.erase(res);
         }
     }
 
-    GLFWmonitor* Monitor::mGetMonitor() const {
+    [[nodiscard]] GLFWmonitor* Monitor::mGetMonitor() const {
         for (auto& _monitor : mMonitors)
         {
             if (_monitor.mMonitor == mMonitor) {

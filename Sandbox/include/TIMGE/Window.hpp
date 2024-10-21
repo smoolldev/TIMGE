@@ -34,23 +34,23 @@ namespace TIMGE
             Window(Info& info, Monitor& monitor);
             ~Window();
 
-            GLFWwindow* GetWindow(); //TODO: Move to private and befriend with Application
-            const Vector<int, 2>& GetPosition() const;
-            const Vector<int, 2>& GetSize() const;
-            const Vector<int, 2>& GetFramebufferSize() const;
-            const Vector<int, 4>& GetFrameSize() const;
-            const Vector<float, 2>& GetContentScale() const;
-            float GetOpacity() const;
-            GLFWmonitor* GetMonitor() const;
+            [[nodiscard]] const V2i32& GetPosition() const;
+            [[nodiscard]] const V2i32& GetSize() const;
+            [[nodiscard]] const V2i32& GetFramebufferSize() const;
+            [[nodiscard]] const V4i32& GetFrameSize() const;
+            [[nodiscard]] const V2f& GetContentScale() const;
+            [[nodiscard]] float GetOpacity() const;
+            [[nodiscard]] bool GetFullscreen() const;
 
             void SetTitle(std::string_view title);
-            void SetIcon(std::filesystem::path iconPath = "Default");
-            void SetPosition(int x, int y);
-            void SetAspectRatio(int numerator, int denominator);
-            void SetSize(int width, int height);
+            void SetIcon(std::filesystem::path iconPath);
+            void SetPosition(V2i32 position);
+            void SetAspectRatio(V2i32 aspectRatio);
+            void SetSize(V2i32 size);
             void SetOpacity(float opacity);
-            void SetMonitor(GLFWmonitor* monitor, int x, int y, int width, int height, int refreshRate);
             void SetShouldClose(bool shouldClose);
+
+            void ResetIcon();
 
             void Minimize();
             void Restore();
@@ -62,7 +62,7 @@ namespace TIMGE
             void BorderlessFullscreen();
             void Fullscreen();
 
-            bool ShouldClose();
+            [[nodiscard]] bool ShouldClose();
 
             static constexpr FLAGS RESIZABLE = (1 << 0);
             static constexpr FLAGS VISIBLE = (1 << 1);
@@ -76,6 +76,8 @@ namespace TIMGE
             static constexpr FLAGS FOCUS_ON_SHOW = (1 << 9);
             static constexpr FLAGS SCALE_TO_MONITOR = (1 << 10);
         private:
+            GLFWwindow* mGetWindow();
+
             static constexpr uint32_t mWINDOWHINTS[]
             {
                 GLFW_RESIZABLE,
@@ -95,17 +97,19 @@ namespace TIMGE
             Monitor& mMonitor;
             GLFWwindow* mWindow;
 
-            Vector<int, 2> mSize;
-            Vector<int, 2> mPosition;
-            Vector<int, 2> mFramebufferSize;
-            Vector<int, 4> mFrameSize;
-            Vector<float, 2> mContentScale;
+            V2i32 mSize;
+            V2i32 mPosition;
+            V2i32 mFramebufferSize;
+            V4i32 mFrameSize;
+            V2f mContentScale;
 
             bool mIsFullscreen;
 
             static Window* mInstance;
 
             friend class Application;
+            friend class Mouse;
+            friend class Keyboard;
     };
 }
 #endif // WINDOW_HPP

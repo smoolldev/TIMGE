@@ -22,7 +22,7 @@ class Game : public Application
     void Update();
     void Render();
 
-    friend void CursorPosCallback(double xPos, double yPos);
+    friend void CursorPosCallback(const V2d& cursorPosition);
     friend void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
     friend void DropCallback(int pathCount, const char* path[]);
 
@@ -31,7 +31,7 @@ class Game : public Application
         static Game* GetInstance();
 };
 
-void CursorPosCallback(double xPos, double yPos);
+void CursorPosCallback(const V2d& cursorPosition);
 void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
 void DropCallback(int pathCount, const char* path[]);
 
@@ -55,17 +55,17 @@ Game::Game()
                 3, /*mOpenGLVersionMajor*/
                 3, /*mOpenGLVersionMinor*/
                 671, /*mFlags*/
-                "resources/youtube_logo.png", /*mIconPath*/
+                {},//"resources/youtube_logo.png", /*mIconPath*/
                 false, /*mIsFullscreen*/
+            },
+            {
+                1.0f, 0.63f, 0.1f, 1.0f
             },
             {
                 // {
                 //     "resources/nice.png",
                 //     "resources/empty.png"
                 // }
-            },
-            {
-                1.0f, 0.63f, 0.1f, 1.0f
             },
             callbacks
          })
@@ -160,7 +160,7 @@ int main()
     }
 }
 
-void CursorPosCallback(double xPos, double yPos)
+void CursorPosCallback(const V2d& cursorPosition)
 {
 }
 

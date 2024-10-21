@@ -3,11 +3,11 @@
 
 #include "Utils/Vector.hpp"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <string_view>
 #include <vector>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace TIMGE
 {
@@ -17,42 +17,42 @@ namespace TIMGE
             Monitor(const Monitor& monitor) = default;
             ~Monitor();
 
-            static std::vector<Monitor*> GetMonitors();
-            static Monitor* GetPrimaryMonitor();
+            [[nodiscard]] static const std::vector<Monitor>& GetMonitors();
+            [[nodiscard]] static const Monitor& GetPrimaryMonitor();
 
-            const Vector<int, 2>& GetPhysicalSize() const;
-            const Vector<float, 2>& GetContentScale() const;
-            const Vector<int, 2>& GetVirtualPosition() const;
-            const Vector<int, 4>& GetWorkarea() const;
+            [[nodiscard]] const V2i32& GetPhysicalSize() const;
+            [[nodiscard]] const V2f& GetContentScale() const;
+            [[nodiscard]] const V2i32& GetVirtualPosition() const;
+            [[nodiscard]] const V4i32& GetWorkarea() const;
 
-            const std::string_view& GetName() const;
+            [[nodiscard]] const std::string_view& GetName() const;
 
-            const float& GetGamma() const;
+            [[nodiscard]] const float& GetGamma() const;
 
-            void SetGamma(float gamma);
+            void SetGamma(float gamma) const;
         private:
             Monitor(GLFWmonitor* monitor);
 
-            GLFWmonitor* mGetMonitor() const;
+            [[nodiscard]] GLFWmonitor* mGetMonitor() const;
             static void mRetrieveMonitors();
 
-            static void Connect(GLFWmonitor* monitor);
-            static void Disconnect(GLFWmonitor* monitor);
+            static void mConnect(GLFWmonitor* monitor);
+            static void mDisconnect(GLFWmonitor* monitor);
 
             GLFWmonitor* mMonitor;
 
             static std::vector<Monitor> mMonitors;
 
-            Vector<int, 2> mPhysicalSize;
-            Vector<float, 2> mContentScale;
-            Vector<int, 2> mVirtualPosition;
-            Vector<int, 4> mWorkarea;
+            static bool mMonitorsRetrieved;
+
+            V2i32 mPhysicalSize;
+            V2f mContentScale;
+            V2i32 mVirtualPosition;
+            V4i32 mWorkarea;
 
             std::string_view mName;
 
-            float mGamma;
-
-            static bool mMonitorsRetrieved;
+            mutable float mGamma;
 
             friend class Application;
             friend class Window;

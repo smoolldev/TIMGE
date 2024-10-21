@@ -9,7 +9,7 @@ namespace TIMGE
     ApplicationBase::ApplicationBase()
     {
         if (!glfwInit()) {
-	   throw "Failed to initialize GLFW!\n";
+	        throw "Failed to initialize GLFW!\n";
         }
     }
 
@@ -17,14 +17,25 @@ namespace TIMGE
         glfwTerminate();
     }
 
-    Application::Application(Info info)
+    Application::EventProcessor_T Application::PollEvents = &glfwPollEvents;
+    Application::EventProcessor_T Application::WaitEvents = &glfwWaitEvents;
+
+    Application::GetTime_T Application::GetTime = &glfwGetTime;
+    Application::SetTime_T Application::SetTime = &glfwSetTime;
+
+    Application* Application::mInstance = nullptr;
+
+    Application::Application(const Info& info)
      : ApplicationBase(),
        mInfo{info},
-       mMonitor{*Monitor::GetPrimaryMonitor()},
-       mWindow{info.mWindowInfo, mMonitor},
+       mMonitor{Monitor::GetPrimaryMonitor()},
+       mWindow{mInfo.mWindowInfo, mMonitor},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
        mDeltaTime{0},
+       mStartTime{0},
+       mEventProcessor{PollEvents},
+       monitor{mMonitor},
        window{mWindow},
        mouse{mMouse},
        keyboard{mKeyboard},
@@ -43,31 +54,31 @@ namespace TIMGE
         mInstance = this;
 
         glfwSetErrorCallback(Callback::ErrorCallback);
-        glfwSetWindowPosCallback(mWindow.GetWindow(), Callback::WindowPosCallback);
-        glfwSetWindowSizeCallback(mWindow.GetWindow(), Callback::WindowSizeCallback);
-        glfwSetWindowCloseCallback(mWindow.GetWindow(), Callback::WindowCloseCallback);
-        glfwSetWindowRefreshCallback(mWindow.GetWindow(), Callback::WindowRefreshCallback);
-        glfwSetWindowFocusCallback(mWindow.GetWindow(), Callback::WindowFocusCallback);
-        glfwSetWindowIconifyCallback(mWindow.GetWindow(), Callback::WindowIconifyCallback);
-        glfwSetWindowMaximizeCallback(mWindow.GetWindow(), Callback::WindowMaximizeCallback);
-        glfwSetFramebufferSizeCallback(mWindow.GetWindow(), Callback::FramebufferSizeCallback);
-        glfwSetWindowContentScaleCallback(mWindow.GetWindow(), Callback::WindowContentScaleCallback);
-        glfwSetMouseButtonCallback(mWindow.GetWindow(), Callback::MouseButtonCallback);
-        glfwSetCursorPosCallback(mWindow.GetWindow(), Callback::CursorPosCallback);
-        glfwSetCursorEnterCallback(mWindow.GetWindow(), Callback::CursorEnterCallback);
-        glfwSetScrollCallback(mWindow.GetWindow(), Callback::ScrollCallback);
-        glfwSetKeyCallback(mWindow.GetWindow(), Callback::KeyCallback);
-        glfwSetCharCallback(mWindow.GetWindow(), Callback::CharCallback);
-        glfwSetCharModsCallback(mWindow.GetWindow(), Callback::CharModsCallback);
-        glfwSetDropCallback(mWindow.GetWindow(), Callback::DropCallback);
+        glfwSetWindowPosCallback(mWindow.mGetWindow(), Callback::WindowPosCallback);
+        glfwSetWindowSizeCallback(mWindow.mGetWindow(), Callback::WindowSizeCallback);
+        glfwSetWindowCloseCallback(mWindow.mGetWindow(), Callback::WindowCloseCallback);
+        glfwSetWindowRefreshCallback(mWindow.mGetWindow(), Callback::WindowRefreshCallback);
+        glfwSetWindowFocusCallback(mWindow.mGetWindow(), Callback::WindowFocusCallback);
+        glfwSetWindowIconifyCallback(mWindow.mGetWindow(), Callback::WindowIconifyCallback);
+        glfwSetWindowMaximizeCallback(mWindow.mGetWindow(), Callback::WindowMaximizeCallback);
+        glfwSetFramebufferSizeCallback(mWindow.mGetWindow(), Callback::FramebufferSizeCallback);
+        glfwSetWindowContentScaleCallback(mWindow.mGetWindow(), Callback::WindowContentScaleCallback);
+        glfwSetMouseButtonCallback(mWindow.mGetWindow(), Callback::MouseButtonCallback);
+        glfwSetCursorPosCallback(mWindow.mGetWindow(), Callback::CursorPosCallback);
+        glfwSetCursorEnterCallback(mWindow.mGetWindow(), Callback::CursorEnterCallback);
+        glfwSetScrollCallback(mWindow.mGetWindow(), Callback::ScrollCallback);
+        glfwSetKeyCallback(mWindow.mGetWindow(), Callback::KeyCallback);
+        glfwSetCharCallback(mWindow.mGetWindow(), Callback::CharCallback);
+        glfwSetCharModsCallback(mWindow.mGetWindow(), Callback::CharModsCallback);
+        glfwSetDropCallback(mWindow.mGetWindow(), Callback::DropCallback);
         glfwSetMonitorCallback(Callback::MonitorCallback);
         glfwSetJoystickCallback(Callback::JoystickCallback);
     }
 
     Application::Application(std::string_view title, uint32_t width, uint32_t height)
      : Application(
-        Application::Info{
-            Window::Info{
+        Application::Info {
+            Window::Info {
     	        title,
     	        width,
     	        height,
@@ -79,9 +90,9 @@ namespace TIMGE
     	        "Default",
                 false,
     	    },
-            Mouse::Info{},
-            Vector<float, 4>{0.0f, 0.0f, 0.0f, 1.0f},
-            Callback::Callbacks{}
+            Vector<float, 4> { 0.0f, 0.0f, 0.0f, 1.0f },
+            Mouse::Info {},
+            Callback::Callbacks {}
         }
     )
     {}
@@ -106,72 +117,80 @@ namespace TIMGE
     {
         mDeltaTime = GetTime() - mStartTime;
 
-        PollEvents();
+        mEventProcessor();
 
-        glfwSwapBuffers(mWindow.GetWindow());
+        glfwSwapBuffers(mWindow.mGetWindow());
     }
 
-    Window& Application::GetWindow() {
+    void Application::SetMonitor(const Monitor& monitor) {
+        mMonitor = monitor;
+    }
+
+    void Application::SetBackgroundColor(const V4f& backgroundColor) {
+        mInfo.mBackground = backgroundColor;
+    }
+
+    void Application::SetEventProcessor(EventProcessor_T eventProcessor) {
+        mEventProcessor = eventProcessor;
+    }
+
+    [[nodiscard]] Window& Application::GetWindow() {
         return mWindow;
     }
 
-    Mouse& Application::GetMouse() {
+    [[nodiscard]] Mouse& Application::GetMouse() {
         return mMouse;
     }
 
-    Keyboard& Application::GetKeyboard() {
+    [[nodiscard]] Keyboard& Application::GetKeyboard() {
         return mKeyboard;
     }
 
-    const Application::Time& Application::GetDeltaTime() {
+    [[nodiscard]] const Time& Application::GetDeltaTime() {
         return mDeltaTime;
     }
 
-    Application* Application::GetInstance() {
+    [[nodiscard]] const V4f& Application::GetBackgroundColor() {
+        return mInfo.mBackground;
+    }
+
+    [[nodiscard]] Application* Application::mGetInstance() {
         return Application::mInstance;
     }
 
-    void Application::mSetCursorPosition(double xPosition, double yPosition) {
-        mMouse.mPosition = { xPosition, yPosition };
-    }
-
-    void Application::mSetScrollOffset(double xOffset, double yOffset) {
-        mMouse.mOffset = { xOffset, yOffset };
-    }
-
-    void Application::mSetPosition(int x, int y) {
-        mWindow.mPosition = { x, y };
-    }
-
-	void Application::mSetSize(int width, int height) {
-        mWindow.mSize = { width, height };
-    }
-
-	void Application::mSetFramebufferSize(int width, int height) {
-       mWindow.mFramebufferSize = { width, height }; 
-    }
-
-    void Application::mSetFrameSize(int top, int left, int right, int bottom) {
-        mWindow.mFrameSize = { top, left, right, bottom };
-    }
-
-	void Application::mSetContentScale(float xScale, float yScale) {
-        mWindow.mContentScale = { xScale, yScale };
-    }
-
     void Application::mConnectMonitor(GLFWmonitor* monitor) {
-        Monitor::Connect(monitor);
+        Monitor::mConnect(monitor);
     }
 
 	void Application::mDisconnectMonitor(GLFWmonitor* monitor) {
-        Monitor::Disconnect(monitor);
+        Monitor::mDisconnect(monitor);
     }
 
-    Application::EventProcessing_T Application::PollEvents = &glfwPollEvents;
-    Application::EventProcessing_T Application::WaitEvents = &glfwWaitEvents;
+    void Application::mSetCursorPosition(const V2d& cursorPosition) {
+        mMouse.mPosition = cursorPosition;
+    }
 
-    Application::GetTime_T Application::GetTime = &glfwGetTime;
-    Application::SetTime_T Application::SetTime = &glfwSetTime;
+    void Application::mSetScrollOffset(const V2d& cursorScrollOffset) {
+        mMouse.mOffset = cursorScrollOffset;
+    }
 
-    Application* Application::mInstance = nullptr;
+    void Application::mSetPosition(const V2i32& position) {
+        mWindow.mPosition = position;
+    }
+
+	void Application::mSetSize(const V2i32& size) {
+        mWindow.mSize = size;
+    }
+
+	void Application::mSetFramebufferSize(const V2i32& framebufferSize) {
+       mWindow.mFramebufferSize = framebufferSize; 
+    }
+
+    void Application::mSetFrameSize(const V4i32& frameSize) {
+        mWindow.mFrameSize = frameSize;
+    }
+
+	void Application::mSetContentScale(const V2f& contentScale) {
+        mWindow.mContentScale = contentScale;
+    }
 }

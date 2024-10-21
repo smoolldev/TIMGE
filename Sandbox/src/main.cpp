@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "TIMGE/Application.hpp"
 #include "TIMGE/Keyboard.hpp"
 #include "TIMGE/Mouse.hpp"
@@ -5,6 +6,14 @@
 #include <TIMGE/CallbackDefs.hpp>
 #include <TIMGE/TIMGE.hpp>
 
+=======
+#include <TIMGE/CallbackDefs.hpp>
+#include <TIMGE/TIMGE.hpp>
+
+#include <cstdio>
+#include <format>
+#include <cstdlib>
+>>>>>>> master
 #include <GLFW/glfw3.h>
 
 #include <stdexcept>
@@ -22,18 +31,44 @@ class Game : public Application
     void Update();
     void Render();
 
+<<<<<<< HEAD
     friend void CursorPosCallback(const V2d& cursorPosition);
     friend void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
     friend void DropCallback(int pathCount, const char* path[]);
+=======
+    friend void CursorPosCallback(double xPos, double yPos);
+    friend void KeyCallback(int key, int scancode, int action, int mods);
+>>>>>>> master
 
     private:
         static Game* mInstance;
         static Game* GetInstance();
 };
 
+<<<<<<< HEAD
 void CursorPosCallback(const V2d& cursorPosition);
 void KeyCallback(Key key, int scancode, TIMGE::Keyboard::Action action, Modifier mods);
 void DropCallback(int pathCount, const char* path[]);
+=======
+void CursorPosCallback(double xPos, double yPos);
+void KeyCallback(int key, int scancode, int action, int mods);
+
+Window::Info win_info = 
+{
+    "Callbacks", /*mTitle*/
+    1000, /*mWidth*/
+    500, /*mHeight*/
+    200, /*mMinWidth*/
+    100, /*mMinHeight*/
+    0, /*mMaxWidth*/
+    0, /*mMaxHeight*/
+    3, /*mOpenGLVersionMajor*/
+    3, /*mOpenGLVersionMinor*/
+    671, /*mFlags*/
+    "/home/marcel/Dev/C++/TIMGE/Sandbox/resources/youtube_logo.png", /*mIconPath*/
+    false, /*mIsFullscreen*/
+};
+>>>>>>> master
 
 Vector<float, 4> color = {1.0f, 0.63f, 0.1f, 1.0f};
 
@@ -42,6 +77,7 @@ Callback::Callbacks callbacks{};
 Game* Game::mInstance = nullptr;
 
 Game::Game()
+<<<<<<< HEAD
  : Application(
          {
             {
@@ -69,11 +105,15 @@ Game::Game()
             },
             callbacks
          })
+=======
+ : Application({win_info, color, callbacks})
+>>>>>>> master
 {
     if (Game::mInstance) {
         throw "Only one instance of Game is allowed!\n";
     }
     mInstance = this;
+<<<<<<< HEAD
 
     Mouse& mouse = GetMouse();
 
@@ -91,6 +131,8 @@ Game::Game()
     // mouse.DeleteCursor(*cursors[1]);
     //
     // mouse.SetCursor(*cursors[1]);
+=======
+>>>>>>> master
 }
 
 Game* Game::GetInstance() {
@@ -98,6 +140,7 @@ Game* Game::GetInstance() {
 }
 void Game::Run()
 {
+<<<<<<< HEAD
     Window& window = GetWindow();
 
     while (!window.ShouldClose()) {
@@ -107,11 +150,24 @@ void Game::Run()
              Render();
          }
          Application::EndFrame();
+=======
+   while (!Application::WindowShouldClose()) {
+        Application::BeginFrame();
+        {
+            Update();
+            Render();
+        }
+        Application::EndFrame();
+>>>>>>> master
     }
 }
 
 void Game::Update()
 {
+<<<<<<< HEAD
+=======
+    //GetWindow().SetAspectRatio(21, 9);
+>>>>>>> master
     // if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     //     glfwSetWindowShouldClose(GetWindow().GetWindow(), 1);
     // } else if (glfwGetKey(GetWindow().GetWindow(), GLFW_KEY_F11) == GLFW_PRESS)
@@ -148,6 +204,7 @@ int main()
 {
     callbacks.mCursorPos = CursorPosCallback;
     callbacks.mKey = KeyCallback;
+<<<<<<< HEAD
     callbacks.mDrop = DropCallback;
 
     try {
@@ -214,5 +271,21 @@ void DropCallback(int pathCount, const char* path[]) {
 
     for (int i = 0; i < pathCount; i++) {
         printf("Path: %s\n", path[i]);
+    }
+=======
+    Game game;
+    game.Run();
+>>>>>>> master
+}
+
+void CursorPosCallback(double xPos, double yPos)
+{
+    Game::GetInstance()->GetWindow().SetTitle(std::format("x = {}, y = {}", xPos, yPos));
+}
+
+void KeyCallback(int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(Game::GetInstance()->GetWindow().GetWindow(), 1);
     }
 }

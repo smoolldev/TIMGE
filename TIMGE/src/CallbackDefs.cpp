@@ -148,7 +148,6 @@ namespace TIMGE::Callback
         else if (event == GLFW_DISCONNECTED) {
             Application::mDisconnectMonitor(monitor);
         }
-
         if (auto func = app->mInfo.mCallbacks.mMonitor; func != nullptr) {
             func(event);
         }

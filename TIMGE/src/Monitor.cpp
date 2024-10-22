@@ -2,12 +2,17 @@
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <algorithm>
+#include <format>
 #include <vector>
 
 #include <GLFW/glfw3.h>
 
 namespace TIMGE
 {
+    MonitorException::MonitorException(std::string message)
+     : Exception(std::format("Monitor: {}", message))
+    {}
+
     std::vector<Monitor> Monitor::mMonitors;
 
     bool Monitor::mMonitorsRetrieved = false;
@@ -45,7 +50,7 @@ namespace TIMGE
         }
 
         if (mMonitors.empty()) {
-            throw "no monitor for you fat fuck!\n";
+            throw MonitorException("There are no monitors available.");
         }
 
         return mMonitors[0];

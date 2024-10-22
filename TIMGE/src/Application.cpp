@@ -3,19 +3,28 @@
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <GLFW/glfw3.h>
+#include <format>
 
 namespace TIMGE
 {
+    ApplicationBaseException::ApplicationBaseException(std::string message)
+     : Exception(std::format("ApplicationBase: {}", message))
+    {}
+
     ApplicationBase::ApplicationBase()
     {
         if (!glfwInit()) {
-	        throw "Failed to initialize GLFW!\n";
+	        throw ApplicationBaseException("Failed to initialize GLFW!");
         }
     }
 
     ApplicationBase::~ApplicationBase() {
         glfwTerminate();
     }
+
+    ApplicationException::ApplicationException(std::string message)
+     : Exception(std::format("Application: {}", message))
+    {}
 
     Application::EventProcessor_T Application::PollEvents = &glfwPollEvents;
     Application::EventProcessor_T Application::WaitEvents = &glfwWaitEvents;
@@ -49,7 +58,7 @@ namespace TIMGE
        cursorScrollOffset{mMouse.GetOffset()}
     {
         if (Application::mInstance) {
-            throw "Only one instance of Application is allowed!\n";
+            throw ApplicationException("Only one instance of Application is allowed!");
         }
         mInstance = this;
 
@@ -87,7 +96,6 @@ namespace TIMGE
     	        Window::RESIZABLE | Window::VISIBLE | Window::DECORATED |
     	        Window::FOCUSED | Window::AUTO_ICONIFY | Window::CENTER_CURSOR |
     	        Window::FOCUS_ON_SHOW,
-    	        "Default",
                 false,
     	    },
             Vector<float, 4> { 0.0f, 0.0f, 0.0f, 1.0f },

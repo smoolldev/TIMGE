@@ -3,11 +3,16 @@
 
 #include <filesystem>
 
+#include <format>
 #include <stb_image/stb_image.h>
 #include <GLFW/glfw3.h>
 
 namespace TIMGE
 {
+    MouseException::MouseException(std::string message)
+     : Exception(std::format("Mouse: {}", message))
+    {}
+
     Mouse::Mouse(const Info& info, Window& window)
      : mWindow{window}
     {
@@ -63,12 +68,12 @@ namespace TIMGE
     [[maybe_unused]] Cursor& Mouse::AddCursor(const std::filesystem::path& image)
     {
         if (!std::filesystem::exists(image)) {
-            throw "Some path to cursor image doesn't exist!\n";
+            throw MouseException(std::format("Cursor at \"{}\" doesn't exist!", image.string()));
         }
         GLFWimage icon;
         icon.pixels = stbi_load(image.string().c_str(), &icon.width, &icon.height, nullptr, 4);
         if (!icon.pixels) {
-            throw "Something went wrong while loading cursor image!\n";
+            throw MouseException("Something went wrong while loading cursor image!");
         }
         std::pair<GLFWcursor*, Cursor> cursor
         {
@@ -76,7 +81,7 @@ namespace TIMGE
             mCursors.size()
         };
         if (!cursor.first) {
-            throw "Something went wront while creating cursor!\n";
+            throw MouseException("Something went wrong while creating cursor!");
         }
         mCursors.push_back(cursor);
         return mCursors.back().second;
@@ -90,7 +95,7 @@ namespace TIMGE
             mCursors.size()
         };
         if (!cursor.first) {
-            throw "Something went wront while creating standard cursor!\n";
+            throw MouseException("Something went wrong while creating standard cursor!");
         }
         mCursors.push_back(cursor);
         return mCursors.back().second;
@@ -98,15 +103,16 @@ namespace TIMGE
 
     void Mouse::DeleteCursor(const Cursor& cursor)
     {
+        if (mCursors.empty()) {
+            throw MouseException("Cannot delete a non-existing cursor.");
+        }
         glfwDestroyCursor(mCursors[cursor.mID].first);
         if (cursor.mID != mCursors.size() - 1) {
             for (int i = cursor.mID + 1; i < mCursors.size(); i++) {
                 mCursors[i].second.mID -= 1;
             }
         }
-        if (mCursors.erase(mCursors.begin() + cursor.mID) == mCursors.end()) {
-            throw "Fucking std::vector!\n";
-        }
+        mCursors.erase(mCursors.begin() + cursor.mID);
     }
 
     void Mouse::SetCursor(const Cursor& cursor) {

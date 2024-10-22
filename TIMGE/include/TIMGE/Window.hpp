@@ -1,15 +1,23 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#include "Exception.hpp"
 #include "Utils/Vector.hpp"
 #include "Monitor.hpp"
 
 #include <cstdint>
 #include <filesystem>
+#include <string>
 #include <string_view>
 
 namespace TIMGE
 {
+    class WindowException : public Exception
+    {
+        public:
+            WindowException(std::string message);
+    };
+
     class Window
     {
         public:
@@ -27,7 +35,6 @@ namespace TIMGE
                 uint32_t mOpenGLVersionMajor;
                 uint32_t mOpenGLVersionMinor;
                 FLAGS mFlags;
-                std::filesystem::path mIconPath;
                 bool mIsFullscreen;
             };
 

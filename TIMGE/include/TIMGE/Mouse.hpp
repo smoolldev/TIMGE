@@ -49,6 +49,12 @@ namespace TIMGE
             uint64_t mID;
     };
 
+    class MouseException : public Exception
+    {
+        public:
+            MouseException(std::string message);
+    };
+
     class Mouse
     {
         private:

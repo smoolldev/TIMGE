@@ -1,6 +1,7 @@
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
 
+#include "Exception.hpp"
 #include "Utils/Vector.hpp"
 
 #include <string_view>
@@ -11,6 +12,12 @@
 
 namespace TIMGE
 {
+    class MonitorException : public Exception
+    {
+        public:
+            MonitorException(std::string message);
+    };
+
     class Monitor
     {
         public:

@@ -3,19 +3,23 @@
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <filesystem>
-#include <iostream>
+#include <format>
 
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>
 
 namespace TIMGE
 {
+    WindowException::WindowException(std::string message)
+     : Exception(std::format("Window: {}", message))
+    {}
+
     Window *Window::mInstance = nullptr;
 
     Window::Window(Window::Info &info, Monitor& monitor) : mInfo{info}, mMonitor{monitor}, mWindow{nullptr}
     {
         if (mInstance) {
-            throw "Only one instance of Window is allowed!\n";
+            throw WindowException("Only one instance of Window is allowed!");
         }
 
         mInstance = this;
@@ -32,14 +36,12 @@ namespace TIMGE
 
         mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
         if (!mWindow) {
-            throw "Failed to create window!\n";
+            throw WindowException("Failed to create window!");
         }
-
-        SetIcon(mInfo.mIconPath);
 
         glfwMakeContextCurrent(mWindow);
         if (!gladLoadGL()) {
-            throw "Failed to load OpenGL!\n";
+            throw WindowException("Failed to load OpenGL!");
         }
 
         glfwSetWindowSizeLimits(
@@ -89,24 +91,17 @@ namespace TIMGE
 
     void Window::SetIcon(std::filesystem::path iconPath)
     {
-        try {
-            if (std::filesystem::exists(iconPath))
-            {
-                GLFWimage image;
+        if (std::filesystem::exists(iconPath))
+        {
+            GLFWimage image;
 
-                image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);
+            image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);
 
-                glfwSetWindowIcon(mWindow, 1, &image);
+            glfwSetWindowIcon(mWindow, 1, &image);
 
-                stbi_image_free(image.pixels);
-            } else {
-                throw Exception("Hello");
-                std::cout << "Image at path: " << iconPath << " does not exist.\n";
-                std::cout << "Setting icon to OS default..." << "\n";
-                glfwSetWindowIcon(mWindow, 0, nullptr);
-            }
-        } catch (Exception e) {
-            std::cout << e.What() << "\n";
+            stbi_image_free(image.pixels);
+        } else {
+            throw WindowException(std::format("Icon at path: \"{}\" does not exist.", iconPath.string()));
         }
     }
 

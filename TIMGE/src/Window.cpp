@@ -1,4 +1,5 @@
 #include "TIMGE/Window.hpp"
+#include "TIMGE/Exception.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <filesystem>
@@ -88,19 +89,24 @@ namespace TIMGE
 
     void Window::SetIcon(std::filesystem::path iconPath)
     {
-        if (std::filesystem::exists(iconPath))
-        {
-            GLFWimage image;
+        try {
+            if (std::filesystem::exists(iconPath))
+            {
+                GLFWimage image;
 
-            image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);
+                image.pixels = stbi_load(iconPath.string().c_str(), &image.width, &image.height, nullptr, 4);
 
-            glfwSetWindowIcon(mWindow, 1, &image);
+                glfwSetWindowIcon(mWindow, 1, &image);
 
-            stbi_image_free(image.pixels);
-        } else {
-            std::cout << "Image at path: " << iconPath << " does not exist.\n";
-            std::cout << "Setting icon to OS default..." << "\n";
-            glfwSetWindowIcon(mWindow, 0, nullptr);
+                stbi_image_free(image.pixels);
+            } else {
+                throw Exception("Hello");
+                std::cout << "Image at path: " << iconPath << " does not exist.\n";
+                std::cout << "Setting icon to OS default..." << "\n";
+                glfwSetWindowIcon(mWindow, 0, nullptr);
+            }
+        } catch (Exception e) {
+            std::cout << e.What() << "\n";
         }
     }
 

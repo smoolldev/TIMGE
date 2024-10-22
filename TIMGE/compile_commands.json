@@ -13,6 +13,12 @@
 },
 {
   "directory": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug",
+  "command": "/usr/bin/c++  -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/glad/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/glfw/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Exception.cpp.o -c /home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/src/Exception.cpp",
+  "file": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/src/Exception.cpp",
+  "output": "CMakeFiles/TIMGE.dir/src/Exception.cpp.o"
+},
+{
+  "directory": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/build/linux_x64-Debug",
   "command": "/usr/bin/c++  -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/glad/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/glfw/include -I/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/vendor/stb_image/include -std=gnu++20 -flto=auto -fno-fat-lto-objects -o CMakeFiles/TIMGE.dir/src/Keyboard.cpp.o -c /home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/src/Keyboard.cpp",
   "file": "/home/smoolldev/SmoollDev/smoolldev/Development/CPP/TIMGE/TIMGE/src/Keyboard.cpp",
   "output": "CMakeFiles/TIMGE.dir/src/Keyboard.cpp.o"

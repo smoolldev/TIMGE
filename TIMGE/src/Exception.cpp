@@ -1,26 +1,27 @@
 #include "TIMGE/Exception.hpp"
 
-#include <string_view>
 #include <format>
+#include <source_location>
+#include <string>
 
 namespace TIMGE
 {
     Exception::Exception()
     {}
 
-    Exception::Exception(std::string_view message)
-     : mWhat{message}
-    {}
+    Exception::Exception(std::string message, const std::source_location location)
+    {
+        std::string filename{location.file_name()};
+        char pathSeparator = filename.find('/') == filename.end() - filename.begin() ? '\\' : '/';
+        filename = filename.substr(filename.find_last_of(pathSeparator) + 1);
+        mWhat = std::format("{} @ {}: {}", filename, location.line(), message);
+    }
 
-    Exception::Exception(std::string_view message, std::filesystem::path filepath, int line)
-     : mWhat(std::format("{}: {} - {}", filepath.c_str(), line, message))
-    {}
-
-    [[nodiscard]] const std::string_view& Exception::What() const {
+    [[nodiscard]] const std::string& Exception::What() const {
         return mWhat;
     }
 
-    [[nodiscard]] const std::string_view& Exception::operator()() const {
+    [[nodiscard]] const std::string& Exception::operator()() const {
         return mWhat;
     }
 }

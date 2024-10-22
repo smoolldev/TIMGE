@@ -1,11 +1,11 @@
 #ifndef EXCEPTION_HPP
 #define EXCEPTION_HPP
 
-#include <filesystem>
-#include <string_view>
+#include <source_location>
+#include <string>
 
-#define MAKE_EXCEPTION_MESSAGE(message) \
-	std::format("{}: {} - {}", __FILE__, __LINE__, message)
+#define MAKE_EXCEPTION(message) \
+	Exception(std::format("{} @ {}: {}", __FILE_NAME__, __LINE__, message))
 
 namespace TIMGE
 {
@@ -13,14 +13,13 @@ namespace TIMGE
 	{
 		public:
 			Exception();
-			Exception(std::string_view message);
-			Exception(std::string_view message, std::filesystem::path filepath, int line);
+			Exception(std::string message, const std::source_location location = std::source_location::current());
 
-			[[nodiscard]] virtual const std::string_view& What() const;
+			[[nodiscard]] virtual const std::string& What() const;
 
-			[[nodiscard]] virtual const std::string_view& operator()() const;
+			[[nodiscard]] virtual const std::string& operator()() const;
 		private:
-			std::string_view mWhat;
+			std::string mWhat;
 	};
 }
 

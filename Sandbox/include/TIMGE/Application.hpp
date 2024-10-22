@@ -15,6 +15,12 @@ namespace TIMGE
 {
 	using Time = double;
 
+	class ApplicationBaseException : public Exception
+    {
+        public:
+            ApplicationBaseException(std::string message);
+    };
+
     class ApplicationBase
     {
 		public:
@@ -23,6 +29,12 @@ namespace TIMGE
 		    virtual void Run() = 0;
 		    virtual void Update() = 0;
 		    virtual void Render() = 0;
+    };
+
+	class ApplicationException : public Exception
+    {
+        public:
+            ApplicationException(std::string message);
     };
 
     class Application : public ApplicationBase

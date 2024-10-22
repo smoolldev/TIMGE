@@ -57,7 +57,6 @@ Game::Game()
                 3, /*mOpenGLVersionMajor*/
                 3, /*mOpenGLVersionMinor*/
                 671, /*mFlags*/
-                {},//"resources/youtube_logo.png", /*mIconPath*/
                 false, /*mIsFullscreen*/
             },
             {

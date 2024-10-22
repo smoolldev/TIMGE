@@ -76,8 +76,10 @@ namespace TIMGE
             static constexpr FLAGS FOCUS_ON_SHOW = (1 << 9);
             static constexpr FLAGS SCALE_TO_MONITOR = (1 << 10);
         private:
+        // WARNING: REMOVE!!!!!!!!!!!!!!!!!!!
+        public:
             GLFWwindow* mGetWindow();
-
+        private:
             static constexpr uint32_t mWINDOWHINTS[]
             {
                 GLFW_RESIZABLE,

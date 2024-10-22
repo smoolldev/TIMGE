@@ -7,6 +7,10 @@
 
 #include <GLFW/glfw3.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 #include <stdexcept>
 #include <cstdio>
 #include <iostream>
@@ -75,6 +79,14 @@ Game::Game()
 
     Mouse& mouse = GetMouse();
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window.mGetWindow(), true);
+    ImGui_ImplOpenGL3_Init();
     // mouse.AddCursor("resources/cursor.png");
     // mouse.AddCursor("resources/cursor (1).png");
     // mouse.AddCursor(TIMGE::StandardCursor::IBEAM_CURSOR);
@@ -99,11 +111,18 @@ void Game::Run()
     Window& window = GetWindow();
 
     while (!window.ShouldClose()) {
+         ImGui_ImplOpenGL3_NewFrame();
+         ImGui_ImplGlfw_NewFrame();
+         ImGui::NewFrame();
          Application::BeginFrame();
          {
+             static bool showDemo = true;
+             ImGui::ShowDemoWindow(&showDemo);
              Update();
              Render();
          }
+         ImGui::Render();
+         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
          Application::EndFrame();
     }
 }
@@ -121,6 +140,8 @@ int main()
 {
     callbacks.mKey = KeyCallback;
     callbacks.mDrop = DropCallback;
+
+    
 
     try {
         Game game;

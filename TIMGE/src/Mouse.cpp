@@ -6,6 +6,8 @@
 #include <format>
 #include <stb_image/stb_image.h>
 #include <GLFW/glfw3.h>
+#include <string>
+#include <unordered_map>
 
 namespace TIMGE
 {
@@ -89,13 +91,26 @@ namespace TIMGE
 
     [[maybe_unused]] Cursor& Mouse::AddCursor(StandardCursor shape)
     {
+        static std::unordered_map<StandardCursor, std::string> shapeNames {
+            { StandardCursor::ARROW_CURSOR, "Arrow" },
+            { StandardCursor::IBEAM_CURSOR, "IBeam" },
+            { StandardCursor::CROSSHAIR_CURSOR, "Crosshair" },
+            { StandardCursor::POINTING_HAND_CURSOR, "Pointing Hand" },
+            { StandardCursor::RESIZE_EW_CURSOR, "Resize EW" },
+            { StandardCursor::RESIZE_NS_CURSOR , "Resize NS" },
+            { StandardCursor::RESIZE_NWSE_CURSOR, "Resize NWSE" },
+            { StandardCursor::RESIZE_NESW_CURSOR, "Resize NESW" },
+            { StandardCursor::RESIZE_ALL_CURSOR, "Resize All" },
+            { StandardCursor::NOT_ALLOWED_CURSOR, "Not Allowed" }
+        };
+
         std::pair<GLFWcursor*, Cursor> cursor
         {
             glfwCreateStandardCursor(static_cast<int>(shape)),
             mCursors.size()
         };
         if (!cursor.first) {
-            throw MouseException("Something went wrong while creating standard cursor!");
+            throw MouseException(std::format("Your OS does not support \"{}\" cursor.", shapeNames[shape]));
         }
         mCursors.push_back(cursor);
         return mCursors.back().second;

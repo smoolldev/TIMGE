@@ -78,6 +78,7 @@ namespace TIMGE
 			[[nodiscard]] Keyboard& GetKeyboard();
 			[[nodiscard]] const Time& GetDeltaTime();
 			[[nodiscard]] const V4f& GetBackgroundColor();
+			[[nodiscard]] EventProcessor_T GetEventProcessor();
 		private:
 			Info mInfo;
 		    Monitor mMonitor;

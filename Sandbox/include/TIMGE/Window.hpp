@@ -45,6 +45,7 @@ namespace TIMGE
             [[nodiscard]] const V2i32& GetPosition() const;
             [[nodiscard]] const V2i32& GetSize() const;
             [[nodiscard]] const V2i32& GetFramebufferSize() const;
+            [[nodiscard]] const V2i32& GetAspectRatio() const;
             [[nodiscard]] const V4i32& GetFrameSize() const;
             [[nodiscard]] const V2f& GetContentScale() const;
             [[nodiscard]] float GetOpacity() const;
@@ -110,6 +111,7 @@ namespace TIMGE
             V2i32 mSize;
             V2i32 mPosition;
             V2i32 mFramebufferSize;
+            V2i32 mAspectRatio;
             V4i32 mFrameSize;
             V2f mContentScale;
 

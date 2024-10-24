@@ -3,6 +3,7 @@
 
 #include <TIMGE/TIMGE.hpp>
 #include "Callbacks.hpp"
+#include "TIMGE/Utils/Vector.hpp"
 
 class Game : public TIMGE::Application
 {
@@ -15,11 +16,38 @@ class Game : public TIMGE::Application
         void Update();
         void Render();
     private:
+        const std::string_view& mTitle;
+        const TIMGE::V2i32& mWindowSize;
+        const TIMGE::V2i32& mWindowPos;
+        const TIMGE::V2i32& mFramebufferSize;
+        const TIMGE::V2i32& mAspectRatio;
+        const TIMGE::V4i32& mFrameSize;
+        const TIMGE::V2f& mContentScale;
+
         static TIMGE::Application::Info mGameInfo;
         static Game* mInstance;
         static Game* GetInstance();
         void mMainWindow();
         void mLeftWindow();
+ 
+        void mWindowInfoPosition();
+        void mWindowInfoSize();
+        void mWindowInfoFramebufferSize();
+        void mWindowInfoFrameSize();
+        void mWindowInfoTitle();
+        void mWindowInfoContentScale();
+        void mWindowInfoOpacity();
+        void mWindowInfoFullscreen();
+        void mWindowInfoAspectRatio();
+        void mWindowAttrMinimize();
+        void mWindowAttrMaximize();
+        void mWindowAttrRestore();
+        void mWindowAttrShow();
+        void mWindowAttrHide();
+        void mWindowAttrFocus();
+        void mWindowAttrRequestAttention();
+        void mWindowAttrFullscreen();
+        void mWindowAttrBorderlessFullscreen();
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);

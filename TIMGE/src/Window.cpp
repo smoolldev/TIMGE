@@ -43,6 +43,8 @@ namespace TIMGE
         if (!gladLoadGL()) {
             throw WindowException("Failed to load OpenGL!");
         }
+        
+        glViewport(360, 120, 360, 360);
 
         glfwGetWindowSize(mWindow, &mSize[V2i32::WIDTH], &mSize[V2i32::HEIGHT]);
         glfwGetWindowPos(mWindow, &mPosition[V2i32::X], &mPosition[V2i32::Y]);
@@ -52,6 +54,7 @@ namespace TIMGE
             &mFrameSize[V2i32::Z], &mFrameSize[V2i32::W]
         );
         glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
+        mAspectRatio = {mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT]};
 
         glfwSetWindowSizeLimits(
             mWindow,
@@ -80,6 +83,10 @@ namespace TIMGE
 
     [[nodiscard]] const V2i32& Window::GetFramebufferSize() const {
         return mFramebufferSize;
+    }
+
+    [[nodiscard]] const V2i32& Window::GetAspectRatio() const {
+        return mAspectRatio;
     }
 
     [[nodiscard]] const V4i32& Window::GetFrameSize() const {
@@ -124,7 +131,8 @@ namespace TIMGE
     }
 
     void Window::SetAspectRatio(V2i32 aspectRatio) {
-        glfwSetWindowAspectRatio(mWindow, aspectRatio[V2i32::A], aspectRatio[V2i32::B]);
+        glfwSetWindowAspectRatio(mWindow, aspectRatio[V2i32::X], aspectRatio[V2i32::Y]);
+        mAspectRatio = aspectRatio;
     }
 
     void Window::SetSize(V2i32 size) {

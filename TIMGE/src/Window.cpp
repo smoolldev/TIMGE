@@ -44,6 +44,15 @@ namespace TIMGE
             throw WindowException("Failed to load OpenGL!");
         }
 
+        glfwGetWindowSize(mWindow, &mSize[V2i32::WIDTH], &mSize[V2i32::HEIGHT]);
+        glfwGetWindowPos(mWindow, &mPosition[V2i32::X], &mPosition[V2i32::Y]);
+        glfwGetFramebufferSize(mWindow, &mFramebufferSize[V2i32::WIDTH], &mFramebufferSize[V2i32::HEIGHT]);
+        glfwGetWindowFrameSize(mWindow, 
+            &mFrameSize[V2i32::X], &mFrameSize[V2i32::Y],
+            &mFrameSize[V2i32::Z], &mFrameSize[V2i32::W]
+        );
+        glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
+
         glfwSetWindowSizeLimits(
             mWindow,
             static_cast<int>((mInfo.mMinWidth == 0) ? GLFW_DONT_CARE : mInfo.mMinWidth),
@@ -55,6 +64,10 @@ namespace TIMGE
 
     Window::~Window() {
         glfwDestroyWindow(mWindow);
+    }
+
+    [[nodiscard]] const std::string_view& Window::GetTitle() const {
+        return mInfo.mTitle;
     }
 
     [[nodiscard]] const V2i32& Window::GetPosition() const {
@@ -86,6 +99,7 @@ namespace TIMGE
     }
 
     void Window::SetTitle(std::string_view title) {
+        mInfo.mTitle = title;
         glfwSetWindowTitle(mWindow, title.data());
     }
 

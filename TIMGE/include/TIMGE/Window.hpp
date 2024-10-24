@@ -41,6 +41,7 @@ namespace TIMGE
             Window(Info& info, Monitor& monitor);
             ~Window();
 
+            [[nodiscard]] const std::string_view& GetTitle() const;
             [[nodiscard]] const V2i32& GetPosition() const;
             [[nodiscard]] const V2i32& GetSize() const;
             [[nodiscard]] const V2i32& GetFramebufferSize() const;

@@ -169,6 +169,9 @@ void Game::mLeftWindow()
     );
 
     ImGui::Text("FPS: %d", (int)(deltaTime * 1'000'000.0 / 60.0));
+    if (ImGui::Checkbox("Fullscreen", &set_fscr)) {
+        window.BorderlessFullscreen();
+    }
     ImGui::Text("Window Title: %s", title.data());
     ImGui::SetNextItemWidth((float)window_size[TIMGE::V2i32::WIDTH] / 3);
     if (ImGui::InputText("##title_input", title_buf, 63, ImGuiInputTextFlags_EnterReturnsTrue)) {

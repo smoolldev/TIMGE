@@ -183,19 +183,19 @@ namespace TIMGE
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
+        static V2i32 size = GetSize();
+        static V2i32 position = GetPosition();
+
         if (!mIsFullscreen)
         {
-            mSize = GetSize();
-            mPosition = GetPosition();
-
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
             SetSize({ mode->width, mode->height} );
             SetPosition({ 0, 0 });
         } else
         {
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
-            SetSize({ mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT] });
-            SetPosition({ mPosition[V2i32::X], mPosition[V2i32::Y] });
+            SetSize({ size[V2i32::WIDTH], size[V2i32::HEIGHT] });
+            SetPosition({ position[V2i32::X], position[V2i32::Y] });
         }
 
         mIsFullscreen = !mIsFullscreen;
@@ -207,14 +207,13 @@ namespace TIMGE
 
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-        if (!mIsFullscreen)
-        {
-            mSize = GetSize();
-            mPosition = GetPosition();
+        static V2i32 size = GetSize();
+        static V2i32 position = GetPosition();
 
+        if (!mIsFullscreen) {
             glfwSetWindowMonitor(mWindow, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
         } else {
-            glfwSetWindowMonitor(mWindow, nullptr, mPosition[V2i32::X], mPosition[V2i32::Y], mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT], 0);
+            glfwSetWindowMonitor(mWindow, nullptr, position[V2i32::X], position[V2i32::Y], size[V2i32::WIDTH], size[V2i32::HEIGHT], 0);
         }
 
         mIsFullscreen = !mIsFullscreen;

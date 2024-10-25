@@ -137,13 +137,10 @@ void Game::mMainWindow()
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
-    //|   ImGuiWindowFlags_NoCollapse
+    |   ImGuiWindowFlags_NoCollapse
     );
 
     ImGui::Text("Delta Time: %f", deltaTime);
-
-    // now;
-    // start;
 
     mWindowInfoTitle();
     mWindowInfoSize();

@@ -19,9 +19,7 @@ namespace TIMGE
     Window::Window(Window::Info &info, Monitor& monitor) 
      :  mInfo{info}, 
         mMonitor{monitor}, 
-        mWindow{nullptr}, 
-        mIsFullscreen{info.mIsFullscreen}, 
-        mFullscreenMode{static_cast<uint8_t>(mIsFullscreen ? 1 : 0)}
+        mWindow{nullptr}
     {
         if (mInstance) {
             throw WindowException("Only one instance of Window is allowed!");
@@ -29,49 +27,25 @@ namespace TIMGE
 
         mInstance = this;
 
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, mInfo.mOpenGLVersionMajor);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, mInfo.mOpenGLVersionMinor);
+        mValidateInfo();
 
-        for (int i = 0; i < sizeof(mWINDOWHINTS) / sizeof(mWINDOWHINTS[0]); i++) {
-            glfwWindowHint(mWINDOWHINTS[i], (mInfo.mFlags >> i) & 1);
-        }
-        
+        mCreateWindow();
 
-        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
-        if (!mWindow) {
-            throw WindowException("Failed to create window!");
-        }
+        mLoadGL();
 
-        glfwMakeContextCurrent(mWindow);
-        if (!gladLoadGL()) {
-            throw WindowException("Failed to load OpenGL!");
-        }
-        
-        glViewport(360, 120, 360, 360);
+        mRetrieveSize();
+        mRetrievePosition();
+        mRetrieveFramebufferSize();
+        mRetrieveFrameSize();
+        mRetrieveContentScale();
+        mRetrieveMonitor();
+        mRetrieveVideoMode();
 
-        glfwGetWindowSize(mWindow, &mSize[V2i32::WIDTH], &mSize[V2i32::HEIGHT]);
-        glfwGetWindowPos(mWindow, &mPosition[V2i32::X], &mPosition[V2i32::Y]);
-        glfwGetFramebufferSize(mWindow, &mFramebufferSize[V2i32::WIDTH], &mFramebufferSize[V2i32::HEIGHT]);
-        glfwGetWindowFrameSize(mWindow, 
-            &mFrameSize[V2i32::X], &mFrameSize[V2i32::Y],
-            &mFrameSize[V2i32::Z], &mFrameSize[V2i32::W]
-        );
-        glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
-        mAspectRatio = {mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT]};
+        mInitializeAspectRatio();
+        mInitializeSizeBeforeFullscreen();
+        mInitializePositionBeforeFullscreen();
 
-        mSizeBeforeFullscreen = mSize;
-        mPositionBeforeFullscreen = mPosition;
-        mFullscreenMonitor = mMonitor.mGetMonitor();
-        mVidMode = glfwGetVideoMode(mFullscreenMonitor);
-
-        glfwSetWindowSizeLimits(
-            mWindow,
-            static_cast<int>((mInfo.mMinWidth == 0) ? GLFW_DONT_CARE : mInfo.mMinWidth),
-            static_cast<int>((mInfo.mMinHeight == 0) ? GLFW_DONT_CARE : mInfo.mMinHeight),
-            static_cast<int>((mInfo.mMaxWidth == 0) ? GLFW_DONT_CARE : mInfo.mMaxWidth),
-            static_cast<int>((mInfo.mMaxHeight == 0) ? GLFW_DONT_CARE : mInfo.mMaxHeight)
-        );
+        SetSizeLimits(mInfo.mSizeLimits);
     }
 
     Window::~Window() {
@@ -88,6 +62,10 @@ namespace TIMGE
 
     [[nodiscard]] const V2i32& Window::GetSize() const {
         return mSize;
+    }
+
+    [[nodiscard]] const V4ui32& Window::GetSizeLimits() const {
+        return mSizeLimits;
     }
 
     [[nodiscard]] const V2i32& Window::GetFramebufferSize() const {
@@ -140,12 +118,27 @@ namespace TIMGE
     }
 
     void Window::SetAspectRatio(V2i32 aspectRatio) {
-        glfwSetWindowAspectRatio(mWindow, aspectRatio[V2i32::X], aspectRatio[V2i32::Y]);
+        glfwSetWindowAspectRatio(mWindow, aspectRatio[V2i32::NUMERATOR], aspectRatio[V2i32::DENOMINATOR]);
         mAspectRatio = aspectRatio;
     }
 
     void Window::SetSize(V2i32 size) {
         glfwSetWindowSize(mWindow, size[V2i32::WIDTH], size[V2i32::HEIGHT]);
+    }
+
+    void Window::SetSizeLimits(V4ui32 sizeLimits)
+    {
+        if ((sizeLimits[V4ui32::MAX_WIDTH] > mVidMode->width) || (sizeLimits[V4ui32::MAX_HEIGHT] > mVidMode->height)) {
+            throw WindowException("Size limits bigger than monitor allows for.");
+        }
+
+        glfwSetWindowSizeLimits(
+            mWindow,
+            static_cast<int>((sizeLimits[V4ui32::MIN_WIDTH] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_WIDTH]),
+            static_cast<int>((sizeLimits[V4ui32::MIN_HEIGHT] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_HEIGHT]),
+            static_cast<int>((sizeLimits[V4ui32::MAX_WIDTH] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_WIDTH]),
+            static_cast<int>((sizeLimits[V4ui32::MAX_HEIGHT] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_HEIGHT])
+        );
     }
 
     void Window::SetOpacity(float opacity) {
@@ -250,4 +243,86 @@ namespace TIMGE
             throw WindowException("KURWA KUBA! MÓWIŁEM!");
         }
     }
+
+    void Window::mValidateInfo()
+    {
+        // size
+        if (mInfo.mSize == { 0, 0 }) {
+            throw WindowException("Size cannot be 0.");
+        } else if (mInfo.)
+        // sizelimits
+        // aspectratio
+        // opacity
+        // openglversion
+        // fullscreen
+    }
+
+    void Window::mCreateWindow()
+    {
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, mInfo.mOpenGLVersionMajor);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, mInfo.mOpenGLVersionMinor);
+
+        for (int i = 0; i < sizeof(mWINDOWHINTS) / sizeof(mWINDOWHINTS[0]); i++) {
+            glfwWindowHint(mWINDOWHINTS[i], (mInfo.mFlags >> i) & 1);
+        }
+
+        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
+        if (!mWindow) {
+            throw WindowException("Failed to create window!");
+        }
+    }
+
+    void Window::mLoadGL()
+    {
+        glfwMakeContextCurrent(mWindow);
+        if (!gladLoadGL()) {
+            throw WindowException("Failed to load OpenGL!");
+        }
+    }
+
+    void Window::mRetrieveSize() {
+        glfwGetWindowSize(mWindow, &mSize[V2i32::WIDTH], &mSize[V2i32::HEIGHT]);
+    }
+
+    void Window::mRetrievePosition() {
+        glfwGetWindowPos(mWindow, &mPosition[V2i32::X], &mPosition[V2i32::Y]);
+    }
+
+    void Window::mRetrieveFramebufferSize() {
+        glfwGetFramebufferSize(mWindow, &mFramebufferSize[V2i32::WIDTH], &mFramebufferSize[V2i32::HEIGHT]);
+    }
+
+    void Window::mRetrieveFrameSize()
+    {
+        glfwGetWindowFrameSize(mWindow, 
+            &mFrameSize[V2i32::X], &mFrameSize[V2i32::Y],
+            &mFrameSize[V2i32::Z], &mFrameSize[V2i32::W]
+        );
+    }
+
+    void Window::mRetrieveContentScale() {
+        glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
+    }
+
+    void Window::mRetrieveMonitor() {
+        mFullscreenMonitor = mMonitor.mGetMonitor();
+    }
+
+    void Window::mRetrieveVideoMode() {
+        mVidMode = glfwGetVideoMode(mFullscreenMonitor);
+    }
+
+    void Window::mInitializeAspectRatio() {
+        mAspectRatio = { mSize[V2i32::NUMERATOR], mSize[V2i32::DENOMINATOR] };
+    }
+
+    void Window::mInitializeSizeBeforeFullscreen() {
+        mSizeBeforeFullscreen = mSize;
+    }
+
+    void Window::mInitializePositionBeforeFullscreen() {
+        mPositionBeforeFullscreen = mPosition;
+    }
+
 } // namespace TIMGE

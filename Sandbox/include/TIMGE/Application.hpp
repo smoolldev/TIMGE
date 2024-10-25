@@ -8,13 +8,12 @@
 #include "Keyboard.hpp"
 #include "Monitor.hpp"
 
+#include <chrono>
 #include <cstdint>
 #include <string_view>
 
 namespace TIMGE
 {
-	using Time = double;
-
 	class ApplicationBaseException : public Exception
     {
         public:
@@ -76,7 +75,7 @@ namespace TIMGE
 		    [[nodiscard]] Window& GetWindow();
 			[[nodiscard]] Mouse& GetMouse();
 			[[nodiscard]] Keyboard& GetKeyboard();
-			[[nodiscard]] const Time& GetDeltaTime();
+			[[nodiscard]] const double& GetDeltaTime();
 			[[nodiscard]] const V4f& GetBackgroundColor();
 			[[nodiscard]] EventProcessor_T GetEventProcessor();
 		private:
@@ -86,8 +85,10 @@ namespace TIMGE
 			Mouse mMouse;
 			Keyboard mKeyboard;
 
-			Time mDeltaTime;
-			Time mStartTime;
+			std::chrono::steady_clock mSteadyClock;
+
+			double mDeltaTime;
+			std::chrono::steady_clock::time_point mStartTime;
 
 			EventProcessor_T mEventProcessor;
 		public:
@@ -96,7 +97,7 @@ namespace TIMGE
 			Mouse& mouse;
 			Keyboard& keyboard;
 
-			const Time& deltaTime;
+			const double& deltaTime;
 
 			const V2i32& windowPosition;
 			const V2i32& windowSize;

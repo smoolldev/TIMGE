@@ -7,6 +7,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <chrono>
+
 Game* Game::mInstance = nullptr;
 
 TIMGE::Application::Info Game::mGameInfo {
@@ -138,24 +140,29 @@ void Game::mMainWindow()
     //|   ImGuiWindowFlags_NoCollapse
     );
 
-    mWindowInfoTitle();
-    mWindowInfoSize();
-    mWindowInfoPosition();
-    mWindowInfoFramebufferSize();
-    mWindowInfoAspectRatio();
-    mWindowInfoFrameSize();
-    mWindowInfoContentScale();
-    mWindowInfoOpacity();
-    mWindowInfoFullscreen();
-    mWindowAttrMinimize();
-    mWindowAttrMaximize();
-    mWindowAttrRestore();
-    mWindowAttrShow();
-    mWindowAttrHide();
-    mWindowAttrFocus();
-    mWindowAttrRequestAttention();
-    mWindowAttrFullscreen();
-    mWindowAttrBorderlessFullscreen();
+    ImGui::Text("Delta Time: %f", deltaTime);
+
+    // now;
+    // start;
+
+    //mWindowInfoTitle();
+    //mWindowInfoSize();
+    //mWindowInfoPosition();
+    //mWindowInfoFramebufferSize();
+    //mWindowInfoAspectRatio();
+    //mWindowInfoFrameSize();
+    //mWindowInfoContentScale();
+    //mWindowInfoOpacity();
+    //mWindowInfoFullscreen();
+    //mWindowAttrMinimize();
+    //mWindowAttrMaximize();
+    //mWindowAttrRestore();
+    //mWindowAttrShow();
+    //mWindowAttrHide();
+    //mWindowAttrFocus();
+    //mWindowAttrRequestAttention();
+    //mWindowAttrFullscreen();
+    //mWindowAttrBorderlessFullscreen();
 
     if (ImGui::ColorEdit3("", &new_bg_color.x)) {
         SetBackgroundColor(TIMGE::V4f{
@@ -235,7 +242,7 @@ void Game::mWindowInfoFrameSize()
 void Game::mWindowInfoTitle()
 {
     static char title_buf[64]{};
-    ImGui::Text("FPS: %d", (int)(deltaTime * 1'000'000.0 / 60.0));
+    //ImGui::Text("FPS: %d", (int)(deltaTime * 1'000'000.0 / 60.0));
     ImGui::Text("Window Title: %s", mTitle.data());
     ImGui::SetNextItemWidth((float)mWindowSize[TIMGE::V2i32::WIDTH] / 3);
     if (ImGui::InputText("##title_input", title_buf, 63, ImGuiInputTextFlags_EnterReturnsTrue)) {

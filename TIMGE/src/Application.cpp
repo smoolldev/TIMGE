@@ -41,8 +41,8 @@ namespace TIMGE
        mWindow{mInfo.mWindowInfo, mMonitor},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
-       mDeltaTime{0},
-       mStartTime{0},
+       mDeltaTime{},
+       mStartTime{std::chrono::steady_clock::now()},
        mEventProcessor{PollEvents},
        monitor{mMonitor},
        window{mWindow},
@@ -110,7 +110,7 @@ namespace TIMGE
 
     void Application::BeginFrame()
     {
-        mStartTime = GetTime();
+        mStartTime = mSteadyClock.now();
 
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(
@@ -123,7 +123,7 @@ namespace TIMGE
 
     void Application::EndFrame()
     {
-        mDeltaTime = GetTime() - mStartTime;
+        mDeltaTime = std::chrono::nanoseconds(mSteadyClock.now() - mStartTime).count() * 1.0E-9;
 
         mEventProcessor();
 
@@ -154,7 +154,7 @@ namespace TIMGE
         return mKeyboard;
     }
 
-    [[nodiscard]] const Time& Application::GetDeltaTime() {
+    [[nodiscard]] const double& Application::GetDeltaTime() {
         return mDeltaTime;
     }
 

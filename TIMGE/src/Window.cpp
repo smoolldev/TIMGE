@@ -16,7 +16,12 @@ namespace TIMGE
 
     Window *Window::mInstance = nullptr;
 
-    Window::Window(Window::Info &info, Monitor& monitor) : mInfo{info}, mMonitor{monitor}, mWindow{nullptr}
+    Window::Window(Window::Info &info, Monitor& monitor) 
+     :  mInfo{info}, 
+        mMonitor{monitor}, 
+        mWindow{nullptr}, 
+        mIsFullscreen{info.mIsFullscreen}, 
+        mFullscreenMode{static_cast<uint8_t>(mIsFullscreen ? 1 : 0)}
     {
         if (mInstance) {
             throw WindowException("Only one instance of Window is allowed!");
@@ -31,8 +36,7 @@ namespace TIMGE
         for (int i = 0; i < sizeof(mWINDOWHINTS) / sizeof(mWINDOWHINTS[0]); i++) {
             glfwWindowHint(mWINDOWHINTS[i], (mInfo.mFlags >> i) & 1);
         }
-
-        mIsFullscreen = mInfo.mIsFullscreen;
+        
 
         mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
         if (!mWindow) {
@@ -55,6 +59,11 @@ namespace TIMGE
         );
         glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
         mAspectRatio = {mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT]};
+
+        mSizeBeforeFullscreen = mSize;
+        mPositionBeforeFullscreen = mPosition;
+        mFullscreenMonitor = mMonitor.mGetMonitor();
+        mVidMode = glfwGetVideoMode(mFullscreenMonitor);
 
         glfwSetWindowSizeLimits(
             mWindow,
@@ -187,23 +196,18 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        GLFWmonitor* monitor = mMonitor.mGetMonitor();
-
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-        static V2i32 size = GetSize();
-        static V2i32 position = GetPosition();
-
         if (!mIsFullscreen)
         {
+            mFullscreenMode = 2;
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
-            SetSize({ mode->width, mode->height} );
+            SetSize({ mVidMode->width, mVidMode->height} );
             SetPosition({ 0, 0 });
         } else
         {
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
-            SetSize({ size[V2i32::WIDTH], size[V2i32::HEIGHT] });
-            SetPosition({ position[V2i32::X], position[V2i32::Y] });
+            SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
+            SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
+            mFullscreenMode = 0;
         }
 
         mIsFullscreen = !mIsFullscreen;
@@ -211,17 +215,14 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        GLFWmonitor* monitor = mMonitor.mGetMonitor();
-
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-        static V2i32 size = GetSize();
-        static V2i32 position = GetPosition();
-
         if (!mIsFullscreen) {
-            glfwSetWindowMonitor(mWindow, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            mFullscreenMode = 1;
+            glfwSetWindowMonitor(mWindow, mFullscreenMonitor, 0, 0, mVidMode->width, mVidMode->height, mVidMode->refreshRate);
         } else {
-            glfwSetWindowMonitor(mWindow, nullptr, position[V2i32::X], position[V2i32::Y], size[V2i32::WIDTH], size[V2i32::HEIGHT], 0);
+            glfwSetWindowMonitor(mWindow, nullptr, mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y], mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT], 0);
+            SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
+            SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
+            mFullscreenMode = 0;
         }
 
         mIsFullscreen = !mIsFullscreen;
@@ -233,5 +234,20 @@ namespace TIMGE
 
     GLFWwindow *Window::mGetWindow() {
         return mWindow;
+    }
+
+    void Window::mUpdateMonitor()
+    {
+        GLFWmonitor* monitor = mMonitor.mGetMonitor();
+        const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
+        if (mFullscreenMode == 0) {
+           // TODO: Always set position after updating monitor 
+        } else if (mFullscreenMode == 1) {
+            
+        } else if (mFullscreenMode == 2) {
+
+        } else {
+            throw WindowException("KURWA KUBA! MÓWIŁEM!");
+        }
     }
 } // namespace TIMGE

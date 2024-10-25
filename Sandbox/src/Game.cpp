@@ -145,24 +145,24 @@ void Game::mMainWindow()
     // now;
     // start;
 
-    //mWindowInfoTitle();
-    //mWindowInfoSize();
-    //mWindowInfoPosition();
-    //mWindowInfoFramebufferSize();
-    //mWindowInfoAspectRatio();
-    //mWindowInfoFrameSize();
-    //mWindowInfoContentScale();
-    //mWindowInfoOpacity();
-    //mWindowInfoFullscreen();
-    //mWindowAttrMinimize();
-    //mWindowAttrMaximize();
-    //mWindowAttrRestore();
-    //mWindowAttrShow();
-    //mWindowAttrHide();
-    //mWindowAttrFocus();
-    //mWindowAttrRequestAttention();
-    //mWindowAttrFullscreen();
-    //mWindowAttrBorderlessFullscreen();
+    mWindowInfoTitle();
+    mWindowInfoSize();
+    mWindowInfoPosition();
+    mWindowInfoFramebufferSize();
+    mWindowInfoAspectRatio();
+    mWindowInfoFrameSize();
+    mWindowInfoContentScale();
+    mWindowInfoOpacity();
+    mWindowInfoFullscreen();
+    mWindowAttrMinimize();
+    mWindowAttrMaximize();
+    mWindowAttrRestore();
+    mWindowAttrShow();
+    mWindowAttrHide();
+    mWindowAttrFocus();
+    mWindowAttrRequestAttention();
+    mWindowAttrFullscreen();
+    mWindowAttrBorderlessFullscreen();
 
     if (ImGui::ColorEdit3("", &new_bg_color.x)) {
         SetBackgroundColor(TIMGE::V4f{
@@ -271,6 +271,10 @@ void Game::mWindowInfoFullscreen()
 {
     static bool set_fscr = window.GetFullscreen();
     if (ImGui::Checkbox("Fullscreen", &set_fscr)) {
+        window.Fullscreen();
+    }
+    static bool set_bjfscr = window.GetFullscreen();
+    if (ImGui::Checkbox("Blowjob Fullscreen", &set_bjfscr)) {
         window.BorderlessFullscreen();
     }
 }

@@ -85,10 +85,11 @@ namespace TIMGE
             static constexpr FLAGS FOCUS_ON_SHOW = (1 << 9);
             static constexpr FLAGS SCALE_TO_MONITOR = (1 << 10);
         private:
-        // WARNING: REMOVE!!!!!!!!!!!!!!!!!!!
+        // WARNING: REMOVE WHEN IMGUI CONDITIONAL COMPILATION IS IMPLEMENTED!!!!!!!!!!!!!!!!!!!
         public:
             GLFWwindow* mGetWindow();
         private:
+            void mUpdateMonitor();
             static constexpr uint32_t mWINDOWHINTS[]
             {
                 GLFW_RESIZABLE,
@@ -115,7 +116,13 @@ namespace TIMGE
             V4i32 mFrameSize;
             V2f mContentScale;
 
+            V2i32 mSizeBeforeFullscreen;
+            V2i32 mPositionBeforeFullscreen;
+            GLFWmonitor* mFullscreenMonitor;
+            const GLFWvidmode* mVidMode;
+
             bool mIsFullscreen;
+            uint8_t mFullscreenMode;
 
             static Window* mInstance;
 

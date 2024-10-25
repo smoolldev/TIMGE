@@ -132,6 +132,7 @@ namespace TIMGE
 
     void Application::SetMonitor(const Monitor& monitor) {
         mMonitor = monitor;
+        mWindow.mUpdateMonitor();
     }
 
     void Application::SetBackgroundColor(const V4f& backgroundColor) {

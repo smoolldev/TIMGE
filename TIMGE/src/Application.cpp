@@ -1,6 +1,7 @@
 #include "TIMGE/Application.hpp"
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Utils/Vector.hpp"
+#include "TIMGE/Window.hpp"
 
 #include <GLFW/glfw3.h>
 #include <format>
@@ -89,14 +90,15 @@ namespace TIMGE
         Application::Info {
             Window::Info {
     	        title,
-    	        width,
-    	        height,
-    	        0, 0, 0, 0,
-    	        4, 6,
+                V2ui32{width, height},
+    	        V4ui32{0, 0, 0, 0},
+                V2i32{POSITION_DONT_CARE, POSITION_DONT_CARE},
+                V2ui32{ASPECT_RATIO_DONT_CARE, ASPECT_RATIO_DONT_CARE},
+                1.0f,
+    	        V2ui32{4, 6},
     	        Window::RESIZABLE | Window::VISIBLE | Window::DECORATED |
     	        Window::FOCUSED | Window::AUTO_ICONIFY | Window::CENTER_CURSOR |
     	        Window::FOCUS_ON_SHOW,
-                false,
     	    },
             Vector<float, 4> { 0.0f, 0.0f, 0.0f, 1.0f },
             Mouse::Info {},
@@ -184,18 +186,18 @@ namespace TIMGE
     }
 
     void Application::mSetPosition(const V2i32& position) {
-        mWindow.mPosition = position;
+        mWindow.mInfo.mPosition = position;
     }
 
-	void Application::mSetSize(const V2i32& size) {
-        mWindow.mSize = size;
+	void Application::mSetSize(const V2ui32& size) {
+        mWindow.mInfo.mSize = size;
     }
 
-	void Application::mSetFramebufferSize(const V2i32& framebufferSize) {
+	void Application::mSetFramebufferSize(const V2ui32& framebufferSize) {
        mWindow.mFramebufferSize = framebufferSize; 
     }
 
-    void Application::mSetFrameSize(const V4i32& frameSize) {
+    void Application::mSetFrameSize(const V4ui32& frameSize) {
         mWindow.mFrameSize = frameSize;
     }
 

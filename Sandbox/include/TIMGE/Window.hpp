@@ -18,6 +18,10 @@ namespace TIMGE
             WindowException(std::string message);
     };
 
+    static constexpr uint32_t ASPECT_RATIO_DONT_CARE = std::numeric_limits<decltype(ASPECT_RATIO_DONT_CARE)>::max();
+    static constexpr uint32_t SIZE_LIMITS_DONT_CARE = std::numeric_limits<decltype(SIZE_LIMITS_DONT_CARE)>::max();
+    static constexpr int32_t POSITION_DONT_CARE = std::numeric_limits<decltype(POSITION_DONT_CARE)>::max();
+
     class Window
     {
         public:
@@ -40,21 +44,24 @@ namespace TIMGE
 
             [[nodiscard]] const std::string_view& GetTitle() const;
             [[nodiscard]] const V2i32& GetPosition() const;
-            [[nodiscard]] const V2i32& GetSize() const;
+            [[nodiscard]] const V2ui32& GetSize() const;
             [[nodiscard]] const V4ui32& GetSizeLimits() const;
-            [[nodiscard]] const V2i32& GetFramebufferSize() const;
-            [[nodiscard]] const V2i32& GetAspectRatio() const;
-            [[nodiscard]] const V4i32& GetFrameSize() const;
+            [[nodiscard]] const V2ui32& GetFramebufferSize() const;
+            [[nodiscard]] const V2ui32& GetAspectRatio() const;
+            [[nodiscard]] const V4ui32& GetFrameSize() const;
             [[nodiscard]] const V2f& GetContentScale() const;
             [[nodiscard]] float GetOpacity() const;
+            [[nodiscard]] bool GetFlagsState(FLAGS flags) const;
+            [[nodiscard]] bool GetBorderlessFullscreen() const;
             [[nodiscard]] bool GetFullscreen() const;
+            [[nodiscard]] bool ShouldClose();
 
-            void SetTitle(std::string_view title);
-            void SetIcon(std::filesystem::path iconPath);
-            void SetPosition(V2i32 position);
-            void SetAspectRatio(V2i32 aspectRatio);
-            void SetSize(V2i32 size);
-            void SetSizeLimits(V4ui32 sizeLimits);
+            void SetTitle(const std::string_view& title);
+            void SetIcon(const std::filesystem::path& iconPath);
+            void SetPosition(const V2i32& position);
+            void SetAspectRatio(const V2ui32& aspectRatio);
+            void SetSize(const V2ui32& size);
+            void SetSizeLimits(const V4ui32& sizeLimits);
             void SetOpacity(float opacity);
             void SetShouldClose(bool shouldClose);
 
@@ -69,8 +76,6 @@ namespace TIMGE
             void RequestAttention();
             void BorderlessFullscreen();
             void Fullscreen();
-
-            [[nodiscard]] bool ShouldClose();
 
             static constexpr FLAGS RESIZABLE = (1 << 0);
             static constexpr FLAGS VISIBLE = (1 << 1);
@@ -94,22 +99,38 @@ namespace TIMGE
             void mUpdateMonitor();
 
             void mValidateInfo();
+            void mValidateSize(const V2ui32& size);
+            void mValidateSizeLimits(const V4ui32& sizeLimits);
+            void mValidateAspectRatio(const V2ui32& aspectRatio);
+            void mValidateOpacity(float opacity);
+            void mValidateOpenGLVersion(const V2ui32& version);
+            void mValidateFullscreenFlags(FLAGS flags);
+ 
+            [[nodiscard]] bool mInvalidSizeMinBound(const V2ui32& size) const;
+            [[nodiscard]] bool mInvalidSizeMaxBound(const V2ui32& size) const;
+            [[nodiscard]] bool mInvalidSizeLimits(const V4ui32& sizeLimits) const;
+            [[nodiscard]] bool mInvalidAspectRatio(const V2ui32& aspectRatio) const;
+            [[nodiscard]] bool mInvalidOpacity(float opacity) const;
+            [[nodiscard]] bool mInvalidOpenGLVersion(const V2ui32& version) const;
+            [[nodiscard]] bool mInvalidFullscreenFlags(FLAGS flags) const;
 
             void mCreateWindow();
 
             void mLoadGL();
 
-            void mRetrieveSize();
-            void mRetrievePosition();
             void mRetrieveFramebufferSize();
             void mRetrieveFrameSize();
             void mRetrieveContentScale();
             void mRetrieveMonitor();
             void mRetrieveVideoMode();
 
-            void mInitializeAspectRatio();
             void mInitializeSizeBeforeFullscreen();
             void mInitializePositionBeforeFullscreen();
+
+            void mToggleOnBorderlessFullscreen();
+            void mToggleOffBorderlessFullscreen();
+            void mToggleOnFullscreen();
+            void mToggleOffFullscreen();
 
             static constexpr uint32_t mWINDOWHINTS[]
             {
@@ -130,11 +151,11 @@ namespace TIMGE
             Monitor& mMonitor;
             GLFWwindow* mWindow;
 
-            V2i32 mFramebufferSize;
-            V4i32 mFrameSize;
+            V2ui32 mFramebufferSize;
+            V4ui32 mFrameSize;
             V2f mContentScale;
 
-            V2i32 mSizeBeforeFullscreen;
+            V2ui32 mSizeBeforeFullscreen;
             V2i32 mPositionBeforeFullscreen;
             GLFWmonitor* mFullscreenMonitor;
             const GLFWvidmode* mVidMode;

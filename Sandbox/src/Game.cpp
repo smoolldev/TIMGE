@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "TIMGE/Window.hpp"
 
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
@@ -7,23 +8,29 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <chrono>
-
 Game* Game::mInstance = nullptr;
 
 TIMGE::Application::Info Game::mGameInfo {
             TIMGE::Window::Info{
                 "TIGMA Ballz!",
-                720,
-                480,
-                0,
-                0,
-                0,
-                0,
-                3,
-                3,
+                TIMGE::V2ui32{720, 480},
+                TIMGE::V4ui32{
+                    TIMGE::SIZE_LIMITS_DONT_CARE,
+                    TIMGE::SIZE_LIMITS_DONT_CARE,
+                    TIMGE::SIZE_LIMITS_DONT_CARE,
+                    TIMGE::SIZE_LIMITS_DONT_CARE
+                },
+                TIMGE::V2i32{
+                    TIMGE::POSITION_DONT_CARE,
+                    TIMGE::POSITION_DONT_CARE,
+                },
+                TIMGE::V2ui32{
+                    TIMGE::ASPECT_RATIO_DONT_CARE,
+                    TIMGE::ASPECT_RATIO_DONT_CARE,
+                },
+                1.0f,
+                TIMGE::V2ui32{3, 3},
                 671,
-                false,
             },
             TIMGE::Vector<float, 4>{
                 1.0f, 0.63f, 0.1f, 1.0f
@@ -208,11 +215,12 @@ void Game::mWindowInfoPosition()
 
 void Game::mWindowInfoSize()
 {
-    static TIMGE::V2i32 size_buf = mWindowSize;
+    static TIMGE::V2ui32 size_buf = mWindowSize;
     ImGui::Text("Window Size:");
     ImGui::Text("Width: %d", mWindowSize[TIMGE::V2i32::WIDTH]);
     ImGui::Text("Height: %d", mWindowSize[TIMGE::V2i32::HEIGHT]);
-    ImGui::InputInt2("##size_input", &size_buf[TIMGE::V2i32::X]);
+    ImGui::InputInt2("##size_input", reinterpret_cast<int*>(&size_buf[TIMGE::V2i32::X]));
+
     if (ImGui::IsItemDeactivatedAfterEdit()){
         window.SetSize(size_buf);
     } else {
@@ -278,11 +286,11 @@ void Game::mWindowInfoFullscreen()
 
 void Game::mWindowInfoAspectRatio()
 {
-    static TIMGE::V2i32 ar_buf = window.GetAspectRatio();
+    static TIMGE::V2ui32 ar_buf = window.GetAspectRatio();
     ImGui::Text("Aspect Ratio:");
     ImGui::Text("Numerator: %d", mAspectRatio[TIMGE::V2i32::X]);
     ImGui::Text("Denominator: %d", mAspectRatio[TIMGE::V2i32::Y]);
-    ImGui::InputInt2("##ar_input", &ar_buf[TIMGE::V2i32::X]);
+    ImGui::InputInt2("##ar_input", reinterpret_cast<int*>(&ar_buf[TIMGE::V2i32::X]));
     if (ImGui::IsItemDeactivated()) {
         window.SetAspectRatio(ar_buf);
     }

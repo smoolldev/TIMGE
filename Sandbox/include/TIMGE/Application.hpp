@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <limits>
 #include <string_view>
 
 namespace TIMGE
@@ -35,6 +36,7 @@ namespace TIMGE
         public:
             ApplicationException(std::string message);
     };
+
 
     class Application : public ApplicationBase
     {
@@ -100,9 +102,9 @@ namespace TIMGE
 			const double& deltaTime;
 
 			const V2i32& windowPosition;
-			const V2i32& windowSize;
-			const V2i32& windowFramebufferSize;
-			const V4i32& windowFrameSize;
+			const V2ui32& windowSize;
+			const V2ui32& windowFramebufferSize;
+			const V4ui32& windowFrameSize;
 			const V2f& windowContentScale;
 
 			const V2d& cursorPosition;
@@ -117,9 +119,9 @@ namespace TIMGE
 			void mSetScrollOffset(const V2d& cursorScrollOffset);
 
 			void mSetPosition(const V2i32& position);
-			void mSetSize(const V2i32& size);
-			void mSetFramebufferSize(const V2i32& framebufferSize);
-    	    void mSetFrameSize(const V4i32& frameSize);
+			void mSetSize(const V2ui32& size);
+			void mSetFramebufferSize(const V2ui32& framebufferSize);
+    	    void mSetFrameSize(const V4ui32& frameSize);
 			void mSetContentScale(const V2f& contentScale);
 
 			static Application* mInstance;

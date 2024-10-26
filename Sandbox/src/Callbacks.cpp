@@ -11,7 +11,7 @@ void WindowPosCallback(const TIMGE::V2i32& position)
 
 }
 
-void WindowSizeCallback(const TIMGE::V2i32& size)
+void WindowSizeCallback(const TIMGE::V2ui32& size)
 {
 
 }
@@ -41,7 +41,7 @@ void WindowMaximizeCallback(bool maximized)
 
 }
 
-void FramebufferSizeCallback(const TIMGE::V2i32& framebufferSize)
+void FramebufferSizeCallback(const TIMGE::V2ui32& framebufferSize)
 {
 
 }

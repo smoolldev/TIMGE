@@ -17,11 +17,11 @@ class Game : public TIMGE::Application
         void Render();
     private:
         const std::string_view& mTitle;
-        const TIMGE::V2i32& mWindowSize;
+        const TIMGE::V2ui32& mWindowSize;
         const TIMGE::V2i32& mWindowPos;
-        const TIMGE::V2i32& mFramebufferSize;
-        const TIMGE::V2i32& mAspectRatio;
-        const TIMGE::V4i32& mFrameSize;
+        const TIMGE::V2ui32& mFramebufferSize;
+        const TIMGE::V2ui32& mAspectRatio;
+        const TIMGE::V4ui32& mFrameSize;
         const TIMGE::V2f& mContentScale;
 
         static TIMGE::Application::Info mGameInfo;
@@ -51,13 +51,13 @@ class Game : public TIMGE::Application
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);
-        friend void WindowSizeCallback(const TIMGE::V2i32& size);
+        friend void WindowSizeCallback(const TIMGE::V2ui32& size);
         friend void WindowCloseCallback();
         friend void WindowRefreshCallback();
         friend void WindowFocusCallback(bool focused);
         friend void WindowIconifyCallback(bool iconified);
         friend void WindowMaximizeCallback(bool maximized);
-        friend void FramebufferSizeCallback(const TIMGE::V2i32& framebufferSize);
+        friend void FramebufferSizeCallback(const TIMGE::V2ui32& framebufferSize);
         friend void WindowContentScaleCallback(const TIMGE::V2f& contentScale);
         friend void MouseButtonCallback(TIMGE::Button button, TIMGE::Mouse::Action action, TIMGE::Modifier mods);
         friend void CursorPosCallback(const TIMGE::V2d& cursorPosition);

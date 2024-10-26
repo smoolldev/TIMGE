@@ -5,13 +5,13 @@
 
 void ErrorCallback(int errorCode, std::string_view description);
 void WindowPosCallback(const TIMGE::V2i32& position);
-void WindowSizeCallback(const TIMGE::V2i32& size);
+void WindowSizeCallback(const TIMGE::V2ui32& size);
 void WindowCloseCallback();
 void WindowRefreshCallback();
 void WindowFocusCallback(bool focused);
 void WindowIconifyCallback(bool iconified);
 void WindowMaximizeCallback(bool maximized);
-void FramebufferSizeCallback(const TIMGE::V2i32& framebufferSize);
+void FramebufferSizeCallback(const TIMGE::V2ui32& framebufferSize);
 void WindowContentScaleCallback(const TIMGE::V2f& contentScale);
 void MouseButtonCallback(TIMGE::Button button, TIMGE::Mouse::Action action, TIMGE::Modifier mods);
 void CursorPosCallback(const TIMGE::V2d& cursorPosition);

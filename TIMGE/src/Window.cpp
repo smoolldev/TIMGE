@@ -1,5 +1,4 @@
 #include "TIMGE/Window.hpp"
-#include "TIMGE/Application.hpp"
 #include "TIMGE/Exception.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
@@ -28,10 +27,10 @@ namespace TIMGE
 
         mInstance = this;
 
-        mValidateInfo();
-
         mRetrieveMonitor();
         mRetrieveVideoMode();
+
+        mValidateInfo();
 
         mInitializeSizeBeforeFullscreen();
         mInitializePositionBeforeFullscreen();
@@ -104,8 +103,8 @@ namespace TIMGE
     }
 
     void Window::SetTitle(const std::string_view& title) {
-        mInfo.mTitle = title;
         glfwSetWindowTitle(mWindow, title.data());
+        mInfo.mTitle = title;
     }
 
     void Window::SetIcon(const std::filesystem::path& iconPath)
@@ -133,38 +132,44 @@ namespace TIMGE
 
         glfwSetWindowAspectRatio(
             mWindow, 
-            aspectRatio[V2i32::NUMERATOR] == ASPECT_RATIO_DONT_CARE ?
+            aspectRatio[V2ui32::NUMERATOR] == ASPECT_RATIO_DONT_CARE ?
                 mInfo.mSize[V2ui32::WIDTH] : aspectRatio[V2i32::NUMERATOR], 
-            aspectRatio[V2i32::DENOMINATOR] == ASPECT_RATIO_DONT_CARE ?
+            aspectRatio[V2ui32::DENOMINATOR] == ASPECT_RATIO_DONT_CARE ?
                 mInfo.mSize[V2ui32::HEIGHT] : aspectRatio[V2i32::DENOMINATOR]
         );
 
         mInfo.mAspectRatio = aspectRatio;
     }
 
-    void Window::SetSize(const V2ui32& size)mValidateSizeLimits 
+    void Window::SetSize(const V2ui32& size)
     {
-        mValidateSizeLimits
+        mValidateSize(size);
         glfwSetWindowSize(mWindow, size[V2i32::WIDTH], size[V2i32::HEIGHT]);
     }
 
-    void Window::SetSizeLimits(V4ui32 sizeLimits)
+    void Window::SetSizeLimits(const V4ui32& sizeLimits)
     {
-        if ((sizeLimits[V4ui32::MAX_WIDTH] > mVidMode->width) || (sizeLimits[V4ui32::MAX_HEIGHT] > mVidMode->height)) {
-            throw WindowException("Size limits bigger than monitor allows for.");
-        }
+        mValidateSizeLimits(sizeLimits);
 
         glfwSetWindowSizeLimits(
             mWindow,
-            static_cast<int>((sizeLimits[V4ui32::MIN_WIDTH] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_WIDTH]),
-            static_cast<int>((sizeLimits[V4ui32::MIN_HEIGHT] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_HEIGHT]),
-            static_cast<int>((sizeLimits[V4ui32::MAX_WIDTH] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_WIDTH]),
-            static_cast<int>((sizeLimits[V4ui32::MAX_HEIGHT] == 0) ? GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_HEIGHT])
+            static_cast<int>((sizeLimits[V4ui32::MIN_WIDTH] == SIZE_LIMITS_DONT_CARE) ?
+                GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_WIDTH]),
+            static_cast<int>((sizeLimits[V4ui32::MIN_HEIGHT] == SIZE_LIMITS_DONT_CARE) ?
+                GLFW_DONT_CARE : sizeLimits[V4ui32::MIN_HEIGHT]),
+            static_cast<int>((sizeLimits[V4ui32::MAX_WIDTH] == SIZE_LIMITS_DONT_CARE) ?
+                GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_WIDTH]),
+            static_cast<int>((sizeLimits[V4ui32::MAX_HEIGHT] == SIZE_LIMITS_DONT_CARE) ?
+                GLFW_DONT_CARE : sizeLimits[V4ui32::MAX_HEIGHT])
         );
+
+        mInfo.mSizeLimits = sizeLimits;
     }
 
     void Window::SetOpacity(float opacity) {
+        mValidateOpacity(opacity);
         glfwSetWindowOpacity(mWindow, opacity);
+        mInfo.mOpacity = opacity;
     }
 
     void Window::SetShouldClose(bool shouldClose) {
@@ -180,16 +185,10 @@ namespace TIMGE
     }
 
     void Window::Restore() {
-        SetSize({ mSize[V2i32::WIDTH], mSize[V2i32::HEIGHT] });
-        SetPosition({ mPosition[V2i32::X], mPosition[V2i32::Y] });
-
         glfwRestoreWindow(mWindow);
     }
 
     void Window::Maximize() {
-        mSize = GetSize();
-        mPosition = GetPosition();
-
         glfwMaximizeWindow(mWindow);
     }
 
@@ -241,16 +240,20 @@ namespace TIMGE
 
     void Window::mUpdateMonitor()
     {
-        GLFWmonitor* monitor = mMonitor.mGetMonitor();
-        const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
-        if (mFullscreenMode == 0) {
-           // TODO: Always set position after updating monitor 
-        } else if (mFullscreenMode == 1) {
-            
-        } else if (mFullscreenMode == 2) {
-
-        } else {
-            throw WindowException("KURWA KUBA! MÓWIŁEM!");
+        mValidateFullscreenFlags(mInfo.mFlags);
+ 
+        mFullscreenMonitor = mMonitor.mGetMonitor();
+        mVidMode = glfwGetVideoMode(mFullscreenMonitor);
+        mValidateSize(mInfo.mSize);
+        glfwSetWindowMonitor(
+            mWindow, mFullscreenMonitor, 0, 0,
+            mInfo.mSize[V2ui32::WIDTH], mInfo.mSize[V2ui32::HEIGHT],
+            0
+        );
+        if (mInfo.mFlags & FULLSCREEN) {
+            mToggleOnFullscreen();
+        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+            mToggleOnBorderlessFullscreen();
         }
     }
 
@@ -279,6 +282,7 @@ namespace TIMGE
             static_cast<int>(mInfo.mSize[V2ui32::HEIGHT]),
             mInfo.mTitle.data(), nullptr, nullptr
         );
+
         if (!mWindow) {
             throw WindowException("Failed to create window!");
         }
@@ -299,19 +303,30 @@ namespace TIMGE
     }
 
     void Window::mRetrieveFramebufferSize() {
-        glfwGetFramebufferSize(mWindow, &mFramebufferSize[V2i32::WIDTH], &mFramebufferSize[V2i32::HEIGHT]);
+        glfwGetFramebufferSize(
+            mWindow, 
+            reinterpret_cast<int*>(&mFramebufferSize[V2ui32::WIDTH]), 
+            reinterpret_cast<int*>(&mFramebufferSize[V2ui32::HEIGHT])
+        );
     }
 
     void Window::mRetrieveFrameSize()
     {
-        glfwGetWindowFrameSize(mWindow, 
-            &mFrameSize[V2i32::X], &mFrameSize[V2i32::Y],
-            &mFrameSize[V2i32::Z], &mFrameSize[V2i32::W]
+        glfwGetWindowFrameSize(
+            mWindow, 
+            reinterpret_cast<int*>(&mFrameSize[V2i32::X]),
+            reinterpret_cast<int*>(&mFrameSize[V2i32::Y]),
+            reinterpret_cast<int*>(&mFrameSize[V2i32::Z]),
+            reinterpret_cast<int*>(&mFrameSize[V2i32::W])
         );
     }
 
     void Window::mRetrieveContentScale() {
-        glfwGetWindowContentScale(mWindow, &mContentScale[V2f::WIDTH], &mContentScale[V2f::HEIGHT]);
+        glfwGetWindowContentScale(
+            mWindow, 
+            &mContentScale[V2f::X], 
+            &mContentScale[V2f::Y]
+        );
     }
 
     void Window::mRetrieveMonitor() {
@@ -332,8 +347,14 @@ namespace TIMGE
 
     void Window::mToggleOnBorderlessFullscreen()
     {
+        mSizeBeforeFullscreen = mInfo.mSize;
+        mPositionBeforeFullscreen = mInfo.mPosition;
+
         glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
-        SetSize({ mVidMode->width, mVidMode->height} );
+        SetSize(V2ui32{ 
+            static_cast<uint32_t>(mVidMode->width),
+            static_cast<uint32_t>(mVidMode->height)
+        });
         SetPosition({ 0, 0 });
     }
 
@@ -345,6 +366,9 @@ namespace TIMGE
     }
 
     void Window::mToggleOnFullscreen() {
+        mSizeBeforeFullscreen = mInfo.mSize;
+        mPositionBeforeFullscreen = mInfo.mPosition;
+
         glfwSetWindowMonitor(mWindow, mFullscreenMonitor, 0, 0, mVidMode->width, mVidMode->height, mVidMode->refreshRate);
     }
 
@@ -361,42 +385,43 @@ namespace TIMGE
     }
 
     [[nodiscard]] bool Window::mInvalidSizeMaxBound(const V2ui32& size) const {
-        return mInfo.mSize[V2ui32::WIDTH] > mVidMode->width || mInfo.mSize[V2ui32::HEIGHT] > mVidMode->height;
+        return size[V2ui32::WIDTH] > static_cast<uint32_t>(mVidMode->width)
+            || size[V2ui32::HEIGHT] > static_cast<uint32_t>(mVidMode->height);
     }
 
     [[nodiscard]] bool Window::mInvalidSizeLimits(const V4ui32& sizeLimits) const {
-        return mInfo.mSizeLimits[V2ui32::MAX_WIDTH] != DONT_CARE 
-            && mInfo.mSizeLimits[V2ui32::MAX_WIDTH] > mVidMode->width 
-            || mInfo.mSize[V2ui32::MAX_HEIGHT] != DONT_CARE 
-            && mInfo.mSize[V2ui32::MAX_HEIGHT] > mVidMode->height;
+        return sizeLimits[V2ui32::MAX_WIDTH] != SIZE_LIMITS_DONT_CARE 
+            && sizeLimits[V2ui32::MAX_WIDTH] > static_cast<uint32_t>(mVidMode->width)
+            || sizeLimits[V2ui32::MAX_HEIGHT] != SIZE_LIMITS_DONT_CARE
+            && sizeLimits[V2ui32::MAX_HEIGHT] > static_cast<uint32_t>(mVidMode->height);
     }
 
     [[nodiscard]] bool Window::mInvalidAspectRatio(const V2ui32& aspectRatio) const {
-        return mInfo.mAspectRatioInfo[V2ui32::NUMERATOR] != ASPECT_RATIO_DONT_CARE
-            && mInfo.mAspectRatioInfo[V2ui32::NUMERATOR] > mSize[V2ui32::WIDTH]
-            || mInfo.mAspectRatioInfo[V2ui32::DENOMINATOR] != ASPECT_RATIO_DONT_CARE 
-            && mInfo.mAspectRatioInfo[V2ui32::DENOMINATOR] > mInfo.mSize[V2ui32::HEIGHT];
+        return aspectRatio[V2ui32::NUMERATOR] != ASPECT_RATIO_DONT_CARE
+            && aspectRatio[V2ui32::NUMERATOR] > mInfo.mSize[V2ui32::WIDTH]
+            || aspectRatio[V2ui32::DENOMINATOR] != ASPECT_RATIO_DONT_CARE 
+            && aspectRatio[V2ui32::DENOMINATOR] > mInfo.mSize[V2ui32::HEIGHT];
     }
 
-    [[nodiscard]] bool mInvalidOpacity(float opacity) const {
+    [[nodiscard]] bool Window::mInvalidOpacity(float opacity) const {
         return  opacity < 0.0f || opacity > 1.0f;
     }
 
-    [[nodiscard]] bool mInvalidOpenGLVersion(const V2ui32& version) const 
+    [[nodiscard]] bool Window::mInvalidOpenGLVersion(const V2ui32& version) const 
     {
-        static constexpr std::array <V2ui32> OpenGLVersions
+        static std::array <V2ui32, 12> GLVers
         {
-            {2, 1}, {3, 0}, {3, 1},
-            {3, 2}, {3, 3}, {4, 0},
-            {4, 1}, {4, 2}, {4, 3},
-            {4, 4}, {4, 5}, {4, 6},
+            V2ui32{2, 1}, V2ui32{3, 0}, V2ui32{3, 1},
+            V2ui32{3, 2}, V2ui32{3, 3}, V2ui32{4, 0},
+            V2ui32{4, 1}, V2ui32{4, 2}, V2ui32{4, 3},
+            V2ui32{4, 4}, V2ui32{4, 5}, V2ui32{4, 6},
         };
 
-        return std::find(OpenGLVersions.begin(), OpenGLVersions.end(), mInfo.OpenGLVersion) == OpenGLVersions.end();
+        return std::find(GLVers.begin(), GLVers.end(), version) == GLVers.end();
     }
 
     [[nodiscard]] bool Window::mInvalidFullscreenFlags(FLAGS flags) const {
-        return (mInfo.mFlags & FULLSCREEN) && (mInfo.mFlags & BORDERLESS_FULLSCREEN);
+        return (flags & FULLSCREEN) && (flags & BORDERLESS_FULLSCREEN);
     }
 
     void Window::mValidateSize(const V2ui32& size)
@@ -408,37 +433,37 @@ namespace TIMGE
         }
     }
 
-    void mValidateSizeLimits(const V4ui32& sizeLimits)
+    void Window::mValidateSizeLimits(const V4ui32& sizeLimits)
     {
         if (mInvalidSizeLimits(mInfo.mSizeLimits)) {
             throw WindowException("Size limits cannot be bigger than monitor allows for.");
         }
     }
 
-    void mValidateAspectRatio(const V2ui32& aspectRatio)
+    void Window::mValidateAspectRatio(const V2ui32& aspectRatio)
     {
         if (mInvalidAspectRatio(mInfo.mAspectRatio)) {
             throw WindowException("Aspect ratio cannot be bigger than window size.");
         }
     }
 
-    void mValidateOpacity(float opacity)
+    void Window::mValidateOpacity(float opacity)
     {
         if (mInvalidOpacity(mInfo.mOpacity)) {
             throw WindowException("Opacity must be in range [0;1].");
         }
     }
 
-    void mValidateOpenGLVersion(const V2ui32& version)
+    void Window::mValidateOpenGLVersion(const V2ui32& version)
     {
         if (mInvalidOpenGLVersion(mInfo.mOpenGLVersion)) {
             throw WindowException("Invalid OpenGL version."); 
         }
     }
 
-    void mValidateFullscreenFlags(FLAGS flags)
+    void Window::mValidateFullscreenFlags(FLAGS flags)
     {
-        if (mInvalidFullscreenFlags()) {
+        if (mInvalidFullscreenFlags(mInfo.mFlags)) {
             throw WindowException("FULLSCREEN and BORDERLESS_FULLSCREEN flags cannot be set simultaneously.");
         }
     }

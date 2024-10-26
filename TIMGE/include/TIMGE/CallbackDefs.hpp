@@ -13,13 +13,13 @@ namespace TIMGE::Callback
 {
     using Error_t = void (*)(int errorCode, std::string_view description);
     using WindowPos_t = void (*)(const V2i32& position);
-    using WindowSize_t = void (*)(const V2i32& size);
+    using WindowSize_t = void (*)(const V2ui32& size);
     using WindowClose_t = void (*)();
     using WindowRefresh_t = void (*)();
     using WindowFocus_t = void (*)(bool focused);
     using WindowIconify_t = void (*)(bool iconified);
     using WindowMaximize_t = void (*)(bool maximized);
-    using FramebufferSize_t = void (*)(const V2i32& framebufferSize);
+    using FramebufferSize_t = void (*)(const V2ui32& framebufferSize);
     using WindowContentScale_t = void (*)(const V2f& contentScale);
     using MouseButton_t = void (*)(Button button, Mouse::Action action, Modifier mods);
     using CursorPos_t = void (*)(const V2d& cursorPosition);

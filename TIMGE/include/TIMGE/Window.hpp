@@ -2,7 +2,6 @@
 #define WINDOW_HPP
 
 #include "Exception.hpp"
-#include "TIMGE/Application.hpp"
 #include "Utils/Vector.hpp"
 #include "Monitor.hpp"
 
@@ -55,6 +54,7 @@ namespace TIMGE
             [[nodiscard]] bool GetFlagsState(FLAGS flags) const;
             [[nodiscard]] bool GetBorderlessFullscreen() const;
             [[nodiscard]] bool GetFullscreen() const;
+            [[nodiscard]] bool ShouldClose();
 
             void SetTitle(const std::string_view& title);
             void SetIcon(const std::filesystem::path& iconPath);
@@ -76,8 +76,6 @@ namespace TIMGE
             void RequestAttention();
             void BorderlessFullscreen();
             void Fullscreen();
-
-            [[nodiscard]] bool ShouldClose();
 
             static constexpr FLAGS RESIZABLE = (1 << 0);
             static constexpr FLAGS VISIBLE = (1 << 1);

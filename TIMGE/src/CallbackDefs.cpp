@@ -24,9 +24,15 @@ namespace TIMGE::Callback
     void WindowSizeCallback(GLFWwindow* window, int width, int height)
     {
         Application* app = Application::mGetInstance();
-        app->mSetSize({ width, height });
+        app->mSetSize({
+            static_cast<uint32_t>(width),
+            static_cast<uint32_t>(height)
+        });
         if (auto func = app->mInfo.mCallbacks.mWindowSize; func != nullptr) {
-            func({width, height});
+            func({
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)
+            });
         }
     }
     void WindowCloseCallback(GLFWwindow* window)
@@ -67,9 +73,15 @@ namespace TIMGE::Callback
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
         Application* app = Application::mGetInstance();
-        app->mSetFramebufferSize({ width, height });
+        app->mSetFramebufferSize({
+            static_cast<uint32_t>(width),
+            static_cast<uint32_t>(height)
+        });
         if (auto func = app->mInfo.mCallbacks.mFramebufferSize; func != nullptr) {
-            func({width, height});
+            func({
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)
+            });
         }
     }
     void WindowContentScaleCallback(GLFWwindow* window, float xScale, float yScale)

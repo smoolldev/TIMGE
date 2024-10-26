@@ -26,16 +26,13 @@ namespace TIMGE
             struct Info
             {
                 std::string_view mTitle;
-                uint32_t mWidth;
-                uint32_t mHeight;
-                uint32_t mMinWidth;
-                uint32_t mMinHeight;
-                uint32_t mMaxWidth;
-                uint32_t mMaxHeight;
-                uint32_t mOpenGLVersionMajor;
-                uint32_t mOpenGLVersionMinor;
+                V2ui32 mSize;
+                V4ui32 mSizeLimits;
+                V2i32 mPosition;
+                V2ui32 mAspectRatio;
+                float mOpacity;
+                V2ui32 mOpenGLVersion;
                 FLAGS mFlags;
-                bool mIsFullscreen;
             };
 
             Window(Info& info, Monitor& monitor);
@@ -44,6 +41,7 @@ namespace TIMGE
             [[nodiscard]] const std::string_view& GetTitle() const;
             [[nodiscard]] const V2i32& GetPosition() const;
             [[nodiscard]] const V2i32& GetSize() const;
+            [[nodiscard]] const V4ui32& GetSizeLimits() const;
             [[nodiscard]] const V2i32& GetFramebufferSize() const;
             [[nodiscard]] const V2i32& GetAspectRatio() const;
             [[nodiscard]] const V4i32& GetFrameSize() const;
@@ -56,6 +54,7 @@ namespace TIMGE
             void SetPosition(V2i32 position);
             void SetAspectRatio(V2i32 aspectRatio);
             void SetSize(V2i32 size);
+            void SetSizeLimits(V4ui32 sizeLimits);
             void SetOpacity(float opacity);
             void SetShouldClose(bool shouldClose);
 
@@ -84,12 +83,34 @@ namespace TIMGE
             static constexpr FLAGS TRANSPARENT_FRAMEBUFFER = (1 << 8);
             static constexpr FLAGS FOCUS_ON_SHOW = (1 << 9);
             static constexpr FLAGS SCALE_TO_MONITOR = (1 << 10);
+            static constexpr FLAGS BORDERLESS_FULLSCREEN = (1 << 11);
+            static constexpr FLAGS FULLSCREEN = (1 << 12);
+            static constexpr FLAGS VSYNC = (1 << 13);
         private:
         // WARNING: REMOVE WHEN IMGUI CONDITIONAL COMPILATION IS IMPLEMENTED!!!!!!!!!!!!!!!!!!!
         public:
             GLFWwindow* mGetWindow();
         private:
             void mUpdateMonitor();
+
+            void mValidateInfo();
+
+            void mCreateWindow();
+
+            void mLoadGL();
+
+            void mRetrieveSize();
+            void mRetrievePosition();
+            void mRetrieveFramebufferSize();
+            void mRetrieveFrameSize();
+            void mRetrieveContentScale();
+            void mRetrieveMonitor();
+            void mRetrieveVideoMode();
+
+            void mInitializeAspectRatio();
+            void mInitializeSizeBeforeFullscreen();
+            void mInitializePositionBeforeFullscreen();
+
             static constexpr uint32_t mWINDOWHINTS[]
             {
                 GLFW_RESIZABLE,
@@ -109,10 +130,7 @@ namespace TIMGE
             Monitor& mMonitor;
             GLFWwindow* mWindow;
 
-            V2i32 mSize;
-            V2i32 mPosition;
             V2i32 mFramebufferSize;
-            V2i32 mAspectRatio;
             V4i32 mFrameSize;
             V2f mContentScale;
 
@@ -120,9 +138,6 @@ namespace TIMGE
             V2i32 mPositionBeforeFullscreen;
             GLFWmonitor* mFullscreenMonitor;
             const GLFWvidmode* mVidMode;
-
-            bool mIsFullscreen;
-            uint8_t mFullscreenMode;
 
             static Window* mInstance;
 

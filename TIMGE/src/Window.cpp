@@ -189,9 +189,8 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        if (!mIsFullscreen)
+        if (!(mInfo.mFlags & BORDERLESS_FULLSCREEN))
         {
-            mFullscreenMode = 2;
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
             SetSize({ mVidMode->width, mVidMode->height} );
             SetPosition({ 0, 0 });
@@ -200,25 +199,23 @@ namespace TIMGE
             glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
             SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
             SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
-            mFullscreenMode = 0;
         }
 
-        mIsFullscreen = !mIsFullscreen;
+        
+        mInfo.mFlags ^= BORDERLESS_FULLSCREEN;
     }
 
     void Window::Fullscreen()
     {
-        if (!mIsFullscreen) {
-            mFullscreenMode = 1;
+        if (!(mInfo.mFlags & FULLSCREEN)) {
             glfwSetWindowMonitor(mWindow, mFullscreenMonitor, 0, 0, mVidMode->width, mVidMode->height, mVidMode->refreshRate);
         } else {
             glfwSetWindowMonitor(mWindow, nullptr, mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y], mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT], 0);
             SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
             SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
-            mFullscreenMode = 0;
         }
 
-        mIsFullscreen = !mIsFullscreen;
+        mInfo.mFlags ^= FULLSCREEN;
     }
 
     [[nodiscard]] bool Window::ShouldClose() {
@@ -246,15 +243,49 @@ namespace TIMGE
 
     void Window::mValidateInfo()
     {
-        // size
-        if (mInfo.mSize == { 0, 0 }) {
+        if (mInfo.mSize[V2ui32::WIDTH] == 0 || mInfo.mSize[V2ui32::HEIGHT] == 0) {
             throw WindowException("Size cannot be 0.");
-        } else if (mInfo.)
-        // sizelimits
-        // aspectratio
-        // opacity
-        // openglversion
-        // fullscreen
+        } else if (mInfo.mSize[V2ui32::WIDTH] > mVidMode->width || mInfo.mSize[V2ui32::HEIGHT] > mVidMode->height) {
+            throw WindowException("Size cannot be bigger than monitor allows for.");
+        }
+
+        if (mInfo.mSizeLimits[V2ui32::MAX_WIDTH] > mVidMode->width || mInfo.mSize[V2ui32::MAX_HEIGHT] > mVidMode->height) {
+            throw WindowException("Size limits cannot be bigger than monitor allows for.");
+        }
+
+        if (mInfo.mAspectRatiomInfo[V2ui32::NUMERATOR] > mSize[V2ui32::WIDTH] || mInfo.mAspectRatiomInfo[V2ui32::DENOMINATOR] > mInfo.mSize[V2ui32::HEIGHT]) {
+            throw WindowException("Aspect ratio cannot be bigger than window size.");
+        }
+
+        if (mInfo.mOpacity < 0.0f) {
+            throw WindowException("Opacity cannot be smaller than 0.");
+        } else if (mInfo.mOpacity > 1.0f) {
+            throw WindowException("Opacity cannot be bigger than 1.");
+        }
+
+        static constexpr std::array<V2ui32> OpenGLVersions
+        {
+            {2, 1},
+            {3, 0},
+            {3, 1},
+            {3, 2},
+            {3, 3},
+            {4, 0},
+            {4, 1},
+            {4, 2},
+            {4, 3},
+            {4, 4},
+            {4, 5},
+            {4, 6},
+        };
+
+        if (std::find(OpenGLVersion.begin(), OpenGLVersion.end(), mInfo.OpenGLVersion) == OpenGLVersion.end()) {
+            throw WindowException("Invalid OpenGL version."); 
+        }
+
+        if ((mInfo.mFlags & FULLSCREEN) && (mInfo.mFlags & BORDERLESS_FULLSCREEN)) {
+            throw WindowException("FULLSCREEN and BORDERLESS_FULLSCREEN flags cannot be set simultaneously.");
+        }
     }
 
     void Window::mCreateWindow()
@@ -267,9 +298,15 @@ namespace TIMGE
             glfwWindowHint(mWINDOWHINTS[i], (mInfo.mFlags >> i) & 1);
         }
 
-        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), mIsFullscreen ? mMonitor.mGetMonitor() : nullptr, nullptr);
+        mWindow = glfwCreateWindow(mInfo.mWidth, mInfo.mHeight, mInfo.mTitle.data(), nullptr, nullptr);
         if (!mWindow) {
             throw WindowException("Failed to create window!");
+        }
+
+        if (mInfo.mFlags & FULLSCREEN) {
+
+        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+            
         }
     }
 

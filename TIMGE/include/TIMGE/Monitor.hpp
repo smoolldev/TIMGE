@@ -27,21 +27,28 @@ namespace TIMGE
             [[nodiscard]] static const std::vector<Monitor>& GetMonitors();
             [[nodiscard]] static const Monitor& GetPrimaryMonitor();
 
-            [[nodiscard]] const V2i32& GetPhysicalSize() const;
+            [[nodiscard]] const V2ui32& GetPhysicalSize() const;
             [[nodiscard]] const V2f& GetContentScale() const;
             [[nodiscard]] const V2i32& GetVirtualPosition() const;
-            [[nodiscard]] const V4i32& GetWorkarea() const;
+            [[nodiscard]] const V2i32& GetWorkareaPosition() const;
+            [[nodiscard]] const V2ui32& GetWorkareaSize() const;
 
             [[nodiscard]] const std::string_view& GetName() const;
 
             [[nodiscard]] const float& GetGamma() const;
 
-            void SetGamma(float gamma) const;
+            void SetGamma(float gamma);
         private:
             Monitor(GLFWmonitor* monitor);
 
             [[nodiscard]] GLFWmonitor* mGetMonitor() const;
             static void mRetrieveMonitors();
+ 
+            void mRetrievePhysicalSize();
+            void mRetrieveContentScale();
+            void mRetrievePosition();
+            void mRetrieveWorkarea();
+            void mRetrieveName();
 
             static void mConnect(GLFWmonitor* monitor);
             static void mDisconnect(GLFWmonitor* monitor);
@@ -52,10 +59,11 @@ namespace TIMGE
 
             static bool mMonitorsRetrieved;
 
-            V2i32 mPhysicalSize;
+            V2ui32 mPhysicalSize;
             V2f mContentScale;
             V2i32 mVirtualPosition;
-            V4i32 mWorkarea;
+            V2i32 mWorkareaPosition;
+            V2ui32 mWorkareaSize;
 
             std::string_view mName;
 

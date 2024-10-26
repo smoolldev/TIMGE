@@ -361,8 +361,8 @@ namespace TIMGE
     void Window::mToggleOffBorderlessFullscreen()
     {
         glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
-        SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
-        SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
+        SetSize(mSizeBeforeFullscreen);
+        SetPosition(mPositionBeforeFullscreen);
     }
 
     void Window::mToggleOnFullscreen() {
@@ -374,9 +374,14 @@ namespace TIMGE
 
     void Window::mToggleOffFullscreen()
     {
-        glfwSetWindowMonitor(mWindow, nullptr, mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y], mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT], 0);
-        SetSize({ mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT] });
-        SetPosition({ mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y] });
+        glfwSetWindowMonitor(
+            mWindow, nullptr,
+            mPositionBeforeFullscreen[V2i32::X], mPositionBeforeFullscreen[V2i32::Y],
+            mSizeBeforeFullscreen[V2i32::WIDTH], mSizeBeforeFullscreen[V2i32::HEIGHT],
+            0
+        );
+        SetSize(mSizeBeforeFullscreen);
+        SetPosition(mPositionBeforeFullscreen);
     }
 
     [[nodiscard]] bool Window::mInvalidSizeMinBound(const V2ui32& size) const

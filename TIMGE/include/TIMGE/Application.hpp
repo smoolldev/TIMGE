@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <limits>
 #include <string_view>
 
 namespace TIMGE
@@ -35,6 +36,7 @@ namespace TIMGE
         public:
             ApplicationException(std::string message);
     };
+
 
     class Application : public ApplicationBase
     {

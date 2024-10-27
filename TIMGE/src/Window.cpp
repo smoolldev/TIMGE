@@ -31,6 +31,7 @@ namespace TIMGE
         mRetrieveVideoMode();
 
         mValidateInfo();
+        mValidateFlags(mInfo.mFlags);
 
         mInitializeSizeBeforeFullscreen();
         mInitializePositionBeforeFullscreen();
@@ -91,13 +92,14 @@ namespace TIMGE
         return mInfo.mOpacity;
     }
 
-    [[nodiscard]] bool Window::GetFlagsState(FLAGS flags) const {
+    [[nodiscard]] bool Window::GetState(FLAGS flags) const {
         return mInfo.mFlags & flags;
     }
 
     [[nodiscard]] bool Window::GetBorderlessFullscreen() const {
         return mInfo.mFlags & BORDERLESS_FULLSCREEN;
     }
+
     [[nodiscard]] bool Window::GetFullscreen() const {
         return mInfo.mFlags & FULLSCREEN;
     }
@@ -176,6 +178,60 @@ namespace TIMGE
         glfwSetWindowShouldClose(mWindow, shouldClose);
     }
 
+    void Window::ToggleResizable() {
+        mInfo.mFlags ^= RESIZABLE;
+
+        glfwSetWindowAttrib(mWindow, GLFW_RESIZABLE, RESIZABLE & mInfo.mFlags);
+    }
+
+    void Window::ToggleDecorated() {
+        mInfo.mFlags ^= DECORATED;
+
+        glfwSetWindowAttrib(mWindow, GLFW_DECORATED, DECORATED & mInfo.mFlags);
+    }
+
+    void Window::ToggleAutoIconify() {
+        mInfo.mFlags ^= AUTO_ICONIFY;
+
+        glfwSetWindowAttrib(mWindow, GLFW_AUTO_ICONIFY, AUTO_ICONIFY & mInfo.mFlags);
+    }
+
+    void Window::ToggleFloating() {
+        mInfo.mFlags ^= FLOATING;
+
+        glfwSetWindowAttrib(mWindow, GLFW_FLOATING, FLOATING & mInfo.mFlags);
+    }
+
+    void Window::ToggleCenterCursor() {
+        mInfo.mFlags ^= CENTER_CURSOR;
+
+        glfwSetWindowAttrib(mWindow, GLFW_CENTER_CURSOR, CENTER_CURSOR & mInfo.mFlags);
+    }
+
+    void Window::ToggleTransparentFramebuffer() {
+        mInfo.mFlags ^= TRANSPARENT_FRAMEBUFFER;
+
+        glfwSetWindowAttrib(mWindow, GLFW_TRANSPARENT_FRAMEBUFFER, TRANSPARENT_FRAMEBUFFER & mInfo.mFlags);
+    }
+
+    void Window::ToggleFocusOnShow() {
+        mInfo.mFlags ^= FOCUS_ON_SHOW;
+
+        glfwSetWindowAttrib(mWindow, GLFW_FOCUS_ON_SHOW, FOCUS_ON_SHOW & mInfo.mFlags);
+    }
+
+    void Window::ToggleScaleToMonitor() {
+        mInfo.mFlags ^= SCALE_TO_MONITOR;
+
+        glfwSetWindowAttrib(mWindow, GLFW_SCALE_TO_MONITOR, SCALE_TO_MONITOR & mInfo.mFlags);
+    }
+
+    void Window::ToggleVSync() {
+        mInfo.mFlags ^= VSYNC;
+
+        glfwSwapInterval(0);
+    }
+
     void Window::ResetIcon() {
         glfwSetWindowIcon(mWindow, 0, nullptr);
     }
@@ -185,19 +241,35 @@ namespace TIMGE
     }
 
     void Window::Restore() {
-        glfwRestoreWindow(mWindow);
+        if (mInfo.mFlags & FULLSCREEN) {
+            Fullscreen();
+        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+            BorderlessFullscreen();
+        } else {
+            glfwRestoreWindow(mWindow);
+        }
     }
 
     void Window::Maximize() {
         glfwMaximizeWindow(mWindow);
+
+        mInfo.mFlags ^= MINIMIZED;
     }
 
     void Window::Show() {
         glfwShowWindow(mWindow);
+
+        mInfo.mFlags |= VISIBLE;
     }
 
     void Window::Hide() {
+        if (GetFullscreen()) {
+            throw WindowException("Fullscreen windows cannot be hidden.");
+        }
+
         glfwHideWindow(mWindow);
+
+        mInfo.mFlags &= ~VISIBLE; 
     }
 
     void Window::Focus() {
@@ -240,7 +312,7 @@ namespace TIMGE
 
     void Window::mUpdateMonitor()
     {
-        mValidateFullscreenFlags(mInfo.mFlags);
+        mValidateFullscreen_BorderlessFullscreen(mInfo.mFlags);
  
         mFullscreenMonitor = mMonitor.mGetMonitor();
         mVidMode = glfwGetVideoMode(mFullscreenMonitor);
@@ -264,7 +336,8 @@ namespace TIMGE
         mValidateAspectRatio(mInfo.mAspectRatio);
         mValidateOpacity(mInfo.mOpacity);
         mValidateOpenGLVersion(mInfo.mOpenGLVersion);
-        mValidateFullscreenFlags(mInfo.mFlags); 
+        mValidateFullscreen_BorderlessFullscreen(mInfo.mFlags); 
+        mValidateFlags(mInfo.mFlags);
     }
 
     void Window::mCreateWindow()
@@ -425,8 +498,36 @@ namespace TIMGE
         return std::find(GLVers.begin(), GLVers.end(), version) == GLVers.end();
     }
 
-    [[nodiscard]] bool Window::mInvalidFullscreenFlags(FLAGS flags) const {
+    [[nodiscard]] bool Window::mConflictFullscreen_BorderlessFullscreen(FLAGS flags) const {
         return (flags & FULLSCREEN) && (flags & BORDERLESS_FULLSCREEN);
+    }
+
+    [[nodiscard]] bool Window::mConflictVisible_Fullscreen(FLAGS flags) const {
+        return !(flags & VISIBLE) && (flags & FULLSCREEN);
+    }
+
+    [[nodiscard]] bool Window::mConflictDecorated_Fullscreen(FLAGS flags) const {
+        return (flags & DECORATED) && (flags & FULLSCREEN);
+    }
+
+    [[nodiscard]] bool Window::mConflictDecorated_BorderlessFullscreen(FLAGS flags) const {
+        return (flags & DECORATED) && (flags & BORDERLESS_FULLSCREEN);
+    }
+
+    [[nodiscard]] bool Window::mConflictFocused_Minimized(FLAGS flags) const {
+        return (flags & FOCUSED) && (flags & MINIMIZED);
+    }
+
+    [[nodiscard]] bool Window::mConflictFocused_CenterCursor(FLAGS flags) const {
+        return !(flags & FOCUSED) && (flags & CENTER_CURSOR);
+    }
+
+    [[nodiscard]] bool Window::mConflictCenterCursor_Minimized(FLAGS flags) const {
+        return (flags & CENTER_CURSOR) && (flags & MINIMIZED);
+    }
+
+    [[nodiscard]] bool Window::mConflictMinimized_Maximized(FLAGS flags) const {
+        return (flags & MINIMIZED) && (flags & MAXIMIZED);
     }
 
     void Window::mValidateSize(const V2ui32& size)
@@ -466,11 +567,71 @@ namespace TIMGE
         }
     }
 
-    void Window::mValidateFullscreenFlags(FLAGS flags)
+    void Window::mValidateFlags(FLAGS flags)
     {
-        if (mInvalidFullscreenFlags(mInfo.mFlags)) {
-            throw WindowException("FULLSCREEN and BORDERLESS_FULLSCREEN flags cannot be set simultaneously.");
+        mValidateFullscreen_BorderlessFullscreen(flags);
+        mValidateVisible_Fullscreen(flags);
+        mValidateDecorated_Fullscreen(flags);
+        mValidateDecorated_BorderlessFullscreen(flags);
+        mValidateFocused_Minimized(flags);
+        mValidateFocused_CenterCursor(flags);
+        mValidateCenterCursor_Minimized(flags);
+        mValidateMinimized_Maximized(flags);
+    }
+
+    void Window::mValidateFullscreen_BorderlessFullscreen(FLAGS flags)
+    {
+        if (mConflictFullscreen_BorderlessFullscreen(flags)) {
+            throw WindowException("Window cannot be both Fullscreen and Borderless Fullscreen.");
         }
     }
 
+    void Window::mValidateVisible_Fullscreen(FLAGS flags)
+    {
+        if (mConflictVisible_Fullscreen(flags)) {
+            throw WindowException("Window cannot be both Hidden and Fullscreen.");
+        }
+    }
+
+    void Window::mValidateDecorated_Fullscreen(FLAGS flags)
+    {
+        if (mConflictDecorated_Fullscreen(flags)) {
+            throw WindowException("Window cannot be both Decorated and Fullscreen.");
+        }
+    }
+
+    void Window::mValidateDecorated_BorderlessFullscreen(FLAGS flags)
+    {
+        if (mConflictDecorated_BorderlessFullscreen(flags)) {
+            throw WindowException("Window cannot be both Decorated and Borderless Fullscreen.");
+        }
+    }
+
+    void Window::mValidateFocused_Minimized(FLAGS flags)
+    {
+        if (mConflictFocused_Minimized(flags)) {
+            throw WindowException("Window cannot be both Focused and Minimized.");
+        }
+    }
+
+    void Window::mValidateFocused_CenterCursor(FLAGS flags)
+    {
+        if (mConflictFocused_CenterCursor(flags)) {
+            throw WindowException("Cursor cannot be centered on unfocused window.");
+        }
+    }
+
+    void Window::mValidateCenterCursor_Minimized(FLAGS flags)
+    {
+        if (mConflictCenterCursor_Minimized(flags)) {
+            throw WindowException("Cursor cannot be centered on minimized window.");
+        }
+    }
+
+    void Window::mValidateMinimized_Maximized(FLAGS flags)
+    {
+        if (mConflictMinimized_Maximized(flags)) {
+            throw WindowException("Window cannot be both Minimized and Maximized.");
+        }
+    }
 } // namespace TIMGE

@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "TIMGE/Window.hpp"
+#include "imgui_internal.h"
 
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
@@ -83,6 +84,9 @@ Game::Game()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImFontConfig cfg{};
+    cfg.SizePixels = 24;
+    io.Fonts->AddFontDefault(&cfg);
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window.mGetWindow(), true);
     ImGui_ImplOpenGL3_Init();
@@ -124,23 +128,21 @@ void Game::Update()
 {
 }
 
-void Game::Render()
-{
-    mLeftWindow();
-    mMainWindow();
+void Game::Render() {
+    mMenu();
 }
 
 Game* Game::GetInstance() {
     return mInstance;
 }
 
-void Game::mMainWindow()
+void Game::mWindowSettings()
 {
-    static bool showMainWindow = true;
+    static bool showWindowSettings = true;
     static ImVec4 new_bg_color;
     ImGui::SetNextWindowPos({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, 0.0f});
     ImGui::SetNextWindowSize({2.0f * (float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
-    ImGui::Begin("Window settings", &showMainWindow, 
+    ImGui::Begin("Window Settings", &showWindowSettings, 
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
@@ -157,16 +159,13 @@ void Game::mMainWindow()
     mWindowInfoFrameSize();
     mWindowInfoContentScale();
     mWindowInfoOpacity();
-    mWindowInfoFullscreen();
     mWindowAttrMinimize();
     mWindowAttrMaximize();
     mWindowAttrRestore();
-    mWindowAttrShow();
     mWindowAttrHide();
-    mWindowAttrFocus();
-    mWindowAttrRequestAttention();
     mWindowAttrFullscreen();
     mWindowAttrBorderlessFullscreen();
+    mWindowAttrVSync();
 
     if (ImGui::ColorEdit3("", &new_bg_color.x)) {
         SetBackgroundColor(TIMGE::V4f{
@@ -180,14 +179,52 @@ void Game::mMainWindow()
     ImGui::End();
 }
 
-void Game::mLeftWindow()
+void Game::mMonitorSettings()
+{
+
+}
+
+void Game::mMouseSettings()
+{
+
+}
+
+void Game::mKeybindings()
+{
+    static bool showKeybindings = true;
+
+    ImGui::SetNextWindowPos({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, 0.0f});
+    ImGui::SetNextWindowSize({2.0f * (float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
+    ImGui::Begin("Keybindings", &showKeybindings, 
+        ImGuiWindowFlags_NoNav
+    |   ImGuiWindowFlags_NoMove
+    |   ImGuiWindowFlags_NoResize
+    |   ImGuiWindowFlags_NoCollapse
+    );
+
+    ImGui::Text("Exit = Escape");
+    ImGui::Text("Minimize = M");
+    ImGui::Text("Restore = R");
+    ImGui::Text("Maximize = Shift + M");
+    ImGui::Text("Show = S");
+    ImGui::Text("Hide = Shift + S");
+    ImGui::Text("Focus = F");
+    ImGui::Text("Request Attention = Shift + F");
+    ImGui::Text("Fullscreen = F11");
+    ImGui::Text("Borderless Fullscreen = Control + F11");
+
+    ImGui::End();
+}
+
+void Game::mMenu()
 {
     static bool showLeftWindow = true;
     static ImVec4 new_bg_color;
+    static int windowsXPIndex = 0;
 
     ImGui::SetNextWindowPos({0.0f, 0.0f});
     ImGui::SetNextWindowSize({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
-    ImGui::Begin("LeftWindow", &showLeftWindow, 
+    ImGui::Begin("Menu", &showLeftWindow, 
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
@@ -195,6 +232,23 @@ void Game::mLeftWindow()
     |   ImGuiWindowFlags_NoCollapse
     );
 
+    if (ImGui::Button("Window Settings")) {
+        windowsXPIndex = 0;
+    }
+
+    if (ImGui::Button("Monitor Settings")) {
+        windowsXPIndex = 1;
+    }
+
+    if (ImGui::Button("Mouse Settings")) {
+        windowsXPIndex = 2;
+    }
+
+    if (ImGui::Button("Keybindings")) {
+        windowsXPIndex = 3;
+    }
+
+    (this->*windowsXP[windowsXPIndex])();
 
     ImGui::End();
 }
@@ -272,18 +326,6 @@ void Game::mWindowInfoOpacity()
     }
 }
 
-void Game::mWindowInfoFullscreen()
-{
-    static bool set_fscr = window.GetFullscreen();
-    if (ImGui::Checkbox("Fullscreen", &set_fscr)) {
-        window.Fullscreen();
-    }
-    static bool set_bjfscr = window.GetFullscreen();
-    if (ImGui::Checkbox("Blowjob Fullscreen", &set_bjfscr)) {
-        window.BorderlessFullscreen();
-    }
-}
-
 void Game::mWindowInfoAspectRatio()
 {
     static TIMGE::V2ui32 ar_buf = window.GetAspectRatio();
@@ -300,46 +342,67 @@ void Game::mWindowInfoAspectRatio()
 }
 void Game::mWindowAttrMinimize()
 {
+    static bool minimized;
+    minimized  = window.GetState(TIMGE::Window::MINIMIZED);
 
+    if (ImGui::Checkbox("Minimize", &minimized)) {
+        window.Minimize();
+    }
 }
 
 void Game::mWindowAttrMaximize()
 {
+    static bool maximized;
+    maximized = window.GetState(TIMGE::Window::MAXIMIZED);
 
+    if (ImGui::Checkbox("Maximize", &maximized)) {
+        window.Maximize();
+    }
 }
 
 void Game::mWindowAttrRestore()
 {
-
-}
-
-void Game::mWindowAttrShow()
-{
-
+    if (ImGui::Button("Restore")) {
+        window.Restore();
+    }
 }
 
 void Game::mWindowAttrHide()
 {
+    static bool hidden;
+    hidden = window.GetState(TIMGE::Window::VISIBLE);
 
-}
-
-void Game::mWindowAttrFocus()
-{
-
-}
-
-void Game::mWindowAttrRequestAttention()
-{
-
+    if (ImGui::Checkbox("Hide", &hidden)) {
+        window.Hide();
+    }
 }
 
 void Game::mWindowAttrFullscreen()
 {
+    static bool fullscreen;
+    fullscreen = window.GetState(TIMGE::Window::FULLSCREEN); 
 
+    if (ImGui::Checkbox("Fullscreen", &fullscreen)) {
+        window.Fullscreen();
+    }
 }
 
 void Game::mWindowAttrBorderlessFullscreen()
 {
+    static bool borderlessFullscreen;
+    borderlessFullscreen = window.GetState(TIMGE::Window::BORDERLESS_FULLSCREEN);
 
+    if (ImGui::Checkbox("Borderless Fullscreen", &borderlessFullscreen)) {
+        window.BorderlessFullscreen();
+    }
 }
 
+void Game::mWindowAttrVSync()
+{
+    static bool vsync;
+    vsync = window.GetState(TIMGE::Window::VSYNC);
+
+    if (ImGui::Checkbox("VSync", &vsync)) {
+        window.ToggleVSync();
+    }
+}

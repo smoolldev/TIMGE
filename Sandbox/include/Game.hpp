@@ -27,8 +27,18 @@ class Game : public TIMGE::Application
         static TIMGE::Application::Info mGameInfo;
         static Game* mInstance;
         static Game* GetInstance();
-        void mMainWindow();
-        void mLeftWindow();
+        void mWindowSettings();
+        void mMonitorSettings();
+        void mMouseSettings();
+        void mKeybindings();
+        void mMenu();
+
+        static constexpr std::array<decltype(&Game::mWindowSettings), 4> windowsXP = {
+            &Game::mWindowSettings,
+            &Game::mMonitorSettings,
+            &Game::mMouseSettings,
+            &Game::mKeybindings
+        };
  
         void mWindowInfoPosition();
         void mWindowInfoSize();
@@ -37,17 +47,14 @@ class Game : public TIMGE::Application
         void mWindowInfoTitle();
         void mWindowInfoContentScale();
         void mWindowInfoOpacity();
-        void mWindowInfoFullscreen();
         void mWindowInfoAspectRatio();
         void mWindowAttrMinimize();
         void mWindowAttrMaximize();
         void mWindowAttrRestore();
-        void mWindowAttrShow();
         void mWindowAttrHide();
-        void mWindowAttrFocus();
-        void mWindowAttrRequestAttention();
         void mWindowAttrFullscreen();
         void mWindowAttrBorderlessFullscreen();
+        void mWindowAttrVSync();
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);

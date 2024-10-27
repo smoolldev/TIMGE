@@ -4,6 +4,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include <cstdint>
+
 namespace TIMGE::Callback
 {
     void ErrorCallback(int errorCode, const char* description)
@@ -52,6 +54,7 @@ namespace TIMGE::Callback
     void WindowFocusCallback(GLFWwindow* window, int focused)
     {
         Application* app = Application::mGetInstance();
+        app->mInfo.mWindowInfo.mFlags ^= Window::FOCUSED;
         if (auto func = app->mInfo.mCallbacks.mWindowFocus; func != nullptr) {
             func(focused);
         }
@@ -59,6 +62,7 @@ namespace TIMGE::Callback
     void WindowIconifyCallback(GLFWwindow* window, int iconified)
     {
         Application* app = Application::mGetInstance();
+        app->mInfo.mWindowInfo.mFlags ^= Window::MINIMIZED;
         if (auto func = app->mInfo.mCallbacks.mWindowIconify; func != nullptr) {
             func(iconified);
         }
@@ -66,6 +70,7 @@ namespace TIMGE::Callback
     void WindowMaximizeCallback(GLFWwindow* window, int maximized)
     {
         Application* app = Application::mGetInstance();
+        app->mInfo.mWindowInfo.mFlags ^= Window::MAXIMIZED;
         if (auto func = app->mInfo.mCallbacks.mWindowMaximize; func != nullptr) {
             func(maximized);
         }

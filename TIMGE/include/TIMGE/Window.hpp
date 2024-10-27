@@ -51,7 +51,7 @@ namespace TIMGE
             [[nodiscard]] const V4ui32& GetFrameSize() const;
             [[nodiscard]] const V2f& GetContentScale() const;
             [[nodiscard]] float GetOpacity() const;
-            [[nodiscard]] bool GetFlagsState(FLAGS flags) const;
+            [[nodiscard]] bool GetState(FLAGS flags) const;
             [[nodiscard]] bool GetBorderlessFullscreen() const;
             [[nodiscard]] bool GetFullscreen() const;
             [[nodiscard]] bool ShouldClose();
@@ -65,7 +65,18 @@ namespace TIMGE
             void SetOpacity(float opacity);
             void SetShouldClose(bool shouldClose);
 
+            void ToggleResizable();
+            void ToggleDecorated();
+            void ToggleAutoIconify();
+            void ToggleFloating();
+            void ToggleCenterCursor();
+            void ToggleTransparentFramebuffer();
+            void ToggleFocusOnShow();
+            void ToggleScaleToMonitor();
+            void ToggleVSync();
+
             void ResetIcon();
+            void ResetState(FLAGS flags);
 
             void Minimize();
             void Restore();
@@ -91,6 +102,7 @@ namespace TIMGE
             static constexpr FLAGS BORDERLESS_FULLSCREEN = (1 << 11);
             static constexpr FLAGS FULLSCREEN = (1 << 12);
             static constexpr FLAGS VSYNC = (1 << 13);
+            static constexpr FLAGS MINIMIZED = (1 << 14);
         private:
         // WARNING: REMOVE WHEN IMGUI CONDITIONAL COMPILATION IS IMPLEMENTED!!!!!!!!!!!!!!!!!!!
         public:
@@ -104,7 +116,16 @@ namespace TIMGE
             void mValidateAspectRatio(const V2ui32& aspectRatio);
             void mValidateOpacity(float opacity);
             void mValidateOpenGLVersion(const V2ui32& version);
-            void mValidateFullscreenFlags(FLAGS flags);
+            void mValidateFlags(FLAGS flags);
+
+            void mValidateFullscreen_BorderlessFullscreen(FLAGS flags);
+            void mValidateVisible_Fullscreen(FLAGS flags);
+            void mValidateDecorated_Fullscreen(FLAGS flags);
+            void mValidateDecorated_BorderlessFullscreen(FLAGS flags);
+            void mValidateFocused_Minimized(FLAGS flags);
+            void mValidateFocused_CenterCursor(FLAGS flags);
+            void mValidateCenterCursor_Minimized(FLAGS flags);
+            void mValidateMinimized_Maximized(FLAGS flags);
  
             [[nodiscard]] bool mInvalidSizeMinBound(const V2ui32& size) const;
             [[nodiscard]] bool mInvalidSizeMaxBound(const V2ui32& size) const;
@@ -112,7 +133,15 @@ namespace TIMGE
             [[nodiscard]] bool mInvalidAspectRatio(const V2ui32& aspectRatio) const;
             [[nodiscard]] bool mInvalidOpacity(float opacity) const;
             [[nodiscard]] bool mInvalidOpenGLVersion(const V2ui32& version) const;
-            [[nodiscard]] bool mInvalidFullscreenFlags(FLAGS flags) const;
+
+            [[nodiscard]] bool mConflictFullscreen_BorderlessFullscreen(FLAGS flags) const;
+            [[nodiscard]] bool mConflictVisible_Fullscreen(FLAGS flags) const;
+            [[nodiscard]] bool mConflictDecorated_Fullscreen(FLAGS flags) const;
+            [[nodiscard]] bool mConflictDecorated_BorderlessFullscreen(FLAGS flags) const;
+            [[nodiscard]] bool mConflictFocused_Minimized(FLAGS flags) const;
+            [[nodiscard]] bool mConflictFocused_CenterCursor(FLAGS flags) const;
+            [[nodiscard]] bool mConflictCenterCursor_Minimized(FLAGS flags) const;
+            [[nodiscard]] bool mConflictMinimized_Maximized(FLAGS flags) const;
 
             void mCreateWindow();
 

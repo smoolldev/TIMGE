@@ -83,41 +83,7 @@ void KeyCallback(TIMGE::Key key, int scancode, TIMGE::Keyboard::Action action, T
     if (keyboard.Pressed(TIMGE::Key::ESCAPE)) {
         window.SetShouldClose(true);
     }
-
-    // if (keyboard.Pressed(TIMGE::Key::ZERO)) {
-    //     mouse.ResetCursor();
-    // }
-    //
-    // if (keyboard.Pressed(TIMGE::Key::ONE)) {
-    //     mouse.SetCursor(*cursors[0]);
-    // }
-    //
-    // if (keyboard.Pressed(TIMGE::Key::TWO)) {
-    //     mouse.SetCursor(*cursors[1]);
-    // }
-    //
-    // if (keyboard.Pressed(TIMGE::Key::THREE)) {
-    //     mouse.SetCursor(*cursors[2]);
-    // }
-
-    if (key == TIMGE::Key::D && mods == TIMGE::Modifier::SHIFT) {
-        mouse.Disable();
-    }
-
-    if (key == TIMGE::Key::H && mods == TIMGE::Modifier::SHIFT) {
-        mouse.Hide();
-    }
-
-    if (key == TIMGE::Key::C && mods == TIMGE::Modifier::SHIFT) {
-        mouse.Capture();
-    }
-
-    if (key == TIMGE::Key::R && mods == TIMGE::Modifier::SHIFT) {
-        mouse.Restore();
-    }
 }
-
-
 
 void CharCallback(unsigned int codepoint)
 {

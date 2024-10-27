@@ -162,7 +162,7 @@ void Game::mWindowSettings()
     mWindowAttrMinimize();
     mWindowAttrMaximize();
     mWindowAttrRestore();
-    mWindowAttrHide();
+    mWindowAttrVisible();
     mWindowAttrFullscreen();
     mWindowAttrBorderlessFullscreen();
     mWindowAttrVSync();
@@ -208,8 +208,6 @@ void Game::mKeybindings()
     ImGui::Text("Maximize = Shift + M");
     ImGui::Text("Show = S");
     ImGui::Text("Hide = Shift + S");
-    ImGui::Text("Focus = F");
-    ImGui::Text("Request Attention = Shift + F");
     ImGui::Text("Fullscreen = F11");
     ImGui::Text("Borderless Fullscreen = Control + F11");
 
@@ -367,12 +365,12 @@ void Game::mWindowAttrRestore()
     }
 }
 
-void Game::mWindowAttrHide()
+void Game::mWindowAttrVisible()
 {
-    static bool hidden;
-    hidden = window.GetState(TIMGE::Window::VISIBLE);
+    static bool visible;
+    visible = window.GetState(TIMGE::Window::VISIBLE);
 
-    if (ImGui::Checkbox("Hide", &hidden)) {
+    if (ImGui::Checkbox("Visible", &visible)) {
         window.Hide();
     }
 }

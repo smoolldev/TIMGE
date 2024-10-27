@@ -52,8 +52,6 @@ namespace TIMGE
             [[nodiscard]] const V2f& GetContentScale() const;
             [[nodiscard]] float GetOpacity() const;
             [[nodiscard]] bool GetState(FLAGS flags) const;
-            [[nodiscard]] bool GetBorderlessFullscreen() const;
-            [[nodiscard]] bool GetFullscreen() const;
             [[nodiscard]] bool ShouldClose();
 
             void SetTitle(const std::string_view& title);

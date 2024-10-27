@@ -96,14 +96,6 @@ namespace TIMGE
         return mInfo.mFlags & flags;
     }
 
-    [[nodiscard]] bool Window::GetBorderlessFullscreen() const {
-        return mInfo.mFlags & BORDERLESS_FULLSCREEN;
-    }
-
-    [[nodiscard]] bool Window::GetFullscreen() const {
-        return mInfo.mFlags & FULLSCREEN;
-    }
-
     void Window::SetTitle(const std::string_view& title) {
         glfwSetWindowTitle(mWindow, title.data());
         mInfo.mTitle = title;
@@ -181,55 +173,55 @@ namespace TIMGE
     void Window::ToggleResizable() {
         mInfo.mFlags ^= RESIZABLE;
 
-        glfwSetWindowAttrib(mWindow, GLFW_RESIZABLE, RESIZABLE & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_RESIZABLE, GetState(RESIZABLE));
     }
 
     void Window::ToggleDecorated() {
         mInfo.mFlags ^= DECORATED;
 
-        glfwSetWindowAttrib(mWindow, GLFW_DECORATED, DECORATED & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GetState(DECORATED));
     }
 
     void Window::ToggleAutoIconify() {
         mInfo.mFlags ^= AUTO_ICONIFY;
 
-        glfwSetWindowAttrib(mWindow, GLFW_AUTO_ICONIFY, AUTO_ICONIFY & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_AUTO_ICONIFY, GetState(AUTO_ICONIFY));
     }
 
     void Window::ToggleFloating() {
         mInfo.mFlags ^= FLOATING;
 
-        glfwSetWindowAttrib(mWindow, GLFW_FLOATING, FLOATING & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_FLOATING, GetState(FLOATING));
     }
 
     void Window::ToggleCenterCursor() {
         mInfo.mFlags ^= CENTER_CURSOR;
 
-        glfwSetWindowAttrib(mWindow, GLFW_CENTER_CURSOR, CENTER_CURSOR & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_CENTER_CURSOR, GetState(CENTER_CURSOR));
     }
 
     void Window::ToggleTransparentFramebuffer() {
         mInfo.mFlags ^= TRANSPARENT_FRAMEBUFFER;
 
-        glfwSetWindowAttrib(mWindow, GLFW_TRANSPARENT_FRAMEBUFFER, TRANSPARENT_FRAMEBUFFER & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_TRANSPARENT_FRAMEBUFFER, GetState(TRANSPARENT_FRAMEBUFFER));
     }
 
     void Window::ToggleFocusOnShow() {
         mInfo.mFlags ^= FOCUS_ON_SHOW;
 
-        glfwSetWindowAttrib(mWindow, GLFW_FOCUS_ON_SHOW, FOCUS_ON_SHOW & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_FOCUS_ON_SHOW, GetState(FOCUS_ON_SHOW));
     }
 
     void Window::ToggleScaleToMonitor() {
         mInfo.mFlags ^= SCALE_TO_MONITOR;
 
-        glfwSetWindowAttrib(mWindow, GLFW_SCALE_TO_MONITOR, SCALE_TO_MONITOR & mInfo.mFlags);
+        glfwSetWindowAttrib(mWindow, GLFW_SCALE_TO_MONITOR, GetState(SCALE_TO_MONITOR));
     }
 
     void Window::ToggleVSync() {
         mInfo.mFlags ^= VSYNC;
 
-        glfwSwapInterval(0);
+        glfwSwapInterval(GetState(VSYNC));
     }
 
     void Window::ResetIcon() {
@@ -241,9 +233,9 @@ namespace TIMGE
     }
 
     void Window::Restore() {
-        if (mInfo.mFlags & FULLSCREEN) {
+        if (GetState(FULLSCREEN)) {
             Fullscreen();
-        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+        } else if (GetState(BORDERLESS_FULLSCREEN)) {
             BorderlessFullscreen();
         } else {
             glfwRestoreWindow(mWindow);
@@ -263,7 +255,7 @@ namespace TIMGE
     }
 
     void Window::Hide() {
-        if (GetFullscreen()) {
+        if (GetState(FULLSCREEN)) {
             throw WindowException("Fullscreen windows cannot be hidden.");
         }
 
@@ -282,7 +274,7 @@ namespace TIMGE
 
     void Window::BorderlessFullscreen()
     {
-        if (!GetBorderlessFullscreen()) {
+        if (!GetState(BORDERLESS_FULLSCREEN)) {
             mToggleOnBorderlessFullscreen();
         } else {
             mToggleOffBorderlessFullscreen();
@@ -293,7 +285,7 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        if (!GetFullscreen()) {
+        if (!GetState(BORDERLESS_FULLSCREEN)) {
             mToggleOnFullscreen();
         } else {
             mToggleOffFullscreen();
@@ -322,9 +314,9 @@ namespace TIMGE
             mInfo.mSize[V2ui32::WIDTH], mInfo.mSize[V2ui32::HEIGHT],
             0
         );
-        if (mInfo.mFlags & FULLSCREEN) {
+        if (GetState(FULLSCREEN)) {
             mToggleOnFullscreen();
-        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+        } else if (GetState(BORDERLESS_FULLSCREEN)) {
             mToggleOnBorderlessFullscreen();
         }
     }
@@ -360,9 +352,9 @@ namespace TIMGE
             throw WindowException("Failed to create window!");
         }
 
-        if (mInfo.mFlags & FULLSCREEN) {
+        if (GetState(FULLSCREEN)) {
             mToggleOnFullscreen();
-        } else if (mInfo.mFlags & BORDERLESS_FULLSCREEN) {
+        } else if (GetState(BORDERLESS_FULLSCREEN)) {
             mToggleOnBorderlessFullscreen();
         }
     }
@@ -373,6 +365,8 @@ namespace TIMGE
         if (!gladLoadGL()) {
             throw WindowException("Failed to load OpenGL!");
         }
+
+        glfwSwapInterval(GetState(VSYNC));
     }
 
     void Window::mRetrieveFramebufferSize() {
@@ -499,35 +493,35 @@ namespace TIMGE
     }
 
     [[nodiscard]] bool Window::mConflictFullscreen_BorderlessFullscreen(FLAGS flags) const {
-        return (flags & FULLSCREEN) && (flags & BORDERLESS_FULLSCREEN);
+        return GetState(FULLSCREEN) && GetState(BORDERLESS_FULLSCREEN);
     }
 
     [[nodiscard]] bool Window::mConflictVisible_Fullscreen(FLAGS flags) const {
-        return !(flags & VISIBLE) && (flags & FULLSCREEN);
+        return !GetState(VISIBLE) && GetState(FULLSCREEN);
     }
 
     [[nodiscard]] bool Window::mConflictDecorated_Fullscreen(FLAGS flags) const {
-        return (flags & DECORATED) && (flags & FULLSCREEN);
+        return GetState(DECORATED) && GetState(FULLSCREEN);
     }
 
     [[nodiscard]] bool Window::mConflictDecorated_BorderlessFullscreen(FLAGS flags) const {
-        return (flags & DECORATED) && (flags & BORDERLESS_FULLSCREEN);
+        return GetState(DECORATED) && GetState(BORDERLESS_FULLSCREEN);
     }
 
     [[nodiscard]] bool Window::mConflictFocused_Minimized(FLAGS flags) const {
-        return (flags & FOCUSED) && (flags & MINIMIZED);
+        return GetState(FOCUSED) && GetState(MINIMIZED);
     }
 
     [[nodiscard]] bool Window::mConflictFocused_CenterCursor(FLAGS flags) const {
-        return !(flags & FOCUSED) && (flags & CENTER_CURSOR);
+        return !GetState(FOCUSED) && GetState(CENTER_CURSOR);
     }
 
     [[nodiscard]] bool Window::mConflictCenterCursor_Minimized(FLAGS flags) const {
-        return (flags & CENTER_CURSOR) && (flags & MINIMIZED);
+        return GetState(CENTER_CURSOR) && GetState(MINIMIZED);
     }
 
     [[nodiscard]] bool Window::mConflictMinimized_Maximized(FLAGS flags) const {
-        return (flags & MINIMIZED) && (flags & MAXIMIZED);
+        return GetState(MINIMIZED) && GetState(MAXIMIZED);
     }
 
     void Window::mValidateSize(const V2ui32& size)

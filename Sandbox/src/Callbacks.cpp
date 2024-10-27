@@ -1,5 +1,6 @@
 #include "Callbacks.hpp"
 #include "Game.hpp"
+#include "TIMGE/Keyboard.hpp"
 
 void ErrorCallback(int errorCode, std::string_view description)
 {
@@ -80,8 +81,36 @@ void KeyCallback(TIMGE::Key key, int scancode, TIMGE::Keyboard::Action action, T
     TIMGE::Mouse& mouse = game->GetMouse();
     auto cursors = mouse.GetCursors();
 
-    if (keyboard.Pressed(TIMGE::Key::ESCAPE)) {
+    if (key == TIMGE::Key::ESCAPE && action == TIMGE::Keyboard::Action::PRESSED) {
         window.SetShouldClose(true);
+    }
+
+    if (key == TIMGE::Key::M && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Minimize();
+    }
+
+    if (key == TIMGE::Key::R && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Restore();
+    }
+
+    if (key == TIMGE::Key::M && mods == TIMGE::Modifier::SHIFT && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Maximize();
+    }
+
+    if (key == TIMGE::Key::S && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Show();
+    }
+
+    if (key == TIMGE::Key::S && mods == TIMGE::Modifier::SHIFT && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Hide();
+    }
+
+    if (key == TIMGE::Key::F11 && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Fullscreen();
+    }
+
+    if (key == TIMGE::Key::F11 && mods == TIMGE::Modifier::CONTROL && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.BorderlessFullscreen();
     }
 }
 

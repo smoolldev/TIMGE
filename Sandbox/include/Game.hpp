@@ -51,7 +51,7 @@ class Game : public TIMGE::Application
         void mWindowAttrMinimize();
         void mWindowAttrMaximize();
         void mWindowAttrRestore();
-        void mWindowAttrHide();
+        void mWindowAttrVisible();
         void mWindowAttrFullscreen();
         void mWindowAttrBorderlessFullscreen();
         void mWindowAttrVSync();

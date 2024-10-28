@@ -35,4 +35,6 @@
 **/build/
 **/.cache/
 
+# Files
 **/compile_commands.json
+**/imgui.ini

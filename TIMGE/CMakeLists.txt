@@ -8,6 +8,10 @@ project(TIMGE
 
 option(TIMGE_ENABLE_IMGUI "Enable ImGUI for use with engine" ON)
 
+if (TIMGE_ENABLE_IMGUI)
+        add_definitions(-DTIMGE_ENABLE_IMGUI)
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 20)
 

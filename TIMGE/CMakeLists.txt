@@ -12,6 +12,9 @@ if (TIMGE_ENABLE_IMGUI)
         add_definitions(-DTIMGE_ENABLE_IMGUI)
 endif()
 
+set(TIMGE_NAME "TIMGE")
+set(TIMGE_SRCDIR "${CMAKE_SOURCE_DIR}/TIMGE")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -41,34 +44,34 @@ if (TIMGE_ENABLE_IMGUI)
                 vendor/imgui/backends/imgui_impl_opengl3.h
                 vendor/imgui/backends/imgui_impl_opengl3.cpp
         )
-include_directories(imgui ${CMAKE_SOURCE_DIR}/vendor/glfw/include vendor/imgui vendor/imgui/backends)
+include_directories(imgui ${TIMGE_SRCDIR}/vendor/glfw/include vendor/imgui vendor/imgui/backends)
 target_link_libraries(imgui PRIVATE glfw3)
 endif()
 
-file(GLOB_RECURSE LIB_SRC CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE LIB_SRC CONFIGURE_DEPENDS "${TIMGE_SRCDIR}/src/*.cpp")
 
-add_library("${CMAKE_PROJECT_NAME}" STATIC)
+add_library("${TIMGE_NAME}" STATIC)
 
 if (TIMGE_ENABLE_IMGUI)
-        target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${LIB_SRC}
+        target_sources("${TIMGE_NAME}" PRIVATE ${LIB_SRC}
             $<TARGET_OBJECTS:glfw>
             $<TARGET_OBJECTS:glad>
             $<TARGET_OBJECTS:stb_image>
             $<TARGET_OBJECTS:imgui>
         )
 else()
-        target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${LIB_SRC}
+        target_sources("${TIMGE_NAME}" PRIVATE ${LIB_SRC}
             $<TARGET_OBJECTS:glfw>
             $<TARGET_OBJECTS:glad>
             $<TARGET_OBJECTS:stb_image>
         )
 endif()
 
-target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories("${TIMGE_NAME}" PRIVATE "${TIMGE_SRCDIR}/include/")
 if (TIMGE_ENABLE_IMGUI)
-        target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad stb_image imgui)
+        target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image imgui)
 else()
-        target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad stb_image)
+        target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image)
 endif()
 
 #add_custom_target(combined ALL COMMAND ${CMAKE_CXX_ARCHIVE_CREATE} libTIMGE.a $<TARGET_FILE:TIMGElib> $<TARGET_FILE:glfw> $<TARGET_FILE:glad> $<TARGET_FILE:stb_image>)

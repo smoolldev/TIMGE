@@ -74,4 +74,6 @@ else()
         target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image)
 endif()
 
+file(COPY "${TIMGE_SRCDIR}/include/TIMGE" DESTINATION "${CMAKE_SOURCE_DIR}/Sandbox/include")
+
 #add_custom_target(combined ALL COMMAND ${CMAKE_CXX_ARCHIVE_CREATE} libTIMGE.a $<TARGET_FILE:TIMGElib> $<TARGET_FILE:glfw> $<TARGET_FILE:glad> $<TARGET_FILE:stb_image>)

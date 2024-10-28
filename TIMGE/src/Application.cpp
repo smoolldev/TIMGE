@@ -74,7 +74,7 @@ namespace TIMGE
             ImGui::CreateContext();
             ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), true);
             std::string glsl_version = std::format(
-                "#version {}{}0", 
+                "#version {}{}0 core", 
                 mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MAJOR], 
                 mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MINOR]
             );
@@ -148,7 +148,6 @@ namespace TIMGE
     {
         #ifdef TIMGE_ENABLE_IMGUI
             ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         #endif // TIMGE_ENABLE_IMGUI
 
         glClearColor(
@@ -158,6 +157,10 @@ namespace TIMGE
             mInfo.mBackground[V4f::A] 
         );
         glClear(GL_COLOR_BUFFER_BIT);
+
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        #endif // TIMGE_ENABLE_IMGUI
 
         mEventProcessor();
         glfwSwapBuffers(mWindow.mGetWindow());

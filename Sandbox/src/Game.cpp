@@ -1,13 +1,12 @@
 #include "Game.hpp"
 #include "TIMGE/Window.hpp"
-#include "imgui_internal.h"
 
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 Game* Game::mInstance = nullptr;
 
@@ -81,46 +80,27 @@ Game::Game()
     }
     mInstance = this;
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImFontConfig cfg{};
     cfg.SizePixels = 24;
     io.Fonts->AddFontDefault(&cfg);
     ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window.mGetWindow(), true);
-    ImGui_ImplOpenGL3_Init();
 }
 
 Game::~Game()
 {}
-
-void Game::BeginFrame()
-{
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    Application::BeginFrame();
-}
-
-void Game::EndFrame()
-{
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    Application::EndFrame();
-}
 
 void Game::Run()
 {
     TIMGE::Window& window = GetWindow();
 
     while (!window.ShouldClose()) {
-        BeginFrame();
+        Application::BeginFrame();
         {
-             Update();
-             Render();
+            Update();
+            Render();
         }
-        EndFrame();
+        Application::EndFrame();
     }
 }
 

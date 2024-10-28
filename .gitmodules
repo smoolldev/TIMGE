@@ -2,6 +2,6 @@
 	path = TIMGE/vendor/glfw
 	url = https://github.com/glfw/glfw
 [submodule "imgui-docking"]
-	path = Sandbox/vendor/imgui
+	path = TIMGE/vendor/imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking

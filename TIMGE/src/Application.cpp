@@ -2,9 +2,17 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/Window.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
-#include <GLFW/glfw3.h>
 #include <format>
+
+#ifdef TIMGE_ENABLE_IMGUI
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#endif //TIMGE_ENABLE_IMGUI
 
 namespace TIMGE
 {
@@ -63,6 +71,14 @@ namespace TIMGE
         }
         mInstance = this;
 
+        #ifdef TIMGE_ENABLE_IMGUI
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), true);
+        std::string glsl_version = std::format("#version {}{}0", mInfo.mOpenGLVersion[V2ui32::GL_MAJOR], mInfo.mOpenGLVersion[V2ui32::GL_MINOR]);
+        ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+        #endif // TIMGE_ENABLE_IMGUI
+
         glfwSetErrorCallback(Callback::ErrorCallback);
         glfwSetWindowPosCallback(mWindow.mGetWindow(), Callback::WindowPosCallback);
         glfwSetWindowSizeCallback(mWindow.mGetWindow(), Callback::WindowSizeCallback);
@@ -108,28 +124,43 @@ namespace TIMGE
     {}
 
     Application::~Application()
-    {}
+    {
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplOpenGL3_Shutdown();
+            ImGui_ImplGlfw_Shutdown();
+            ImGui::DestroyContext();
+        #endif // TIMGE_ENABLE_IMGUI
+    }
 
     void Application::BeginFrame()
     {
         mStartTime = mSteadyClock.now();
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+        #endif // TIMGE_ENABLE_IMGUI
+    }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+    void Application::EndFrame()
+    {
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        #endif // TIMGE_ENABLE_IMGUI
+
         glClearColor(
             mInfo.mBackground[V4f::R], 
             mInfo.mBackground[V4f::G], 
             mInfo.mBackground[V4f::B], 
             mInfo.mBackground[V4f::A] 
         );
-    }
-
-    void Application::EndFrame()
-    {
-        mDeltaTime = std::chrono::nanoseconds(mSteadyClock.now() - mStartTime).count() * 1.0E-9;
+        glClear(GL_COLOR_BUFFER_BIT);
 
         mEventProcessor();
-
         glfwSwapBuffers(mWindow.mGetWindow());
+
+        mDeltaTime = std::chrono::nanoseconds(mSteadyClock.now() - mStartTime).count() * 1.0E-9;
     }
 
     void Application::SetMonitor(const Monitor& monitor) {

@@ -489,7 +489,12 @@ namespace TIMGE
             V2ui32{4, 4}, V2ui32{4, 5}, V2ui32{4, 6},
         };
 
-        return std::find(GLVers.begin(), GLVers.end(), version) == GLVers.end();
+        for (const auto& ver: GLVers) {
+            if (ver == version) {
+                return false;
+            }
+        }
+        return true;
     }
 
     [[nodiscard]] bool Window::mConflictFullscreen_BorderlessFullscreen(FLAGS flags) const {

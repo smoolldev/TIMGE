@@ -10,8 +10,6 @@ class Game : public TIMGE::Application
     public:
         Game();
         ~Game();
-        void BeginFrame();
-        void EndFrame();
         void Run();
         void Update();
         void Render();

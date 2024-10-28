@@ -5,7 +5,6 @@
 
 #include <format>
 
-#define TIMGE_ENABLE_IMGUI
 #ifdef TIMGE_ENABLE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

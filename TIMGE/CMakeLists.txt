@@ -85,7 +85,7 @@ if (EXISTS "${TIMGE_SRCDIR}/include/TIMGE")
 endif()
 
 # Create symbolic link between TIMGE's binary directory and it's source directory
-if (EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json")
+if (EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json" AND NOT EXISTS "${TIMGE_SRCDIR}/compile_commands.json")
     file(
         CREATE_LINK
             "${CMAKE_BINARY_DIR}/compile_commands.json"

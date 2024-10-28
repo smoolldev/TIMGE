@@ -1,3 +1,4 @@
+#define TIMGE_ENABLE_IMGUI
 #include <iostream>
 #include <TIMGE/Exception.hpp>
 #include "Game.hpp"

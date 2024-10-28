@@ -10,7 +10,6 @@
 
 #include <chrono>
 #include <cstdint>
-#include <limits>
 #include <string_view>
 
 namespace TIMGE

@@ -17,7 +17,7 @@ add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb_image)
 
 add_library(
-        imgui EXCLUDE_FROM_ALL
+		imgui OBJECT EXCLUDE_FROM_ALL
         vendor/imgui/imgui.cpp
         vendor/imgui/imgui.h
         vendor/imgui/imgui_demo.cpp
@@ -47,8 +47,9 @@ target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${LIB_SRC}
 	$<TARGET_OBJECTS:glfw>
 	$<TARGET_OBJECTS:glad>
 	$<TARGET_OBJECTS:stb_image>
+	$<TARGET_OBJECTS:imgui>
 )
 target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glad glfw stb_image imgui)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glfw glad stb_image imgui)
 
 #add_custom_target(combined ALL COMMAND ${CMAKE_CXX_ARCHIVE_CREATE} libTIMGE.a $<TARGET_FILE:TIMGElib> $<TARGET_FILE:glfw> $<TARGET_FILE:glad> $<TARGET_FILE:stb_image>)

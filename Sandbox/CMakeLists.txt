@@ -22,3 +22,11 @@ target_include_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/include/
 target_link_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/lib")
 target_link_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/vendor")
 target_link_libraries("${SANDBOX_NAME}" PRIVATE TIMGE)
+
+# Create symbolic link between TIMGE's binary directory and it's source directory
+file(
+    CREATE_LINK
+        "${CMAKE_BINARY_DIR}/compile_commands.json"
+		"${SANDBOX_SRCDIR}/compile_commands.json"
+    SYMBOLIC
+)

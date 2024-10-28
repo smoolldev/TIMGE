@@ -75,19 +75,23 @@ else()
 endif()
 
 # Copy TIMGE headers to Sandbox/include
-file(
-    COPY
-        "${TIMGE_SRCDIR}/include/TIMGE"
-    DESTINATION
-        "${CMAKE_SOURCE_DIR}/Sandbox/include"
-)
+if (EXISTS "${TIMGE_SRCDIR}/include/TIMGE")
+    file(
+        COPY
+            "${TIMGE_SRCDIR}/include/TIMGE"
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+endif()
 
 # Create symbolic link between TIMGE's binary directory and it's source directory
-file(
-    CREATE_LINK
-        "${CMAKE_BINARY_DIR}/compile_commands.json"
-        "${TIMGE_SRCDIR}/compile_commands.json"
-    SYMBOLIC
-)
+if (EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json")
+    file(
+        CREATE_LINK
+            "${CMAKE_BINARY_DIR}/compile_commands.json"
+            "${TIMGE_SRCDIR}/compile_commands.json"
+        SYMBOLIC
+    )
+endif()
 
 #add_custom_target(combined ALL COMMAND ${CMAKE_CXX_ARCHIVE_CREATE} libTIMGE.a $<TARGET_FILE:TIMGElib> $<TARGET_FILE:glfw> $<TARGET_FILE:glad> $<TARGET_FILE:stb_image>)

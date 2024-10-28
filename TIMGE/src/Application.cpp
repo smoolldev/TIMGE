@@ -2,12 +2,10 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/Window.hpp"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 
 #include <format>
 
+#define TIMGE_ENABLE_IMGUI
 #ifdef TIMGE_ENABLE_IMGUI
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -72,11 +70,15 @@ namespace TIMGE
         mInstance = this;
 
         #ifdef TIMGE_ENABLE_IMGUI
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), true);
-        std::string glsl_version = std::format("#version {}{}0", mInfo.mOpenGLVersion[V2ui32::GL_MAJOR], mInfo.mOpenGLVersion[V2ui32::GL_MINOR]);
-        ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), true);
+            std::string glsl_version = std::format(
+                "#version {}{}0", 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MAJOR], 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MINOR]
+            );
+            ImGui_ImplOpenGL3_Init(glsl_version.c_str());
         #endif // TIMGE_ENABLE_IMGUI
 
         glfwSetErrorCallback(Callback::ErrorCallback);

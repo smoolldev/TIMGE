@@ -44,9 +44,6 @@ namespace TIMGE
         mRetrieveFrameSize();
         mRetrieveContentScale();
 
-        if (mInfo.mPosition == V2i32{POSITION_DONT_CARE, POSITION_DONT_CARE}) {
-            SetPosition(mInfo.mPosition);
-        }
         SetSizeLimits(mInfo.mSizeLimits);
         SetAspectRatio(mInfo.mAspectRatio);
         SetOpacity(mInfo.mOpacity);
@@ -127,9 +124,9 @@ namespace TIMGE
         glfwSetWindowAspectRatio(
             mWindow, 
             aspectRatio[V2ui32::NUMERATOR] == ASPECT_RATIO_DONT_CARE ?
-                mInfo.mSize[V2ui32::WIDTH] : aspectRatio[V2i32::NUMERATOR], 
+                GLFW_DONT_CARE : aspectRatio[V2i32::NUMERATOR], 
             aspectRatio[V2ui32::DENOMINATOR] == ASPECT_RATIO_DONT_CARE ?
-                mInfo.mSize[V2ui32::HEIGHT] : aspectRatio[V2i32::DENOMINATOR]
+                GLFW_DONT_CARE : aspectRatio[V2i32::DENOMINATOR]
         );
 
         mInfo.mAspectRatio = aspectRatio;
@@ -244,8 +241,6 @@ namespace TIMGE
 
     void Window::Maximize() {
         glfwMaximizeWindow(mWindow);
-
-        mInfo.mFlags ^= MINIMIZED;
     }
 
     void Window::Show() {
@@ -285,7 +280,7 @@ namespace TIMGE
 
     void Window::Fullscreen()
     {
-        if (!GetState(BORDERLESS_FULLSCREEN)) {
+        if (!GetState(FULLSCREEN)) {
             mToggleOnFullscreen();
         } else {
             mToggleOffFullscreen();
@@ -414,6 +409,7 @@ namespace TIMGE
 
     void Window::mToggleOnBorderlessFullscreen()
     {
+        mInfo.mFlags &= ~DECORATED;
         mSizeBeforeFullscreen = mInfo.mSize;
         mPositionBeforeFullscreen = mInfo.mPosition;
 
@@ -427,6 +423,8 @@ namespace TIMGE
 
     void Window::mToggleOffBorderlessFullscreen()
     {
+        mInfo.mFlags |= DECORATED;
+
         glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
         SetSize(mSizeBeforeFullscreen);
         SetPosition(mPositionBeforeFullscreen);

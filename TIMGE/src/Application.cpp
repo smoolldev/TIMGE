@@ -69,7 +69,18 @@ namespace TIMGE
         }
         mInstance = this;
 
-        
+        #ifdef TIMGE_ENABLE_IMGUI
+            IMGUI_CHECKVERSION();
+            mImGuiContext = ImGui::CreateContext();
+            ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), false);
+            std::string glsl_version = std::format(
+                "#version {}{}0 core", 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MAJOR], 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MINOR]
+            );
+            ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+        #endif // TIMGE_ENABLE_IMGUI
+
         glfwSetErrorCallback(Callback::ErrorCallback);
         glfwSetWindowPosCallback(mWindow.mGetWindow(), Callback::WindowPosCallback);
         glfwSetWindowSizeCallback(mWindow.mGetWindow(), Callback::WindowSizeCallback);
@@ -90,18 +101,6 @@ namespace TIMGE
         glfwSetDropCallback(mWindow.mGetWindow(), Callback::DropCallback);
         glfwSetMonitorCallback(Callback::MonitorCallback);
         glfwSetJoystickCallback(Callback::JoystickCallback);
-
-        #ifdef TIMGE_ENABLE_IMGUI
-            IMGUI_CHECKVERSION();
-            mImGuiContext = ImGui::CreateContext();
-            ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), true);
-            std::string glsl_version = std::format(
-                "#version {}{}0 core", 
-                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MAJOR], 
-                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MINOR]
-            );
-            ImGui_ImplOpenGL3_Init(glsl_version.c_str());
-        #endif // TIMGE_ENABLE_IMGUI
 }
 
     Application::Application(std::string_view title, uint32_t width, uint32_t height)

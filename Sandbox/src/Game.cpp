@@ -19,8 +19,7 @@ TIMGE::Application::Info Game::mGameInfo {
                     TIMGE::SIZE_LIMITS_DONT_CARE
                 },
                 TIMGE::V2i32{
-                    TIMGE::POSITION_DONT_CARE,
-                    TIMGE::POSITION_DONT_CARE,
+                    0, 0 
                 },
                 TIMGE::V2ui32{
                     TIMGE::ASPECT_RATIO_DONT_CARE,
@@ -250,6 +249,7 @@ void Game::mWindowInfoSize()
     ImGui::Text("Window Size:");
     ImGui::Text("Width: %d", mWindowSize[TIMGE::V2i32::WIDTH]);
     ImGui::Text("Height: %d", mWindowSize[TIMGE::V2i32::HEIGHT]);
+    //TODO: Sliders
     ImGui::InputInt2("##size_input", reinterpret_cast<int*>(&size_buf[TIMGE::V2i32::X]));
 
     if (ImGui::IsItemDeactivatedAfterEdit()){
@@ -278,7 +278,6 @@ void Game::mWindowInfoFrameSize()
 void Game::mWindowInfoTitle()
 {
     static char title_buf[64]{};
-    //ImGui::Text("FPS: %d", (int)(deltaTime * 1'000'000.0 / 60.0));
     ImGui::Text("Window Title: %s", mTitle.data());
     ImGui::SetNextItemWidth((float)mWindowSize[TIMGE::V2i32::WIDTH] / 3);
     if (ImGui::InputText("##title_input", title_buf, 63, ImGuiInputTextFlags_EnterReturnsTrue)) {
@@ -322,6 +321,7 @@ void Game::mWindowAttrMinimize()
     static bool minimized;
     minimized  = window.GetState(TIMGE::Window::MINIMIZED);
 
+    //TODO: Buttonize
     if (ImGui::Checkbox("Minimize", &minimized)) {
         window.Minimize();
     }
@@ -331,9 +331,15 @@ void Game::mWindowAttrMaximize()
 {
     static bool maximized;
     maximized = window.GetState(TIMGE::Window::MAXIMIZED);
+    static bool Switch = maximized;
 
     if (ImGui::Checkbox("Maximize", &maximized)) {
-        window.Maximize();
+        if (Switch) {
+            window.Restore();
+        } else {
+            window.Maximize();
+        }
+        Switch = !Switch;
     }
 }
 

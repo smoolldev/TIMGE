@@ -1,6 +1,9 @@
 #include "TIMGE/CallbackDefs.hpp"
 #include "TIMGE/Application.hpp"
 #include "TIMGE/Utils/Vector.hpp"
+#ifdef TIMGE_ENABLE_IMGUI
+#include <imgui_impl_glfw.h>
+#endif // TIMGE_ENABLE_IMGUI
 
 #include <GLFW/glfw3.h>
 
@@ -53,6 +56,9 @@ namespace TIMGE::Callback
     }
     void WindowFocusCallback(GLFWwindow* window, int focused)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_WindowFocusCallback(window, focused);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         app->mInfo.mWindowInfo.mFlags ^= Window::FOCUSED;
         if (auto func = app->mInfo.mCallbacks.mWindowFocus; func != nullptr) {
@@ -99,6 +105,9 @@ namespace TIMGE::Callback
     }
     void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         if (auto func = app->mInfo.mCallbacks.mMouseButton; func != nullptr) {
             func(static_cast<Button>(button), static_cast<Mouse::Action>(action), static_cast<Modifier>(mods));
@@ -106,6 +115,9 @@ namespace TIMGE::Callback
     }
     void CursorPosCallback(GLFWwindow* window, double xPos, double yPos)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_CursorPosCallback(window, xPos, yPos);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         app->mSetCursorPosition({ xPos, yPos });
         if (auto func = app->mInfo.mCallbacks.mCursorPos; func != nullptr) {
@@ -114,6 +126,9 @@ namespace TIMGE::Callback
     }
     void CursorEnterCallback(GLFWwindow* window, int entered)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_CursorEnterCallback(window, entered);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         if (auto func = app->mInfo.mCallbacks.mCursorEnter; func != nullptr) {
             func(entered);
@@ -121,6 +136,9 @@ namespace TIMGE::Callback
     }
     void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_ScrollCallback(window, xOffset, yOffset);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         app->mSetScrollOffset({ xOffset, yOffset });
         if (auto func = app->mInfo.mCallbacks.mScroll; func != nullptr) {
@@ -129,6 +147,9 @@ namespace TIMGE::Callback
     }
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         if (auto func = app->mInfo.mCallbacks.mKey; func != nullptr) {
             func(static_cast<Key>(key), scancode, static_cast<Keyboard::Action>(action), static_cast<Modifier>(mods));
@@ -136,6 +157,9 @@ namespace TIMGE::Callback
     }
     void CharCallback(GLFWwindow* window, unsigned int codepoint)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_CharCallback(window, codepoint);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
         if (auto func = app->mInfo.mCallbacks.mChar; func != nullptr) {
             func(codepoint);
@@ -157,6 +181,9 @@ namespace TIMGE::Callback
     }
     void MonitorCallback(GLFWmonitor* monitor, int event)
     {
+        #ifdef TIMGE_ENABLE_IMGUI
+        ImGui_ImplGlfw_MonitorCallback(monitor, event);
+        #endif // TIMGE_ENABLE_IMGUI
         Application* app = Application::mGetInstance();
 
         if (event == GLFW_CONNECTED) {

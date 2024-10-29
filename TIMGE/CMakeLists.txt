@@ -18,6 +18,9 @@ set(TIMGE_SRCDIR "${CMAKE_SOURCE_DIR}/TIMGE")
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_CXX_STANDARD 20)
 
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "")
 set(GLFW_LIBRARY_TYPE OBJECT)
 
 add_subdirectory(vendor/glfw)
@@ -75,12 +78,12 @@ else()
 endif()
 
 # Copy TIMGE headers to Sandbox/include
-if (EXISTS "${TIMGE_SRCDIR}/include/TIMGE")
+if (EXISTS "${TIMGE_SRCDIR}/include/TIMGE" AND NOT EXISTS "${CMAKE_SOURCE_DIR}/Sandbox/include/TIMGE")
     file(
-        COPY
+        CREATE_LINK
             "${TIMGE_SRCDIR}/include/TIMGE"
-        DESTINATION
-            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/TIMGE"
+        SYMBOLIC
     )
 endif()
 

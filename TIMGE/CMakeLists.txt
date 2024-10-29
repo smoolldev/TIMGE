@@ -80,10 +80,64 @@ endif()
 # Copy TIMGE headers to Sandbox/include
 if (EXISTS "${TIMGE_SRCDIR}/include/TIMGE" AND NOT EXISTS "${CMAKE_SOURCE_DIR}/Sandbox/include/TIMGE")
     file(
-        CREATE_LINK
+        COPY
             "${TIMGE_SRCDIR}/include/TIMGE"
-            "${CMAKE_SOURCE_DIR}/Sandbox/include/TIMGE"
-        SYMBOLIC
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+    file(
+        COPY
+            "${TIMGE_SRCDIR}/vendor/glfw/include/GLFW"
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+    file(
+        COPY
+            "${TIMGE_SRCDIR}/vendor/glad/include/glad"
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+    file(
+        COPY
+            "${TIMGE_SRCDIR}/vendor/glad/include/KHR"
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+    file(
+        COPY
+            "${TIMGE_SRCDIR}/vendor/stb_image/include/stb_image"
+        DESTINATION
+            "${CMAKE_SOURCE_DIR}/Sandbox/include"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imgui.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imgui.h"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imgui_internal.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imgui_internal.h"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imconfig.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imconfig.h"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imstb_rectpack.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_rectpack.h"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imstb_textedit.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_textedit.h"
+    )
+    file(
+        COPY_FILE
+            "${TIMGE_SRCDIR}/vendor/imgui/imstb_truetype.h"
+            "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_truetype.h"
     )
 endif()
 

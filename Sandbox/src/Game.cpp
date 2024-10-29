@@ -4,7 +4,7 @@
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
 
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 Game* Game::mInstance = nullptr;
 
@@ -78,6 +78,7 @@ Game::Game()
     }
     mInstance = this;
 
+    ImGui::SetCurrentContext(GetImGuiContext());
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImFontConfig cfg{};
     cfg.SizePixels = 24;

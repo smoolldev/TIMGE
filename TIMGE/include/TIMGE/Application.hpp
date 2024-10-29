@@ -12,6 +12,10 @@
 #include <cstdint>
 #include <string_view>
 
+#ifdef TIMGE_ENABLE_IMGUI
+#include <imgui_internal.h>
+#endif // TIMGE_ENABLE_IMGUI
+
 namespace TIMGE
 {
 	class ApplicationBaseException : public Exception
@@ -79,6 +83,10 @@ namespace TIMGE
 			[[nodiscard]] const double& GetDeltaTime();
 			[[nodiscard]] const V4f& GetBackgroundColor();
 			[[nodiscard]] EventProcessor_T GetEventProcessor();
+
+			#ifdef TIMGE_ENABLE_IMGUI
+			[[nodiscard]] ImGuiContext* GetImGuiContext();
+			#endif // TIMGE_ENABLE_IMGUI
 		private:
 			Info mInfo;
 		    Monitor mMonitor;
@@ -92,6 +100,10 @@ namespace TIMGE
 			std::chrono::steady_clock::time_point mStartTime;
 
 			EventProcessor_T mEventProcessor;
+			
+			#ifdef TIMGE_ENABLE_IMGUI
+			ImGuiContext* mImGuiContext;
+			#endif // TIMGE_ENABLE_IMGUI
 		public:
 			Monitor& monitor;
 			Window& window;

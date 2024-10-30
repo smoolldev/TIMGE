@@ -5,6 +5,7 @@
 #include <TIMGE/CallbackDefs.hpp>
 
 #include <imgui.h>
+#include <vector>
 
 Game* Game::mInstance = nullptr;
 
@@ -70,7 +71,8 @@ Game::Game()
     mFramebufferSize{window.GetFramebufferSize()},
     mAspectRatio{window.GetAspectRatio()},
     mFrameSize{window.GetFrameSize()},
-    mContentScale{window.GetContentScale()}
+    mContentScale{window.GetContentScale()},
+    mMonitors{monitor.GetMonitors()}
 {
     if (Game::mInstance) {
         throw "Only one instance of Game is allowed!\n";
@@ -171,7 +173,25 @@ void Game::mWindowSettings()
 
 void Game::mMonitorSettings()
 {
+    static bool showMonitorSettings = true;
 
+    ImGui::SetNextWindowPos({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, 0.0f});
+    ImGui::SetNextWindowSize({2.0f * (float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
+    ImGui::Begin("Keybindings", &showMonitorSettings, 
+        ImGuiWindowFlags_NoNav
+    |   ImGuiWindowFlags_NoMove
+    |   ImGuiWindowFlags_NoResize
+    |   ImGuiWindowFlags_NoCollapse
+    );
+
+    mListMonitors();
+    mMonitorInfoPhysicalSize();
+    mMonitorInfoContentScale();
+    mMonitorInfoVirtualPosition();
+    mMonitorInfoWorkarea();
+    mMonitorInfoGamma();
+
+    ImGui::End();
 }
 
 void Game::mMouseSettings()
@@ -208,7 +228,7 @@ void Game::mMenu()
 {
     static bool showLeftWindow = true;
     static ImVec4 new_bg_color;
-    static int windowsXPIndex = 0;
+    static int windowsXPIndex = 1;
 
     ImGui::SetNextWindowPos({0.0f, 0.0f});
     ImGui::SetNextWindowSize({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
@@ -502,4 +522,71 @@ void Game::mWindowAttrScaleToMonitor()
 void Game::mWindowAttrRequestAttention()
 {
 
+}
+
+void Game::mListMonitors()
+{
+    ImGui::Text("# of monitors: %zu", mMonitors.size());
+
+    ImGui::Text("\nList of monitors:");
+    for (const auto& monitor : mMonitors) {
+        ImGui::Text("\t");
+        ImGui::SameLine();
+        ImGui::Button(monitor.GetName().data());
+
+        if (ImGui::IsItemDeactivated()) {
+            SetMonitor(monitor);
+        }
+    }
+}
+
+void Game::mMonitorInfoPhysicalSize()
+{
+    const TIMGE::V2ui32& physicalSize = monitor.GetPhysicalSize();
+
+    ImGui::Text("Monitor physical size:");
+    ImGui::Text("\tWidth: %u", physicalSize[TIMGE::V2ui32::WIDTH]);
+    ImGui::Text("\tHeight: %u", physicalSize[TIMGE::V2ui32::HEIGHT]);
+}
+
+void Game::mMonitorInfoContentScale()
+{
+    const TIMGE::V2f& contentScale = monitor.GetContentScale();
+
+    ImGui::Text("Monitor content scale:");
+    ImGui::Text("\tX: %f", contentScale[TIMGE::V2f::X]);
+    ImGui::Text("\tY: %f", contentScale[TIMGE::V2f::Y]);
+}
+
+void Game::mMonitorInfoVirtualPosition()
+{
+    const TIMGE::V2i32& virtualPosition = monitor.GetVirtualPosition();
+
+    ImGui::Text("Monitor virtual position:");
+    ImGui::Text("\tX: %d", virtualPosition[TIMGE::V2i32::X]);
+    ImGui::Text("\tY: %d", virtualPosition[TIMGE::V2i32::Y]);
+}
+
+void Game::mMonitorInfoWorkarea()
+{
+    const TIMGE::V2i32& workareaPosition = monitor.GetWorkareaPosition();
+    const TIMGE::V2ui32& workareaSize = monitor.GetWorkareaSize();
+
+    ImGui::Text("Monitor workarea:");
+    ImGui::Text("\tX: %d", workareaPosition[TIMGE::V2i32::X]);
+    ImGui::Text("\tY: %d", workareaPosition[TIMGE::V2i32::Y]);
+    ImGui::Text("\tWidth: %d", workareaSize[TIMGE::V2ui32::WIDTH]);
+    ImGui::Text("\tHeight: %d", workareaSize[TIMGE::V2ui32::HEIGHT]);
+}
+
+void Game::mMonitorInfoGamma()
+{
+    static float gamma;
+    gamma = monitor.GetGamma();
+
+    ImGui::Text("Monitor gamma: %.3f", gamma);
+    ImGui::SliderFloat("##gamma_input", &gamma, 0.1f, 1.0f);
+    if (ImGui::IsItemDeactivated()) {
+        monitor.SetGamma(gamma);
+    }
 }

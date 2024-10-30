@@ -23,6 +23,8 @@ class Game : public TIMGE::Application
         const TIMGE::V4ui32& mFrameSize;
         const TIMGE::V2f& mContentScale;
 
+        const std::vector<TIMGE::Monitor>& mMonitors;
+
         static TIMGE::Application::Info mGameInfo;
         static Game* mInstance;
         static Game* GetInstance();
@@ -64,6 +66,13 @@ class Game : public TIMGE::Application
         void mWindowAttrFocusOnShow();
         void mWindowAttrScaleToMonitor();
         void mWindowAttrRequestAttention();
+
+        void mListMonitors();
+        void mMonitorInfoPhysicalSize();
+        void mMonitorInfoContentScale();
+        void mMonitorInfoVirtualPosition();
+        void mMonitorInfoWorkarea();
+        void mMonitorInfoGamma();
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);

@@ -48,7 +48,7 @@ if (TIMGE_ENABLE_IMGUI)
                 vendor/imgui/backends/imgui_impl_opengl3.cpp
         )
 include_directories(imgui ${TIMGE_SRCDIR}/vendor/glfw/include vendor/imgui vendor/imgui/backends)
-target_link_libraries(imgui PRIVATE glfw3)
+target_link_libraries(imgui PRIVATE glfw)
 endif()
 
 file(GLOB_RECURSE LIB_SRC CONFIGURE_DEPENDS "${TIMGE_SRCDIR}/src/*.cpp")

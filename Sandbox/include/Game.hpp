@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <array>
 #include <TIMGE/TIMGE.hpp>
 #include "Callbacks.hpp"
 #include "TIMGE/Utils/Vector.hpp"

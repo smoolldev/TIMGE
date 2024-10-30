@@ -102,10 +102,7 @@ namespace TIMGE
             static constexpr FLAGS VSYNC = (1 << 13);
             static constexpr FLAGS MINIMIZED = (1 << 14);
         private:
-        // WARNING: REMOVE WHEN IMGUI CONDITIONAL COMPILATION IS IMPLEMENTED!!!!!!!!!!!!!!!!!!!
-        public:
             GLFWwindow* mGetWindow();
-        private:
             void mUpdateMonitor();
 
             void mValidateInfo();

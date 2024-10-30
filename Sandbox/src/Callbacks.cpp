@@ -112,6 +112,10 @@ void KeyCallback(TIMGE::Key key, int scancode, TIMGE::Keyboard::Action action, T
     if (key == TIMGE::Key::F11 && mods == TIMGE::Modifier::CONTROL && action == TIMGE::Keyboard::Action::PRESSED) {
         window.BorderlessFullscreen();
     }
+
+    if (key == TIMGE::Key::L && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.ToggleCenterCursor();
+    }
 }
 
 void CharCallback(unsigned int codepoint)

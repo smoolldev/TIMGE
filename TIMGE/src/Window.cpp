@@ -2,6 +2,7 @@
 #include "TIMGE/Exception.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
+#include <string>
 #include <array>
 #include <filesystem>
 #include <format>

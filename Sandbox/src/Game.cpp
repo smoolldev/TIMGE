@@ -77,6 +77,8 @@ Game::Game()
     }
     mInstance = this;
 
+    window.SetIcon("resources/youtube_logo.png");
+
     ImGui::SetCurrentContext(GetImGuiContext());
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImFontConfig cfg{};
@@ -131,6 +133,7 @@ void Game::mWindowSettings()
 
     mWindowInfoTitle();
     mWindowInfoSize();
+    mWindowInfoSizeLimits();
     mWindowInfoPosition();
     mWindowInfoFramebufferSize();
     mWindowInfoAspectRatio();
@@ -144,6 +147,15 @@ void Game::mWindowSettings()
     mWindowAttrFullscreen();
     mWindowAttrBorderlessFullscreen();
     mWindowAttrVSync();
+    mWindowAttrResizeable();
+    mWindowAttrDecorated();
+    mWindowAttrAutoIconify();
+    mWindowAttrFloating();
+    mWindowAttrCenterCursor();
+    mWindowAttrTransparentFramebuffer();
+    mWindowAttrFocusOnShow();
+    mWindowAttrScaleToMonitor();
+    mWindowAttrRequestAttention();
 
     if (ImGui::ColorEdit3("", &new_bg_color.x)) {
         SetBackgroundColor(TIMGE::V4f{
@@ -252,10 +264,27 @@ void Game::mWindowInfoSize()
     //TODO: Sliders
     ImGui::InputInt2("##size_input", reinterpret_cast<int*>(&size_buf[TIMGE::V2i32::X]));
 
-    if (ImGui::IsItemDeactivatedAfterEdit()){
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
         window.SetSize(size_buf);
     } else {
         size_buf = mWindowSize;
+    }
+}
+
+void Game::mWindowInfoSizeLimits()
+{
+    static TIMGE::V4ui32 sizelims_buf = window.GetSizeLimits();
+    ImGui::Text("Window Size Limits:");
+    ImGui::Text("Min Width: %d", window.GetSizeLimits()[TIMGE::V4ui32::MIN_WIDTH]);
+    ImGui::Text("Min Height: %d", window.GetSizeLimits()[TIMGE::V4ui32::MIN_HEIGHT]);
+    ImGui::Text("Max Width: %d", window.GetSizeLimits()[TIMGE::V4ui32::MAX_WIDTH]);
+    ImGui::Text("Max Height: %d", window.GetSizeLimits()[TIMGE::V4ui32::MAX_HEIGHT]);
+    ImGui::InputInt4("##size_lims", reinterpret_cast<int*>(&sizelims_buf[TIMGE::V4ui32::MIN_WIDTH]));
+    
+    if (ImGui::IsItemDeactivated()) {
+        window.SetSizeLimits(sizelims_buf);
+    } else {
+        sizelims_buf = window.GetSizeLimits();
     }
 }
 
@@ -388,4 +417,89 @@ void Game::mWindowAttrVSync()
     if (ImGui::Checkbox("VSync", &vsync)) {
         window.ToggleVSync();
     }
+}
+
+void Game::mWindowAttrResizeable()
+{
+    static bool resizeable;
+    resizeable = window.GetState(TIMGE::Window::RESIZABLE);
+
+    if (ImGui::Checkbox("Resizable", &resizeable)) {
+        window.ToggleResizable();
+    }
+}
+
+void Game::mWindowAttrDecorated()
+{
+    static bool decorated;
+    decorated = window.GetState(TIMGE::Window::DECORATED);
+
+    if (ImGui::Checkbox("Decorated", &decorated)) {
+        window.ToggleDecorated();
+    }
+}
+
+void Game::mWindowAttrAutoIconify()
+{
+    static bool auto_iconify;
+    auto_iconify = window.GetState(TIMGE::Window::AUTO_ICONIFY);
+
+    if (ImGui::Checkbox("Auto iconify", &auto_iconify)) {
+        window.ToggleAutoIconify();
+    }
+}
+
+void Game::mWindowAttrFloating()
+{
+    static bool floating;
+    floating = window.GetState(TIMGE::Window::FLOATING);
+
+    if (ImGui::Checkbox("Floating", &floating)) {
+        window.ToggleFloating();
+    }
+}
+
+void Game::mWindowAttrCenterCursor()
+{
+    static bool center_cursor;
+    center_cursor = window.GetState(TIMGE::Window::CENTER_CURSOR);
+
+    if (ImGui::Checkbox("Center", &center_cursor)) {
+        window.ToggleCenterCursor();
+    }
+}
+
+void Game::mWindowAttrTransparentFramebuffer()
+{
+    static bool transparent;
+    transparent = window.GetState(TIMGE::Window::TRANSPARENT_FRAMEBUFFER);
+
+    if (ImGui::Checkbox("Transparent Framebuffer", &transparent)) {
+        window.ToggleTransparentFramebuffer();
+    }
+}
+
+void Game::mWindowAttrFocusOnShow()
+{
+    static bool focus;
+    focus = window.GetState(TIMGE::Window::FOCUS_ON_SHOW);
+
+    if (ImGui::Checkbox("Focus on show", &focus)) {
+        window.ToggleFocusOnShow();
+    }
+}
+
+void Game::mWindowAttrScaleToMonitor()
+{
+    static bool scale;
+    scale = window.GetState(TIMGE::Window::SCALE_TO_MONITOR);
+
+    if (ImGui::Checkbox("Scale to monitor", &scale)) {
+        window.ToggleScaleToMonitor();
+    }
+}
+
+void Game::mWindowAttrRequestAttention()
+{
+
 }

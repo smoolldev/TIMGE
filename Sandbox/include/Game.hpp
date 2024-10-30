@@ -41,6 +41,7 @@ class Game : public TIMGE::Application
  
         void mWindowInfoPosition();
         void mWindowInfoSize();
+        void mWindowInfoSizeLimits();
         void mWindowInfoFramebufferSize();
         void mWindowInfoFrameSize();
         void mWindowInfoTitle();
@@ -54,6 +55,15 @@ class Game : public TIMGE::Application
         void mWindowAttrFullscreen();
         void mWindowAttrBorderlessFullscreen();
         void mWindowAttrVSync();
+        void mWindowAttrResizeable();
+        void mWindowAttrDecorated();
+        void mWindowAttrAutoIconify();
+        void mWindowAttrFloating();
+        void mWindowAttrCenterCursor();
+        void mWindowAttrTransparentFramebuffer();
+        void mWindowAttrFocusOnShow();
+        void mWindowAttrScaleToMonitor();
+        void mWindowAttrRequestAttention();
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);

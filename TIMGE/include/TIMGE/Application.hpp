@@ -3,7 +3,7 @@
 
 #include "Window.hpp"
 #include "Utils/Vector.hpp"
-#include "CallbackDefs.hpp"
+#include "Callback.hpp"
 #include "Mouse.hpp"
 #include "Keyboard.hpp"
 #include "Monitor.hpp"

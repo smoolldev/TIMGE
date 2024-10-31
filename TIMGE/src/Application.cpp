@@ -1,5 +1,5 @@
 #include "TIMGE/Application.hpp"
-#include "TIMGE/CallbackDefs.hpp"
+#include "TIMGE/Callback.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 #include "TIMGE/Window.hpp"
 

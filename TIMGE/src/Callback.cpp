@@ -1,4 +1,4 @@
-#include "TIMGE/CallbackDefs.hpp"
+#include "TIMGE/Callback.hpp"
 #include "TIMGE/Application.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 #ifdef TIMGE_ENABLE_IMGUI

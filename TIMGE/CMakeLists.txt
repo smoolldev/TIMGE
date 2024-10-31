@@ -97,15 +97,3 @@ add_custom_target(timge_comp_commands
     ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/compile_commands.json" "${TIMGE_SRCDIR}"
 )
-
-# Create symbolic link between TIMGE's binary directory and it's source directory
-if (EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json" AND NOT EXISTS "${TIMGE_SRCDIR}/compile_commands.json")
-    file(
-        CREATE_LINK
-            "${CMAKE_BINARY_DIR}/compile_commands.json"
-            "${TIMGE_SRCDIR}/compile_commands.json"
-        SYMBOLIC
-    )
-endif()
-
-#add_custom_target(combined ALL COMMAND ${CMAKE_CXX_ARCHIVE_CREATE} libTIMGE.a $<TARGET_FILE:TIMGElib> $<TARGET_FILE:glfw> $<TARGET_FILE:glad> $<TARGET_FILE:stb_image>)

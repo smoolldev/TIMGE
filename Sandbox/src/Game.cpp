@@ -1,6 +1,8 @@
 #include "Game.hpp"
+#include "TIMGE/Mouse.hpp"
 #include "TIMGE/Window.hpp"
 
+#include <TIMGE/Application.hpp>
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
 
@@ -65,14 +67,21 @@ TIMGE::Application::Info Game::mGameInfo {
 
 Game::Game()
  : Application(Game::mGameInfo),
+    monitor{GetMonitor()},
+    window{Application::GetWindow()},
+    mouse{Application::GetMouse()},
+    keyboard{Application::GetKeyboard()},
     mTitle{window.GetTitle()},
+    mDeltaTime{Application::GetDeltaTime()},
     mWindowSize{window.GetSize()},
     mWindowPos{window.GetPosition()},
     mFramebufferSize{window.GetFramebufferSize()},
     mAspectRatio{window.GetAspectRatio()},
     mFrameSize{window.GetFrameSize()},
     mContentScale{window.GetContentScale()},
-    mMonitors{monitor.GetMonitors()}
+    mMonitors{GetMonitor().GetMonitors()},
+    mCursorPos{mouse.GetPosition()},
+    mScrollOffset{mouse.GetOffset()}
 {
     if (Game::mInstance) {
         throw "Only one instance of Game is allowed!\n";
@@ -83,6 +92,7 @@ Game::Game()
 
     ImGui::SetCurrentContext(GetImGuiContext());
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     ImFontConfig cfg{};
     cfg.SizePixels = 24;
     io.Fonts->AddFontDefault(&cfg);
@@ -131,7 +141,7 @@ void Game::mWindowSettings()
     |   ImGuiWindowFlags_NoCollapse
     );
 
-    ImGui::Text("Delta Time: %f", deltaTime);
+    ImGui::Text("Delta Time: %f", mDeltaTime);
 
     mWindowInfoTitle();
     mWindowInfoSize();
@@ -196,7 +206,29 @@ void Game::mMonitorSettings()
 
 void Game::mMouseSettings()
 {
+    static bool showMouseSettings = true;
 
+    ImGui::SetNextWindowPos({(float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, 0.0f});
+    ImGui::SetNextWindowSize({2.0f * (float)mWindowSize[TIMGE::V2i32::WIDTH] / 3.0f, (float)mWindowSize[TIMGE::V2i32::HEIGHT]});
+    ImGui::Begin("Mouse", &showMouseSettings, 
+        ImGuiWindowFlags_NoNav
+    |   ImGuiWindowFlags_NoMove
+    |   ImGuiWindowFlags_NoResize
+    |   ImGuiWindowFlags_NoCollapse
+    );
+
+    mMouseInfoPosition();
+    mMouseInfoScrollOffset();
+    mMouseInfoLeftButton();
+    mMouseInfoRightButton();
+    mMouseInfoDisable();
+    mMouseInfoHide();
+    mMouseInfoCapture();
+    mMouseInfoRestore();
+    mMouseInfoRawMotion();
+    mMouseInfoCursors();
+
+    ImGui::End();
 }
 
 void Game::mKeybindings()
@@ -589,4 +621,60 @@ void Game::mMonitorInfoGamma()
     if (ImGui::IsItemDeactivated()) {
         monitor.SetGamma(gamma);
     }
+}
+
+void Game::mMouseInfoPosition()
+{
+    ImGui::Text("Cursor Position:");
+    ImGui::Text("\tX: %f", mCursorPos[TIMGE::V2d::X]);
+    ImGui::Text("\tX: %f", mCursorPos[TIMGE::V2d::Y]);
+}
+
+void Game::mMouseInfoScrollOffset()
+{
+    ImGui::Text("Scroll Offset:");
+    ImGui::Text("\tOffset X: %f", mScrollOffset[TIMGE::V2d::X]);
+    ImGui::Text("\tOffset Y: %f", mScrollOffset[TIMGE::V2d::Y]);
+}
+
+void Game::mMouseInfoLeftButton()
+{
+    ImGui::Text("Mouse Button Left:");
+    ImGui::Text("\tState: %s", mouse.Pressed(TIMGE::Button::LEFT) ? "Pressed" : "Released");
+}
+
+void Game::mMouseInfoRightButton()
+{
+    ImGui::Text("Mouse Button Right:");
+    ImGui::Text("\tState: %s", mouse.Pressed(TIMGE::Button::RIGHT) ? "Pressed" : "Released");
+}
+
+void Game::mMouseInfoDisable()
+{
+
+}
+
+void Game::mMouseInfoHide()
+{
+
+}
+
+void Game::mMouseInfoCapture()
+{
+
+}
+
+void Game::mMouseInfoRestore()
+{
+
+}
+
+void Game::mMouseInfoRawMotion()
+{
+
+}
+
+void Game::mMouseInfoCursors()
+{
+
 }

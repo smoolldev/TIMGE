@@ -15,13 +15,20 @@ class Game : public TIMGE::Application
         void Update();
         void Render();
     private:
+        TIMGE::Monitor& monitor;
+        TIMGE::Window& window;
+        TIMGE::Mouse& mouse;
+        TIMGE::Keyboard& keyboard;
         const std::string_view& mTitle;
+        const double& mDeltaTime;
         const TIMGE::V2ui32& mWindowSize;
         const TIMGE::V2i32& mWindowPos;
         const TIMGE::V2ui32& mFramebufferSize;
         const TIMGE::V2ui32& mAspectRatio;
         const TIMGE::V4ui32& mFrameSize;
         const TIMGE::V2f& mContentScale;
+        const TIMGE::V2d& mCursorPos;
+        const TIMGE::V2d& mScrollOffset;
 
         const std::vector<TIMGE::Monitor>& mMonitors;
 
@@ -73,6 +80,17 @@ class Game : public TIMGE::Application
         void mMonitorInfoVirtualPosition();
         void mMonitorInfoWorkarea();
         void mMonitorInfoGamma();
+
+        void mMouseInfoPosition();
+        void mMouseInfoScrollOffset();
+        void mMouseInfoLeftButton();
+        void mMouseInfoRightButton();
+        void mMouseInfoDisable();
+        void mMouseInfoHide();
+        void mMouseInfoCapture();
+        void mMouseInfoRestore();
+        void mMouseInfoRawMotion();
+        void mMouseInfoCursors();
 
         friend void ErrorCallback(int errorCode, std::string_view description);
         friend void WindowPosCallback(const TIMGE::V2i32& position);

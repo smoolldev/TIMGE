@@ -104,23 +104,7 @@ namespace TIMGE
 			#ifdef TIMGE_ENABLE_IMGUI
 			ImGuiContext* mImGuiContext;
 			#endif // TIMGE_ENABLE_IMGUI
-		public:
-			Monitor& monitor;
-			Window& window;
-			Mouse& mouse;
-			Keyboard& keyboard;
 
-			const double& deltaTime;
-
-			const V2i32& windowPosition;
-			const V2ui32& windowSize;
-			const V2ui32& windowFramebufferSize;
-			const V4ui32& windowFrameSize;
-			const V2f& windowContentScale;
-
-			const V2d& cursorPosition;
-			const V2d& cursorScrollOffset;
-		private:
 		    [[nodiscard]] static Application* mGetInstance();
 
 			static void mConnectMonitor(GLFWmonitor* monitor);

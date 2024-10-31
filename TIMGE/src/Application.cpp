@@ -50,19 +50,7 @@ namespace TIMGE
        mKeyboard{mWindow},
        mDeltaTime{},
        mStartTime{std::chrono::steady_clock::now()},
-       mEventProcessor{PollEvents},
-       monitor{mMonitor},
-       window{mWindow},
-       mouse{mMouse},
-       keyboard{mKeyboard},
-       deltaTime{GetDeltaTime()},
-       windowPosition{mWindow.GetPosition()},
-       windowSize{mWindow.GetSize()},
-       windowFramebufferSize{mWindow.GetFramebufferSize()},
-       windowFrameSize{mWindow.GetFrameSize()},
-       windowContentScale{mWindow.GetContentScale()},
-       cursorPosition{mMouse.GetPosition()},
-       cursorScrollOffset{mMouse.GetOffset()}
+       mEventProcessor{PollEvents}
     {
         if (Application::mInstance) {
             throw ApplicationException("Only one instance of Application is allowed!");

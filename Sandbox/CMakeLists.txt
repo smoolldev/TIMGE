@@ -25,47 +25,7 @@ target_link_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/lib")
 target_link_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/vendor")
 target_link_libraries("${SANDBOX_NAME}" PRIVATE TIMGE)
 
-# Create symbolic link between TIMGE's binary directory and it's source directory
-if (EXISTS "${CMAKE_BINARY_DIR}/compile_commands.json" AND NOT EXISTS "${SANDBOX_SRCDIR}/compile_commands.json")
-    file(
-        CREATE_LINK
-            "${CMAKE_BINARY_DIR}/compile_commands.json"
-            "${SANDBOX_SRCDIR}/compile_commands.json"
-        SYMBOLIC
-    )
-endif()
-
-# file(
-#     GLOB
-#         TIMGEHeaders
-#             "${CMAKE_SOURCE_DIR}/TIMGE/include/TIMGE"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/glfw/include/GLFW"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/glad/include/glad"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/glad/include/KHR"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/stb_image/include/stb_image"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imgui.h"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imgui_internal.h"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imconfig.h"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imstb_rectpack.h"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imstb_textedit.h"
-#             "${CMAKE_SOURCE_DIR}/TIMGE/vendor/imgui/imstb_truetype.h"
-# )
-#
-# file(
-#     GLOB
-#         SandboxHeaders
-#             "${SANDBOX_SRCDIR}/include"
-# )
-#
-# add_custom_target(copy)
-# foreach(header ${TIMGEHeaders})
-#     add_custom_command(
-#         TARGET
-#             copy
-#         BUILD
-#         COMMAND
-#             ${CMAKE_COMMAND} -E
-#             copy ${header} "${SANDBOX_SRCDIR}/Sandbox/include"
-# )
-# endforeach()
-# add_dependencies(Sandbox copy)
+add_custom_target(sandbox_comp_commands
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/compile_commands.json" "${SANDBOX_SRCDIR}"
+)

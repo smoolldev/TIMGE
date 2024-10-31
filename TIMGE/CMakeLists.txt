@@ -78,7 +78,8 @@ else()
 endif()
 
 # Copy TIMGE headers to Sandbox/include
-add_custom_target(copy_includes ALL
+add_custom_target(copy_includes
+    ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${TIMGE_SRCDIR}/include/TIMGE" "${CMAKE_SOURCE_DIR}/Sandbox/include/TIMGE"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${TIMGE_SRCDIR}/vendor/glfw/include/GLFW" "${CMAKE_SOURCE_DIR}/Sandbox/include/GLFW"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${TIMGE_SRCDIR}/vendor/glad/include/glad" "${CMAKE_SOURCE_DIR}/Sandbox/include/glad"
@@ -90,6 +91,11 @@ add_custom_target(copy_includes ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_rectpack.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_rectpack.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_textedit.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_textedit.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_truetype.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_truetype.h"
+)
+
+add_custom_target(timge_comp_commands
+    ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/compile_commands.json" "${TIMGE_SRCDIR}"
 )
 
 # Create symbolic link between TIMGE's binary directory and it's source directory

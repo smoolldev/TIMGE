@@ -529,10 +529,10 @@ void Game::mListMonitors()
     ImGui::Text("# of monitors: %zu", mMonitors.size());
 
     ImGui::Text("\nList of monitors:");
-    for (const auto& monitor : mMonitors) {
+    for (int i = 0; i < mMonitors.size(); i++) {
         ImGui::Text("\t");
         ImGui::SameLine();
-        ImGui::Button(monitor.GetName().data());
+        ImGui::Button(std::format("{}: {}", i, mMonitors[i].GetName().data()).c_str());
 
         if (ImGui::IsItemDeactivated()) {
             SetMonitor(monitor);

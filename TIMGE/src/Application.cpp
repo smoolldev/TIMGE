@@ -169,6 +169,10 @@ namespace TIMGE
         mEventProcessor = eventProcessor;
     }
 
+    [[nodiscard]] Monitor& Application::GetMonitor() {
+        return mMonitor;
+    }
+
     [[nodiscard]] Window& Application::GetWindow() {
         return mWindow;
     }

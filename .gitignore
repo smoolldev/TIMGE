@@ -36,5 +36,5 @@
 **/.cache/
 
 # Files
-**/compile_commands.json
-**/imgui.ini
+compile_commands.json
+imgui.ini

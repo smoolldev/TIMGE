@@ -377,7 +377,7 @@ void Game::mWindowInfoOpacity()
 {
     static float opacity_buf = window.GetOpacity();
     ImGui::Text("Window Opacity: %.3f", opacity_buf);
-    ImGui::SliderFloat("##opacity_input", &opacity_buf, 0.0f, 1.0f);
+    ImGui::SliderFloat("##opacity_input", &opacity_buf, 0.1f, 1.0f);
     if (ImGui::IsItemDeactivated()) {
         window.SetOpacity(opacity_buf);
     }
@@ -617,7 +617,7 @@ void Game::mMonitorInfoGamma()
     gamma = monitor.GetGamma();
 
     ImGui::Text("Monitor gamma: %.3f", gamma);
-    ImGui::SliderFloat("##gamma_input", &gamma, 0.1f, 1.0f);
+    ImGui::InputFloat("##gamma_input", &gamma);
     if (ImGui::IsItemDeactivated()) {
         monitor.SetGamma(gamma);
     }

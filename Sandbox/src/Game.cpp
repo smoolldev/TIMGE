@@ -246,12 +246,18 @@ void Game::mKeybindings()
 
     ImGui::Text("Exit = Escape");
     ImGui::Text("Minimize = M");
-    ImGui::Text("Restore = R");
     ImGui::Text("Maximize = Shift + M");
+    ImGui::Text("Window Restore = R");
+    ImGui::Text("Mouse Restore = Control + R");
+    ImGui::Text("Raw Mouse Motion = Shift + R");
     ImGui::Text("Show = S");
     ImGui::Text("Hide = Shift + S");
     ImGui::Text("Fullscreen = F11");
     ImGui::Text("Borderless Fullscreen = Control + F11");
+    ImGui::Text("Center Cursor = L");
+    ImGui::Text("Hide cursor = H");
+    ImGui::Text("Capture cursor = C");
+    ImGui::Text("Disable cursor = D");
 
     ImGui::End();
 }
@@ -613,13 +619,14 @@ void Game::mMonitorInfoWorkarea()
 
 void Game::mMonitorInfoGamma()
 {
-    static float gamma;
-    gamma = monitor.GetGamma();
+    static float gamma = monitor.GetGamma();
 
     ImGui::Text("Monitor gamma: %.3f", gamma);
     ImGui::InputFloat("##gamma_input", &gamma);
     if (ImGui::IsItemDeactivated()) {
         monitor.SetGamma(gamma);
+    } else {
+        gamma = monitor.GetGamma();
     }
 }
 
@@ -651,30 +658,67 @@ void Game::mMouseInfoRightButton()
 
 void Game::mMouseInfoDisable()
 {
-
+    static bool disabled;
+    disabled = mouse.GetState(TIMGE::Mouse::DISABLED);
+    if (ImGui::Checkbox("Disabled", &disabled)) {
+        mouse.Disable();
+    }
 }
 
 void Game::mMouseInfoHide()
 {
-
+    static bool hidden;
+    hidden = mouse.GetState(TIMGE::Mouse::HIDDEN);
+    if (ImGui::Checkbox("Hidden", &hidden)) {
+        mouse.Hide();
+    }
 }
 
 void Game::mMouseInfoCapture()
 {
-
+    static bool captured;
+    captured = mouse.GetState(TIMGE::Mouse::CAPTURED);
+    if (ImGui::Checkbox("Captured", &captured)) {
+        mouse.Capture();
+    }
 }
 
 void Game::mMouseInfoRestore()
 {
-
+    if (ImGui::Button("Restore")) {
+        mouse.Restore();
+    }
 }
 
 void Game::mMouseInfoRawMotion()
 {
+    if (!mouse.IsRawMouseMotionSupported()) {
+        return;
+    }
 
+    static bool raw_motion;
+    raw_motion = mouse.GetState(TIMGE::Mouse::RAW_MOTION);
+    if (ImGui::Checkbox("Raw Motion", &raw_motion)) {
+        mouse.RawMotion();
+    }
 }
 
 void Game::mMouseInfoCursors()
 {
+    static  std::vector<TIMGE::Cursor*> cursors;
+    cursors = mouse.GetCursors();
 
+    for (int i = 0; i < cursors.size(); i++)
+    {
+        if (ImGui::Button(std::format("Set {}", i).c_str())) {
+            mouse.SetCursor(*cursors[i]);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(std::format("Delete ##{}", i).c_str())) {
+            mouse.DeleteCursor(*cursors[i]);
+        }
+    }
+    if (ImGui::Button("Reset cursor")) {
+        mouse.ResetCursor();
+    }
 }

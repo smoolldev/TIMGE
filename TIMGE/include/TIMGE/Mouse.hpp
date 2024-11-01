@@ -66,6 +66,12 @@ namespace TIMGE
                 RELEASED = GLFW_RELEASE
             };
 
+            using FLAGS = uint32_t;
+            static constexpr FLAGS DISABLED = 1 << 0;
+            static constexpr FLAGS HIDDEN = 1 << 1;
+            static constexpr FLAGS CAPTURED = 1 << 2;
+            static constexpr FLAGS RAW_MOTION = 1 << 3;
+
             struct Info {
                 std::vector<std::filesystem::path> mCursorPaths;
             };
@@ -76,30 +82,30 @@ namespace TIMGE
             [[nodiscard]] bool Pressed(Button button) const;
             [[nodiscard]] bool Released(Button button) const;
 
-            void Disable() const;
-            void Hide() const;
-            void Capture() const;
-            void Restore() const;
-            static RawMouseMotionSupported_t IsRawMouseMotionSupported;
-            void EnableRawMouseMotion() const;
-            void DisableRawMouseMotion() const;
+            void Disable();
+            void Hide();
+            void Capture();
+            void Restore();
+            void RawMotion();
 
             [[maybe_unused]] Cursor& AddCursor(const std::filesystem::path& image);
             [[maybe_unused]] Cursor& AddCursor(StandardCursor shape);
             void DeleteCursor(const Cursor& cursor);
-
             void SetCursor(const Cursor& cursor);
             void ResetCursor();
 
             [[nodiscard]] const V2d& GetPosition() const;
             [[nodiscard]] const V2d& GetOffset() const;
-
+            [[nodiscard]] bool GetState(FLAGS flags) const;
             [[nodiscard]] std::vector<Cursor*> GetCursors();
+
+            static RawMouseMotionSupported_t IsRawMouseMotionSupported;
         private:
             Window& mWindow;
 
             V2d mPosition;
             V2d mOffset;
+            FLAGS mFlags;
 
             std::vector<std::pair<GLFWcursor*, Cursor>> mCursors;
 

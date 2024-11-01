@@ -81,40 +81,52 @@ void KeyCallback(TIMGE::Key key, int scancode, TIMGE::Keyboard::Action action, T
     TIMGE::Mouse& mouse = game->GetMouse();
     auto cursors = mouse.GetCursors();
 
+    // TODO: Rewrite this whole function;
     if (key == TIMGE::Key::ESCAPE && action == TIMGE::Keyboard::Action::PRESSED) {
         window.SetShouldClose(true);
     }
 
-    if (key == TIMGE::Key::M && action == TIMGE::Keyboard::Action::PRESSED) {
-        window.Minimize();
-    }
-
-    if (key == TIMGE::Key::R && action == TIMGE::Keyboard::Action::PRESSED) {
+    if (key == TIMGE::Key::R && mods == TIMGE::Modifier::CONTROL && action == TIMGE::Keyboard::Action::PRESSED) {
+        mouse.Restore();
+    } else if (key == TIMGE::Key::R &&  mods == TIMGE::Modifier::SHIFT && action == TIMGE::Keyboard::Action::PRESSED) {
+        mouse.RawMotion();
+    } else if (key == TIMGE::Key::R && action == TIMGE::Keyboard::Action::PRESSED) {
         window.Restore();
     }
 
     if (key == TIMGE::Key::M && mods == TIMGE::Modifier::SHIFT && action == TIMGE::Keyboard::Action::PRESSED) {
         window.Maximize();
-    }
-
-    if (key == TIMGE::Key::S && action == TIMGE::Keyboard::Action::PRESSED) {
-        window.Show();
+    } else if (key == TIMGE::Key::M && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Minimize();
     }
 
     if (key == TIMGE::Key::S && mods == TIMGE::Modifier::SHIFT && action == TIMGE::Keyboard::Action::PRESSED) {
         window.Hide();
-    }
-
-    if (key == TIMGE::Key::F11 && action == TIMGE::Keyboard::Action::PRESSED) {
-        window.Fullscreen();
+    } else if (key == TIMGE::Key::S && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Show();
     }
 
     if (key == TIMGE::Key::F11 && mods == TIMGE::Modifier::CONTROL && action == TIMGE::Keyboard::Action::PRESSED) {
         window.BorderlessFullscreen();
     }
+    else if (key == TIMGE::Key::F11 && action == TIMGE::Keyboard::Action::PRESSED) {
+        window.Fullscreen();
+    }
 
     if (key == TIMGE::Key::L && action == TIMGE::Keyboard::Action::PRESSED) {
         window.ToggleCenterCursor();
+    }
+
+    if (key == TIMGE::Key::C && action == TIMGE::Keyboard::Action::PRESSED) {
+        mouse.Capture();
+    }
+
+    if (key == TIMGE::Key::H && action == TIMGE::Keyboard::Action::PRESSED) {
+        mouse.Hide();
+    }
+
+    if (key == TIMGE::Key::D && action == TIMGE::Keyboard::Action::PRESSED) {
+        mouse.Disable();
     }
 }
 
@@ -129,10 +141,9 @@ void CharmodsCallback(unsigned int codepoint, int mods)
 }
 
 void DropCallback(int pathCount, const char* path[]) {
-    printf("Paths: %d\n\n", pathCount);
-
+    static TIMGE::Mouse& mouse = Game::GetInstance()->GetMouse();
     for (int i = 0; i < pathCount; i++) {
-        printf("Path: %s\n", path[i]);
+        mouse.AddCursor(path[i]);
     }
 }
 

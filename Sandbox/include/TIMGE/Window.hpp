@@ -68,7 +68,6 @@ namespace TIMGE
             void ToggleAutoIconify();
             void ToggleFloating();
             void ToggleCenterCursor();
-            void ToggleTransparentFramebuffer();
             void ToggleFocusOnShow();
             void ToggleScaleToMonitor();
             void ToggleVSync();
@@ -155,6 +154,8 @@ namespace TIMGE
             void mToggleOffBorderlessFullscreen();
             void mToggleOnFullscreen();
             void mToggleOffFullscreen();
+
+            void mSetIfTransparentFramebuffer();
 
             static constexpr uint32_t mWINDOWHINTS[]
             {

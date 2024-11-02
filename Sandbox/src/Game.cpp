@@ -30,7 +30,7 @@ TIMGE::Application::Info Game::mGameInfo {
                 },
                 1.0f,
                 TIMGE::V2ui32{3, 3},
-                671,
+                671 | TIMGE::Window::TRANSPARENT_FRAMEBUFFER,
             },
             TIMGE::Vector<float, 4>{
                 1.0f, 0.63f, 0.1f, 1.0f
@@ -138,7 +138,6 @@ void Game::mWindowSettings()
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
-    |   ImGuiWindowFlags_NoCollapse
     );
 
     ImGui::Text("Delta Time: %f", mDeltaTime);
@@ -169,12 +168,12 @@ void Game::mWindowSettings()
     mWindowAttrScaleToMonitor();
     mWindowAttrRequestAttention();
 
-    if (ImGui::ColorEdit3("", &new_bg_color.x)) {
+    if (ImGui::ColorEdit4("", &new_bg_color.x)) {
         SetBackgroundColor(TIMGE::V4f{
             new_bg_color.x,
             new_bg_color.y,
             new_bg_color.z,
-            1.0f
+            new_bg_color.w
         });
     }
 
@@ -191,7 +190,6 @@ void Game::mMonitorSettings()
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
-    |   ImGuiWindowFlags_NoCollapse
     );
 
     mListMonitors();
@@ -214,7 +212,6 @@ void Game::mMouseSettings()
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
-    |   ImGuiWindowFlags_NoCollapse
     );
 
     mMouseInfoPosition();
@@ -241,7 +238,6 @@ void Game::mKeybindings()
         ImGuiWindowFlags_NoNav
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
-    |   ImGuiWindowFlags_NoCollapse
     );
 
     ImGui::Text("Exit = Escape");
@@ -275,7 +271,6 @@ void Game::mMenu()
     |   ImGuiWindowFlags_NoMove
     |   ImGuiWindowFlags_NoResize
     |   ImGuiWindowFlags_NoTitleBar
-    |   ImGuiWindowFlags_NoCollapse
     );
 
     if (ImGui::Button("Window Settings")) {
@@ -533,7 +528,7 @@ void Game::mWindowAttrTransparentFramebuffer()
     transparent = window.GetState(TIMGE::Window::TRANSPARENT_FRAMEBUFFER);
 
     if (ImGui::Checkbox("Transparent Framebuffer", &transparent)) {
-        window.ToggleTransparentFramebuffer();
+
     }
 }
 

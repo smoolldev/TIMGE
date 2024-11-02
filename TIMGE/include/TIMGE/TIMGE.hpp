@@ -6,7 +6,7 @@
 #include "Mouse.hpp"
 #include "Monitor.hpp"
 #include "Keyboard.hpp"
-#include "CallbackDefs.hpp"
+#include "Callback.hpp"
 #include "Utils/Vector.hpp"
 
 #endif //TIMGE_HPP

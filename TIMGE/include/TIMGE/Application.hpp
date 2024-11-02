@@ -3,18 +3,21 @@
 
 #include "Window.hpp"
 #include "Utils/Vector.hpp"
-#include "CallbackDefs.hpp"
+#include "Callback.hpp"
 #include "Mouse.hpp"
 #include "Keyboard.hpp"
 #include "Monitor.hpp"
 
+#include <chrono>
 #include <cstdint>
 #include <string_view>
 
+#ifdef TIMGE_ENABLE_IMGUI
+#include <imgui_internal.h>
+#endif // TIMGE_ENABLE_IMGUI
+
 namespace TIMGE
 {
-	using Time = double;
-
 	class ApplicationBaseException : public Exception
     {
         public:
@@ -36,6 +39,7 @@ namespace TIMGE
         public:
             ApplicationException(std::string message);
     };
+
 
     class Application : public ApplicationBase
     {
@@ -76,8 +80,13 @@ namespace TIMGE
 		    [[nodiscard]] Window& GetWindow();
 			[[nodiscard]] Mouse& GetMouse();
 			[[nodiscard]] Keyboard& GetKeyboard();
-			[[nodiscard]] const Time& GetDeltaTime();
+			[[nodiscard]] const double& GetDeltaTime();
 			[[nodiscard]] const V4f& GetBackgroundColor();
+			[[nodiscard]] EventProcessor_T GetEventProcessor();
+
+			#ifdef TIMGE_ENABLE_IMGUI
+			[[nodiscard]] ImGuiContext* GetImGuiContext();
+			#endif // TIMGE_ENABLE_IMGUI
 		private:
 			Info mInfo;
 		    Monitor mMonitor;
@@ -85,27 +94,17 @@ namespace TIMGE
 			Mouse mMouse;
 			Keyboard mKeyboard;
 
-			Time mDeltaTime;
-			Time mStartTime;
+			std::chrono::steady_clock mSteadyClock;
+
+			double mDeltaTime;
+			std::chrono::steady_clock::time_point mStartTime;
 
 			EventProcessor_T mEventProcessor;
-		public:
-			Monitor& monitor;
-			Window& window;
-			Mouse& mouse;
-			Keyboard& keyboard;
+			
+			#ifdef TIMGE_ENABLE_IMGUI
+			ImGuiContext* mImGuiContext;
+			#endif // TIMGE_ENABLE_IMGUI
 
-			const Time& deltaTime;
-
-			const V2i32& windowPosition;
-			const V2i32& windowSize;
-			const V2i32& windowFramebufferSize;
-			const V4i32& windowFrameSize;
-			const V2f& windowContentScale;
-
-			const V2d& cursorPosition;
-			const V2d& cursorScrollOffset;
-		private:
 		    [[nodiscard]] static Application* mGetInstance();
 
 			static void mConnectMonitor(GLFWmonitor* monitor);
@@ -115,9 +114,9 @@ namespace TIMGE
 			void mSetScrollOffset(const V2d& cursorScrollOffset);
 
 			void mSetPosition(const V2i32& position);
-			void mSetSize(const V2i32& size);
-			void mSetFramebufferSize(const V2i32& framebufferSize);
-    	    void mSetFrameSize(const V4i32& frameSize);
+			void mSetSize(const V2ui32& size);
+			void mSetFramebufferSize(const V2ui32& framebufferSize);
+    	    void mSetFrameSize(const V4ui32& frameSize);
 			void mSetContentScale(const V2f& contentScale);
 
 			static Application* mInstance;

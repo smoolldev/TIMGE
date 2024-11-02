@@ -21,11 +21,12 @@ namespace TIMGE
      : mMonitor{monitor},
        mGamma{1.0f}
     {
-        glfwGetMonitorPhysicalSize(monitor, &mPhysicalSize[V2i32::WIDTH], &mPhysicalSize[V2i32::HEIGHT]);
-        glfwGetMonitorContentScale(monitor, &mContentScale[V2f::X], &mContentScale[V2f::Y]);
-        glfwGetMonitorPos(monitor, &mVirtualPosition[V2i32::X], &mVirtualPosition[V2i32::Y]);
-        glfwGetMonitorWorkarea(monitor, &mWorkarea[V2i32::X], &mWorkarea[V2i32::Y], &mWorkarea[V2i32::WIDTH], &mWorkarea[V2i32::HEIGHT]);
-        glfwGetMonitorName(monitor);
+        mRetrievePhysicalSize();
+        mRetrieveContentScale();
+        mRetrievePosition();
+        mRetrieveWorkarea();
+        mRetrieveName();
+
     }
 
     Monitor::~Monitor() {}
@@ -56,7 +57,7 @@ namespace TIMGE
         return mMonitors[0];
     }
 
-    [[nodiscard]] const V2i32& Monitor::GetPhysicalSize() const {
+    [[nodiscard]] const V2ui32& Monitor::GetPhysicalSize() const {
         return mPhysicalSize;
     }
 
@@ -68,8 +69,12 @@ namespace TIMGE
         return mVirtualPosition;
     }
 
-	[[nodiscard]] const V4i32& Monitor::GetWorkarea() const {
-        return mWorkarea;
+	[[nodiscard]] const V2i32& Monitor::GetWorkareaPosition() const {
+        return mWorkareaPosition;
+    }
+
+    [[nodiscard]] const V2ui32& Monitor::GetWorkareaSize() const {
+        return mWorkareaSize;
     }
 
     [[nodiscard]] const std::string_view& Monitor::GetName() const {
@@ -80,9 +85,38 @@ namespace TIMGE
         return mGamma;
     }
 
-	void Monitor::SetGamma(float gamma) const {
+	void Monitor::SetGamma(float gamma) {
         glfwSetGamma(mMonitor, (mGamma = gamma));
     }
+
+    void Monitor::mRetrievePhysicalSize() {
+        glfwGetMonitorPhysicalSize(
+            mMonitor, 
+            reinterpret_cast<int*>(&mPhysicalSize[V2ui32::WIDTH]), 
+            reinterpret_cast<int*>(&mPhysicalSize[V2ui32::HEIGHT])
+        );
+    }
+
+    void Monitor::mRetrieveContentScale() {
+        glfwGetMonitorContentScale(mMonitor, &mContentScale[V2f::X], &mContentScale[V2f::Y]);
+    }
+
+    void Monitor::mRetrievePosition() {
+        glfwGetMonitorPos(mMonitor, &mVirtualPosition[V2i32::X], &mVirtualPosition[V2i32::Y]);
+    }
+
+    void Monitor::mRetrieveWorkarea() {
+        glfwGetMonitorWorkarea(mMonitor, 
+            &mWorkareaPosition[V2i32::X], &mWorkareaPosition[V2i32::Y], 
+            reinterpret_cast<int*>(&mWorkareaSize[V2i32::WIDTH]), 
+            reinterpret_cast<int*>(&mWorkareaSize[V2i32::HEIGHT])
+        );
+    }
+
+    void Monitor::mRetrieveName() {
+        mName = glfwGetMonitorName(mMonitor);
+    }
+
 
     void Monitor::mConnect(GLFWmonitor* monitor) {
         for (auto& _monitor : mMonitors)

@@ -1,9 +1,16 @@
 #include "TIMGE/Application.hpp"
-#include "TIMGE/CallbackDefs.hpp"
+#include "TIMGE/Callback.hpp"
 #include "TIMGE/Utils/Vector.hpp"
+#include "TIMGE/Window.hpp"
 
-#include <GLFW/glfw3.h>
 #include <format>
+
+#ifdef TIMGE_ENABLE_IMGUI
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_internal.h>
+#endif //TIMGE_ENABLE_IMGUI
 
 namespace TIMGE
 {
@@ -41,26 +48,26 @@ namespace TIMGE
        mWindow{mInfo.mWindowInfo, mMonitor},
        mMouse{info.mMouseInfo, mWindow},
        mKeyboard{mWindow},
-       mDeltaTime{0},
-       mStartTime{0},
-       mEventProcessor{PollEvents},
-       monitor{mMonitor},
-       window{mWindow},
-       mouse{mMouse},
-       keyboard{mKeyboard},
-       deltaTime{GetDeltaTime()},
-       windowPosition{mWindow.GetPosition()},
-       windowSize{mWindow.GetSize()},
-       windowFramebufferSize{mWindow.GetFramebufferSize()},
-       windowFrameSize{mWindow.GetFrameSize()},
-       windowContentScale{mWindow.GetContentScale()},
-       cursorPosition{mMouse.GetPosition()},
-       cursorScrollOffset{mMouse.GetOffset()}
+       mDeltaTime{},
+       mStartTime{std::chrono::steady_clock::now()},
+       mEventProcessor{PollEvents}
     {
         if (Application::mInstance) {
             throw ApplicationException("Only one instance of Application is allowed!");
         }
         mInstance = this;
+
+        #ifdef TIMGE_ENABLE_IMGUI
+            IMGUI_CHECKVERSION();
+            mImGuiContext = ImGui::CreateContext();
+            ImGui_ImplGlfw_InitForOpenGL(mWindow.mGetWindow(), false);
+            std::string glsl_version = std::format(
+                "#version {}{}0 core", 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MAJOR], 
+                mInfo.mWindowInfo.mOpenGLVersion[V2ui32::GL_MINOR]
+            );
+            ImGui_ImplOpenGL3_Init(glsl_version.c_str());
+        #endif // TIMGE_ENABLE_IMGUI
 
         glfwSetErrorCallback(Callback::ErrorCallback);
         glfwSetWindowPosCallback(mWindow.mGetWindow(), Callback::WindowPosCallback);
@@ -82,21 +89,22 @@ namespace TIMGE
         glfwSetDropCallback(mWindow.mGetWindow(), Callback::DropCallback);
         glfwSetMonitorCallback(Callback::MonitorCallback);
         glfwSetJoystickCallback(Callback::JoystickCallback);
-    }
+}
 
     Application::Application(std::string_view title, uint32_t width, uint32_t height)
      : Application(
         Application::Info {
             Window::Info {
     	        title,
-    	        width,
-    	        height,
-    	        0, 0, 0, 0,
-    	        4, 6,
+                V2ui32{width, height},
+    	        V4ui32{0, 0, 0, 0},
+                V2i32{POSITION_DONT_CARE, POSITION_DONT_CARE},
+                V2ui32{ASPECT_RATIO_DONT_CARE, ASPECT_RATIO_DONT_CARE},
+                1.0f,
+    	        V2ui32{4, 6},
     	        Window::RESIZABLE | Window::VISIBLE | Window::DECORATED |
     	        Window::FOCUSED | Window::AUTO_ICONIFY | Window::CENTER_CURSOR |
     	        Window::FOCUS_ON_SHOW,
-                false,
     	    },
             Vector<float, 4> { 0.0f, 0.0f, 0.0f, 1.0f },
             Mouse::Info {},
@@ -106,32 +114,51 @@ namespace TIMGE
     {}
 
     Application::~Application()
-    {}
+    {
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplOpenGL3_Shutdown();
+            ImGui_ImplGlfw_Shutdown();
+            ImGui::DestroyContext();
+        #endif // TIMGE_ENABLE_IMGUI
+    }
 
     void Application::BeginFrame()
     {
-        mStartTime = GetTime();
+        mStartTime = mSteadyClock.now();
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplGlfw_NewFrame();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui::NewFrame();
+        #endif // TIMGE_ENABLE_IMGUI
+    }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+    void Application::EndFrame()
+    {
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui::Render();
+        #endif // TIMGE_ENABLE_IMGUI
+
         glClearColor(
             mInfo.mBackground[V4f::R], 
             mInfo.mBackground[V4f::G], 
             mInfo.mBackground[V4f::B], 
             mInfo.mBackground[V4f::A] 
         );
-    }
+        glClear(GL_COLOR_BUFFER_BIT);
 
-    void Application::EndFrame()
-    {
-        mDeltaTime = GetTime() - mStartTime;
+        #ifdef TIMGE_ENABLE_IMGUI
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        #endif // TIMGE_ENABLE_IMGUI
 
         mEventProcessor();
-
         glfwSwapBuffers(mWindow.mGetWindow());
+
+        mDeltaTime = std::chrono::nanoseconds(mSteadyClock.now() - mStartTime).count() * 1.0E-9;
     }
 
     void Application::SetMonitor(const Monitor& monitor) {
         mMonitor = monitor;
+        mWindow.mUpdateMonitor();
     }
 
     void Application::SetBackgroundColor(const V4f& backgroundColor) {
@@ -140,6 +167,10 @@ namespace TIMGE
 
     void Application::SetEventProcessor(EventProcessor_T eventProcessor) {
         mEventProcessor = eventProcessor;
+    }
+
+    [[nodiscard]] Monitor& Application::GetMonitor() {
+        return mMonitor;
     }
 
     [[nodiscard]] Window& Application::GetWindow() {
@@ -154,13 +185,23 @@ namespace TIMGE
         return mKeyboard;
     }
 
-    [[nodiscard]] const Time& Application::GetDeltaTime() {
+    [[nodiscard]] const double& Application::GetDeltaTime() {
         return mDeltaTime;
     }
 
     [[nodiscard]] const V4f& Application::GetBackgroundColor() {
         return mInfo.mBackground;
     }
+
+    [[nodiscard]] Application::EventProcessor_T Application::GetEventProcessor() {
+        return mEventProcessor;
+    }
+
+#ifdef TIMGE_ENABLE_IMGUI
+    [[nodiscard]] ImGuiContext* Application::GetImGuiContext() {
+        return mImGuiContext;
+    }
+#endif // TIMGE_ENABLE_IMGUI
 
     [[nodiscard]] Application* Application::mGetInstance() {
         return Application::mInstance;
@@ -183,18 +224,18 @@ namespace TIMGE
     }
 
     void Application::mSetPosition(const V2i32& position) {
-        mWindow.mPosition = position;
+        mWindow.mInfo.mPosition = position;
     }
 
-	void Application::mSetSize(const V2i32& size) {
-        mWindow.mSize = size;
+	void Application::mSetSize(const V2ui32& size) {
+        mWindow.mInfo.mSize = size;
     }
 
-	void Application::mSetFramebufferSize(const V2i32& framebufferSize) {
+	void Application::mSetFramebufferSize(const V2ui32& framebufferSize) {
        mWindow.mFramebufferSize = framebufferSize; 
     }
 
-    void Application::mSetFrameSize(const V4i32& frameSize) {
+    void Application::mSetFrameSize(const V4ui32& frameSize) {
         mWindow.mFrameSize = frameSize;
     }
 

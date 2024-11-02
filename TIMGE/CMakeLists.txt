@@ -26,6 +26,7 @@ set(GLFW_LIBRARY_TYPE OBJECT)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/stb_image)
+add_subdirectory(vendor/glm)
 
 if (TIMGE_ENABLE_IMGUI)
         add_library(
@@ -72,9 +73,9 @@ endif()
 
 target_include_directories("${TIMGE_NAME}" PRIVATE "${TIMGE_SRCDIR}/include/")
 if (TIMGE_ENABLE_IMGUI)
-    target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image imgui)
+    target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image imgui glm)
 else()
-    target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image)
+    target_link_libraries("${TIMGE_NAME}" PRIVATE glfw glad stb_image glm)
 endif()
 
 # Copy TIMGE headers to Sandbox/include
@@ -91,6 +92,7 @@ add_custom_target(copy_includes
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_rectpack.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_rectpack.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_textedit.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_textedit.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TIMGE_SRCDIR}/vendor/imgui/imstb_truetype.h" "${CMAKE_SOURCE_DIR}/Sandbox/include/imstb_truetype.h"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${TIMGE_SRCDIR}/vendor/glm/glm" "${CMAKE_SOURCE_DIR}/Sandbox/include/glm"
 )
 
 add_custom_target(timge_comp_commands

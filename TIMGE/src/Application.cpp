@@ -125,6 +125,15 @@ namespace TIMGE
     void Application::BeginFrame()
     {
         mStartTime = mSteadyClock.now();
+
+        glClearColor(
+            mInfo.mBackground[V4f::R], 
+            mInfo.mBackground[V4f::G], 
+            mInfo.mBackground[V4f::B], 
+            mInfo.mBackground[V4f::A] 
+        );
+        glClear(GL_COLOR_BUFFER_BIT);
+
         #ifdef TIMGE_ENABLE_IMGUI
             ImGui_ImplGlfw_NewFrame();
             ImGui_ImplOpenGL3_NewFrame();
@@ -136,17 +145,6 @@ namespace TIMGE
     {
         #ifdef TIMGE_ENABLE_IMGUI
             ImGui::Render();
-        #endif // TIMGE_ENABLE_IMGUI
-
-        glClearColor(
-            mInfo.mBackground[V4f::R], 
-            mInfo.mBackground[V4f::G], 
-            mInfo.mBackground[V4f::B], 
-            mInfo.mBackground[V4f::A] 
-        );
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        #ifdef TIMGE_ENABLE_IMGUI
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         #endif // TIMGE_ENABLE_IMGUI
 

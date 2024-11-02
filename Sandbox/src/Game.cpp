@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "TIMGE/Monitor.hpp"
 #include "TIMGE/Mouse.hpp"
 #include "TIMGE/Window.hpp"
 
@@ -7,7 +8,11 @@
 #include <TIMGE/CallbackDefs.hpp>
 
 #include <imgui.h>
+#include <iostream>
 #include <vector>
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 Game* Game::mInstance = nullptr;
 
@@ -106,6 +111,99 @@ void Game::Run()
 {
     TIMGE::Window& window = GetWindow();
 
+    GLuint VBO, VAO, IBO;
+
+    float vertices[] = 
+    {
+        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.25f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
+    };
+
+    const char* vertex_shader = 
+    R"(
+        #version 330 core
+
+        layout(location = 0) in vec3 aPos;
+        layout(location = 1) in vec3 aCol;
+
+        out vec3 Col;
+        void main()
+        {
+            gl_Position = vec4(aPos, 1.0);
+            Col = aCol;
+        }
+    )";
+
+    const char* fragment_shader = 
+    R"(
+        #version 330 core
+
+        in vec3 Col;
+        out vec4 FragColor;
+
+        void main() {
+            FragColor = vec4(Col, 1.0);
+        }
+    )";
+
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    GLuint vs, fs;
+    vs = glCreateShader(GL_VERTEX_SHADER);
+    fs = glCreateShader(GL_FRAGMENT_SHADER);
+
+    glShaderSource(vs, 1, &vertex_shader, nullptr);
+    glCompileShader(vs);
+
+    glShaderSource(fs, 1, &fragment_shader, nullptr);
+    glCompileShader(fs);
+
+    int vs_success;
+    glGetShaderiv(vs, GL_COMPILE_STATUS, &vs_success);
+    if (!vs_success) 
+    {
+        char info_log[512];
+        glGetShaderInfoLog(vs, 512, nullptr, info_log);
+        std::cout << info_log << '\n';
+    }
+
+    int fs_success;
+    glGetShaderiv(fs, GL_COMPILE_STATUS, &fs_success);
+    if (!fs_success) 
+    {
+        char info_log[512];
+        glGetShaderInfoLog(vs, 512, nullptr, info_log);
+        std::cout << info_log << '\n';
+    }
+
+    GLuint shader = glCreateProgram();
+    glAttachShader(shader, vs);
+    glAttachShader(shader, fs);
+    glLinkProgram(shader);
+
+    int shader_success;
+    glGetProgramiv(shader, GL_LINK_STATUS, &shader_success);
+    if (!shader_success)
+    {
+        char info_log[512];
+        glGetProgramInfoLog(shader, 512, nullptr, info_log);
+    }
+
+    glUseProgram(shader);
+    glViewport(0, 0, 720, 480);
+
     while (!window.ShouldClose()) {
         Application::BeginFrame();
         {
@@ -121,7 +219,7 @@ void Game::Update()
 }
 
 void Game::Render() {
-    mMenu();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 Game* Game::GetInstance() {

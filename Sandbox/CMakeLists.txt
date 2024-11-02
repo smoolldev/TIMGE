@@ -13,12 +13,13 @@ add_definitions(-DTIMGE_ENABLE_IMGUI)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE EXE_SRC CONFIGURE_DEPENDS "${SANDBOX_SRCDIR}/src/*.cpp")
 
 add_executable("${SANDBOX_NAME}")
 
-target_compile_features("${SANDBOX_NAME}" PUBLIC cxx_std_20)
 target_sources("${SANDBOX_NAME}" PRIVATE ${EXE_SRC})
 target_include_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/include/")
 target_link_directories("${SANDBOX_NAME}" PRIVATE "${SANDBOX_SRCDIR}/lib")

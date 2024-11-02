@@ -242,6 +242,11 @@ namespace TIMGE
     }
 
     void Window::Maximize() {
+        if (GetState(FULLSCREEN)) {
+            mToggleOffFullscreen();
+        } else if (GetState(BORDERLESS_FULLSCREEN)) {
+            mToggleOffBorderlessFullscreen();
+        }
         glfwMaximizeWindow(mWindow);
     }
 
@@ -305,13 +310,23 @@ namespace TIMGE
  
         mFullscreenMonitor = mMonitor.mGetMonitor();
         mVidMode = glfwGetVideoMode(mFullscreenMonitor);
+
+        V2i32 new_position = mMonitor.GetWorkareaPosition();
+        V2ui32 workarea_size = mMonitor.GetWorkareaSize();
+
+        new_position[V2i32::X] += (workarea_size[V2ui32::WIDTH] - mInfo.mSize[V2ui32::WIDTH]) / 2;
+        new_position[V2i32::Y] += (workarea_size[V2ui32::HEIGHT] - mInfo.mSize[V2ui32::HEIGHT]) / 2;
+
         mValidateSize(mInfo.mSize);
-        glfwSetWindowMonitor(
-            mWindow, mFullscreenMonitor, 0, 0,
-            mInfo.mSize[V2ui32::WIDTH], mInfo.mSize[V2ui32::HEIGHT],
-            0
-        );
-        if (GetState(FULLSCREEN)) {
+
+        if (!GetState(FULLSCREEN) && !GetState(BORDERLESS_FULLSCREEN)) {
+            glfwSetWindowMonitor(
+                mWindow, nullptr, new_position[V2i32::X], new_position[V2i32::Y],
+                mInfo.mSize[V2ui32::WIDTH], mInfo.mSize[V2ui32::HEIGHT],
+                0
+            );
+        }
+        else if (GetState(FULLSCREEN)) {
             mToggleOnFullscreen();
         } else if (GetState(BORDERLESS_FULLSCREEN)) {
             mToggleOnBorderlessFullscreen();

@@ -573,7 +573,7 @@ void Game::mListMonitors()
         ImGui::Button(std::format("{}: {}", i, mMonitors[i].GetName().data()).c_str());
 
         if (ImGui::IsItemDeactivated()) {
-            SetMonitor(monitor);
+            SetMonitor(mMonitors[i]);
         }
     }
 }

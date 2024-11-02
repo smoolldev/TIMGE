@@ -1,5 +1,6 @@
 #include "TIMGE/Window.hpp"
 #include "TIMGE/Exception.hpp"
+#include "TIMGE/Monitor.hpp"
 #include "TIMGE/Utils/Vector.hpp"
 
 #include <string>
@@ -41,6 +42,8 @@ namespace TIMGE
         mCreateWindow();
 
         mLoadGL();
+
+        mSetIfTransparentFramebuffer();
 
         mRetrieveFramebufferSize();
         mRetrieveFrameSize();
@@ -197,12 +200,6 @@ namespace TIMGE
         mInfo.mFlags ^= CENTER_CURSOR;
 
         glfwSetWindowAttrib(mWindow, GLFW_CENTER_CURSOR, GetState(CENTER_CURSOR));
-    }
-
-    void Window::ToggleTransparentFramebuffer() {
-        mInfo.mFlags ^= TRANSPARENT_FRAMEBUFFER;
-
-        glfwSetWindowAttrib(mWindow, GLFW_TRANSPARENT_FRAMEBUFFER, GetState(TRANSPARENT_FRAMEBUFFER));
     }
 
     void Window::ToggleFocusOnShow() {
@@ -498,7 +495,7 @@ namespace TIMGE
     {
         static std::array <V2ui32, 12> GLVers
         {
-            V2ui32{2, 1}, V2ui32{3, 0}, V2ui32{3, 1},
+            V2ui32{3, 0}, V2ui32{3, 1},
             V2ui32{3, 2}, V2ui32{3, 3}, V2ui32{4, 0},
             V2ui32{4, 1}, V2ui32{4, 2}, V2ui32{4, 3},
             V2ui32{4, 4}, V2ui32{4, 5}, V2ui32{4, 6},
@@ -646,6 +643,14 @@ namespace TIMGE
     {
         if (mConflictMinimized_Maximized(flags)) {
             throw WindowException("Window cannot be both Minimized and Maximized.");
+        }
+    }
+
+    void Window::mSetIfTransparentFramebuffer()
+    {
+    if (GetState(TRANSPARENT_FRAMEBUFFER)) {
+            glEnable(GL_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 } // namespace TIMGE

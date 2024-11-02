@@ -13,9 +13,9 @@ name: "CodeQL Advanced"
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "development" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "development" ]
   schedule:
     - cron: '38 14 * * 6'
 
@@ -81,7 +81,7 @@ jobs:
     - if: matrix.build-mode == 'manual'
       shell: bash
       run: |
-        cmake -S . -B build
+        cmake -S . -B build -DGLFW_BUILD_WAYLAND=OFF
         cmake --build build/
 
     - name: Perform CodeQL Analysis

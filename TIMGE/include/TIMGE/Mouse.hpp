@@ -52,7 +52,7 @@ namespace TIMGE
     class MouseException : public Exception
     {
         public:
-            MouseException(std::string message);
+            MouseException(const std::string& message);
     };
 
     class Mouse

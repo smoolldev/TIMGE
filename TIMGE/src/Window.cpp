@@ -13,7 +13,7 @@
 
 namespace TIMGE
 {
-    WindowException::WindowException(std::string message)
+    WindowException::WindowException(const std::string& message)
      : Exception(std::format("Window: {}", message))
     {}
 

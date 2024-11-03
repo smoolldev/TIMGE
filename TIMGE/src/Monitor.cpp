@@ -9,7 +9,7 @@
 
 namespace TIMGE
 {
-    MonitorException::MonitorException(std::string message)
+    MonitorException::MonitorException(const std::string& message)
      : Exception(std::format("Monitor: {}", message))
     {}
 
@@ -26,7 +26,6 @@ namespace TIMGE
         mRetrievePosition();
         mRetrieveWorkarea();
         mRetrieveName();
-
     }
 
     Monitor::~Monitor() {}

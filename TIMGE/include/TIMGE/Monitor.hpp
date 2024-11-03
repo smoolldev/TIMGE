@@ -15,7 +15,7 @@ namespace TIMGE
     class MonitorException : public Exception
     {
         public:
-            MonitorException(std::string message);
+            MonitorException(const std::string& message);
     };
 
     class Monitor

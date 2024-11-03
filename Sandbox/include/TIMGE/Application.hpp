@@ -21,7 +21,7 @@ namespace TIMGE
 	class ApplicationBaseException : public Exception
     {
         public:
-            ApplicationBaseException(std::string message);
+            ApplicationBaseException(const std::string& message);
     };
 
     class ApplicationBase
@@ -37,7 +37,7 @@ namespace TIMGE
 	class ApplicationException : public Exception
     {
         public:
-            ApplicationException(std::string message);
+            ApplicationException(const std::string& message);
     };
 
 

@@ -14,7 +14,7 @@
 
 namespace TIMGE
 {
-    ApplicationBaseException::ApplicationBaseException(std::string message)
+    ApplicationBaseException::ApplicationBaseException(const std::string& message)
      : Exception(std::format("ApplicationBase: {}", message))
     {}
 
@@ -29,7 +29,7 @@ namespace TIMGE
         glfwTerminate();
     }
 
-    ApplicationException::ApplicationException(std::string message)
+    ApplicationException::ApplicationException(const std::string& message)
      : Exception(std::format("Application: {}", message))
     {}
 

@@ -6,6 +6,7 @@
 #include <TIMGE/Application.hpp>
 #include <TIMGE/Utils/Vector.hpp>
 #include <TIMGE/CallbackDefs.hpp>
+#include <TIMGE/Shader.hpp>
 
 #include <imgui.h>
 #include <iostream>
@@ -120,7 +121,7 @@ void Game::Run()
         0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
 
-    const char* vertex_shader = 
+    std::string_view vertex_shader = 
     R"(
         #version 330 core
 
@@ -135,7 +136,7 @@ void Game::Run()
         }
     )";
 
-    const char* fragment_shader = 
+    std::string_view fragment_shader = 
     R"(
         #version 330 core
 
@@ -146,6 +147,10 @@ void Game::Run()
             FragColor = vec4(Col, 1.0);
         }
     )";
+
+    TIMGE::Shader vertex(TIMGE::Shader::VERTEX, vertex_shader);
+    TIMGE::Shader fragment(TIMGE::Shader::FRAGMENT, fragment_shader);
+    TIMGE::ShaderProgram shader{&vertex, &fragment};
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -160,48 +165,7 @@ void Game::Run()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-    GLuint vs, fs;
-    vs = glCreateShader(GL_VERTEX_SHADER);
-    fs = glCreateShader(GL_FRAGMENT_SHADER);
-
-    glShaderSource(vs, 1, &vertex_shader, nullptr);
-    glCompileShader(vs);
-
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
-
-    int vs_success;
-    glGetShaderiv(vs, GL_COMPILE_STATUS, &vs_success);
-    if (!vs_success) 
-    {
-        char info_log[512];
-        glGetShaderInfoLog(vs, 512, nullptr, info_log);
-        std::cout << info_log << '\n';
-    }
-
-    int fs_success;
-    glGetShaderiv(fs, GL_COMPILE_STATUS, &fs_success);
-    if (!fs_success) 
-    {
-        char info_log[512];
-        glGetShaderInfoLog(vs, 512, nullptr, info_log);
-        std::cout << info_log << '\n';
-    }
-
-    GLuint shader = glCreateProgram();
-    glAttachShader(shader, vs);
-    glAttachShader(shader, fs);
-    glLinkProgram(shader);
-
-    int shader_success;
-    glGetProgramiv(shader, GL_LINK_STATUS, &shader_success);
-    if (!shader_success)
-    {
-        char info_log[512];
-        glGetProgramInfoLog(shader, 512, nullptr, info_log);
-    }
-
-    glUseProgram(shader);
+    shader.Bind();
     glViewport(0, 0, 720, 480);
 
     while (!window.ShouldClose()) {

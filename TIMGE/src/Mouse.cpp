@@ -11,7 +11,7 @@
 
 namespace TIMGE
 {
-    MouseException::MouseException(std::string message)
+    MouseException::MouseException(const std::string& message)
      : Exception(std::format("Mouse: {}", message))
     {}
 

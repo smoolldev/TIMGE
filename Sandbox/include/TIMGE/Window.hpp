@@ -15,7 +15,7 @@ namespace TIMGE
     class WindowException : public Exception
     {
         public:
-            WindowException(std::string message);
+            WindowException(const std::string& message);
     };
 
     static constexpr uint32_t ASPECT_RATIO_DONT_CARE = std::numeric_limits<decltype(ASPECT_RATIO_DONT_CARE)>::max();

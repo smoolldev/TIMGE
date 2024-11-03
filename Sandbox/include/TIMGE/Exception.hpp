@@ -8,7 +8,7 @@ namespace TIMGE
 	class Exception
 	{
 		public:
-			Exception(std::string message);
+			Exception(const std::string& message);
 
 			[[nodiscard]] virtual const std::string& What() const;
 

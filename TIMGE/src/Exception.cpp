@@ -4,7 +4,7 @@
 
 namespace TIMGE
 {
-    Exception::Exception(std::string message)
+    Exception::Exception(const std::string& message)
      : mWhat{message}
     {}
 

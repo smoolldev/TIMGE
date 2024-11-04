@@ -8,5 +8,7 @@
 #include "Keyboard.hpp"
 #include "Callback.hpp"
 #include "Utils/Vector.hpp"
+#include "Buffer.hpp"
+#include "Vertex.hpp"
 
 #endif //TIMGE_HPP

@@ -1,16 +1,10 @@
 #include "Game.hpp"
-#include "TIMGE/Monitor.hpp"
-#include "TIMGE/Mouse.hpp"
-#include "TIMGE/Window.hpp"
-
-#include <TIMGE/Application.hpp>
-#include <TIMGE/Utils/Vector.hpp>
-#include <TIMGE/CallbackDefs.hpp>
 
 #include <imgui.h>
 #include <iostream>
 #include <vector>
 
+#include <TIMGE/TIMGE.hpp>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
@@ -111,14 +105,18 @@ void Game::Run()
 {
     TIMGE::Window& window = GetWindow();
 
-    GLuint VBO, VAO, IBO;
+    /*GLuint VBO, VAO, IBO;*/
 
-    float vertices[] = 
-    {
-        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.25f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
-    };
+    /*float vertices[] = */
+    /*{*/
+    /*    0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,*/
+    /*    -0.25f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f,*/
+    /*    0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,*/
+    /*};*/
+
+    TIMGE::Vertex v1{-1.0, -1.0};
+
+
 
     const char* vertex_shader = 
     R"(
@@ -147,18 +145,33 @@ void Game::Run()
         }
     )";
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    /*TIMGE::VertexArray VAO(1);*/
+    /*TIMGE::Buffer VBO(1, TIMGE::Buffer::VERTEX, TIMGE::Buffer::STATIC_DRAW);*/
+    /**/
+    /*VAO.Generate();*/
+    /*VAO.Bind();*/
+    /*glGenVertexArrays(1, &VAO);*/
+    /*glBindVertexArray(VAO);*/
+    /**/
+    /*VBO.Generate();*/
+    /*VBO.Bind(vertices, sizeof(vertices));*/
+    /**/
+    /*VBO.InterpretVertexBufferData(0, 3, 6 * sizeof(float), TIMGE::Buffer::DataType::FLOAT, false, vertices, 0);*/
+    /*VBO.InterpretVertexBufferData(1, 3, 6 * sizeof(float), TIMGE::Buffer::DataType::FLOAT, false, vertices, 3 * sizeof(float));*/
 
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    //VBO.Unbind();
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    //VAO.Unbind();
 
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    /*glGenBuffers(1, &VBO);*/
+    /*glBindBuffer(GL_ARRAY_BUFFER, VBO);*/
+    /*glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);*/
+
+    /*glEnableVertexAttribArray(0);*/
+    /*glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);*/
+    /**/
+    /*glEnableVertexAttribArray(1);*/
+    /*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));*/
 
     GLuint vs, fs;
     vs = glCreateShader(GL_VERTEX_SHADER);

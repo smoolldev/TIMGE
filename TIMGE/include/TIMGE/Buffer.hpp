@@ -63,7 +63,7 @@ namespace TIMGE
             void Bind();
             void Unbind();
 
-            void Data(std::vector<int> indices);
+            void Data(const std::vector<int>& indices);
     };
 }
 

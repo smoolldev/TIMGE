@@ -40,10 +40,12 @@ namespace TIMGE
     }
 
     void VertexBuffer::Data() {
+        //TODO: same as below (ideally just one argument)
         glBufferData(GL_ARRAY_BUFFER, size, data, mUsageHint);
     }
 
     void VertexBuffer::AttributePointer(const Vertex& vertex) {
+        //TODO: figure out how to do this without needing the user to pass in too much
         glVertexAttribPointer(index, size, type, normalized, stride, offset);
     }
 
@@ -59,7 +61,7 @@ namespace TIMGE
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    void IndexBuffer::Data(std::vector<int> indices) {
+    void IndexBuffer::Data(const std::vector<int>& indices) {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size(), indices.data(), mUsageHint);
     }
 }

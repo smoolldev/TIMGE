@@ -6,9 +6,9 @@
 
 namespace TIMGE
 {
-    Buffer::Buffer(int numberOfBuffers, UsageHint usageHint)
+    Buffer::Buffer(UsageHint usageHint)
      : mBuffer{0},
-       mNumberOfBuffers{numberOfBuffers},
+       mNumberOfBuffers{1},
        mUsageHint{usageHint}
     {
         Generate();
@@ -27,8 +27,8 @@ namespace TIMGE
         glDeleteBuffers(mNumberOfBuffers, &mBuffer);
     }
 
-    VertexBuffer::VertexBuffer(int numberOfBuffers, Buffer::UsageHint usageHint)
-     : Buffer(numberOfBuffers, usageHint)
+    VertexBuffer::VertexBuffer(Buffer::UsageHint usageHint)
+     : Buffer(usageHint)
     {}
 
     void VertexBuffer::Bind() {
@@ -49,8 +49,8 @@ namespace TIMGE
         //glVertexAttribPointer(index, size, type, normalized, stride, offset);
     }
 
-    IndexBuffer::IndexBuffer(int numberOfBuffers, Buffer::UsageHint usageHint)
-    : Buffer(numberOfBuffers, usageHint)
+    IndexBuffer::IndexBuffer(Buffer::UsageHint usageHint)
+    : Buffer(usageHint)
     {}
 
     void IndexBuffer::Bind() {

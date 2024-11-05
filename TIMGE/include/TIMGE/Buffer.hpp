@@ -30,8 +30,6 @@ namespace TIMGE
 
             virtual void Bind() = 0;
             virtual void Unbind() = 0;
-
-            virtual void Data() = 0;
         protected:
             unsigned int mBuffer;
             UsageHint mUsageHint;
@@ -47,12 +45,14 @@ namespace TIMGE
         public:
             VertexBuffer(Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
 
-            void Bind();
-            void Unbind();
+            void Bind() override;
+            void Unbind() override;
 
             void Data(const std::vector<Vertex>& vertices);
+            void Data(const std::vector<ColoredVertex>& vertices);
+            void Data(const std::vector<TexturedVertex>& vertices);
 
-            void AttributePointer(const Vertex& vertex);
+            void AttributePointer(unsigned int index);
     };
 
     class IndexBuffer : public Buffer
@@ -60,10 +60,10 @@ namespace TIMGE
         public:
             IndexBuffer(Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
 
-            void Bind();
-            void Unbind();
+            void Bind() override;
+            void Unbind() override;
 
-            void Data(const std::vector<int>& indices);
+            void Data(const std::vector<unsigned int>& indices);
     };
 }
 

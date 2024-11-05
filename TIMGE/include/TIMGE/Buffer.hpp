@@ -25,11 +25,8 @@ namespace TIMGE
                 DYNAMIC_COPY = GL_DYNAMIC_COPY
             };
 
-            Buffer(int numberOfBuffers = 1, UsageHint usageHint = UsageHint::STATIC_DRAW);
+            Buffer(UsageHint usageHint = UsageHint::STATIC_DRAW);
             ~Buffer();
-
-            void Generate();
-            void Delete();
 
             virtual void Bind() = 0;
             virtual void Unbind() = 0;
@@ -39,13 +36,16 @@ namespace TIMGE
             unsigned int mBuffer;
             UsageHint mUsageHint;
         private:
+            void mGenerate();
+            void mDelete();
+
             int mNumberOfBuffers;
     };
 
     class VertexBuffer : public Buffer
     {
         public:
-            VertexBuffer(int numberOfBuffers = 1, Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
+            VertexBuffer(Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
 
             void Bind();
             void Unbind();
@@ -58,7 +58,7 @@ namespace TIMGE
     class IndexBuffer : public Buffer
     {
         public:
-            IndexBuffer(int numberOfBuffers = 1, Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
+            IndexBuffer(Buffer::UsageHint usageHint = Buffer::UsageHint::STATIC_DRAW);
 
             void Bind();
             void Unbind();

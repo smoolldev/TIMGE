@@ -114,9 +114,13 @@ void Game::Run()
     /*    0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,*/
     /*};*/
 
-    TIMGE::Vertex v1{-1.0, -1.0};
-
-
+    // there's an error when compiling the code, something about a brace initializer list or something i don't know I gotta go to school or im going to be late.
+    std::vector<TIMGE::Vertex> vertices
+    {
+        { 0.0f,   0.5f,  0.0f, 1.0f, 0.0f, 0.0f},
+        {-0.25f, -0.75f, 0.0f, 0.0f, 1.0f, 0.0f},
+        { 0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f}
+    };
 
     const char* vertex_shader = 
     R"(

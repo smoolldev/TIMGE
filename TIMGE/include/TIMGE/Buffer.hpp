@@ -50,7 +50,7 @@ namespace TIMGE
             void Bind();
             void Unbind();
 
-            void Data();
+            void Data(const std::vector<Vertex>& vertices);
 
             void AttributePointer(const Vertex& vertex);
     };

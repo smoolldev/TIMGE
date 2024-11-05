@@ -39,14 +39,14 @@ namespace TIMGE
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void VertexBuffer::Data() {
+    void VertexBuffer::Data(const std::vector<Vertex>& vertices) {
         //TODO: same as below (ideally just one argument)
-        glBufferData(GL_ARRAY_BUFFER, size, data, mUsageHint);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size(), vertices.data(), mUsageHint);
     }
 
     void VertexBuffer::AttributePointer(const Vertex& vertex) {
         //TODO: figure out how to do this without needing the user to pass in too much
-        glVertexAttribPointer(index, size, type, normalized, stride, offset);
+        //glVertexAttribPointer(index, size, type, normalized, stride, offset);
     }
 
     IndexBuffer::IndexBuffer(int numberOfBuffers, Buffer::UsageHint usageHint)

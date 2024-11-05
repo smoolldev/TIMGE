@@ -4,27 +4,19 @@ namespace TIMGE
 {
     Vertex::Vertex(float x, float y)
      : x{x},
-       y{y},
-       r{-2.0},
-       g{-2.0},
-       b{-2.0},
-       a{-2.0},
-       u{-2.0},
-       v{-2.0}
+       y{y}
     {}
 
-    Vertex::Vertex(float x, float y, float r, float g, float b, float a)
+    ColoredVertex::ColoredVertex(float x, float y, float r, float g, float b, float a)
      : x{x},
        y{y},
        r{r},
        g{g},
        b{b},
-       a{a},
-       u{-2.0},
-       v{-2.0}
+       a{a}
     {}
 
-    Vertex::Vertex(float x, float y, float r, float g, float b, float a, float u, float v)
+    TexturedVertex::TexturedVertex(float x, float y, float r, float g, float b, float a, float u, float v)
      : x{x},
        y{y},
        r{r},

@@ -8,6 +8,8 @@
 #include <TIMGE/CallbackDefs.hpp>
 #include <TIMGE/Shader.hpp>
 
+#include <cstddef>
+#include <filesystem>
 #include <imgui.h>
 #include <iostream>
 #include <vector>
@@ -35,7 +37,7 @@ TIMGE::Application::Info Game::mGameInfo {
                     TIMGE::ASPECT_RATIO_DONT_CARE,
                 },
                 1.0f,
-                TIMGE::V2ui32{3, 3},
+                TIMGE::V2ui32{4, 5},
                 671 | TIMGE::Window::TRANSPARENT_FRAMEBUFFER,
             },
             TIMGE::Vector<float, 4>{
@@ -121,36 +123,17 @@ void Game::Run()
         0.25f, -0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
 
-    std::string_view vertex_shader = 
-    R"(
-        #version 330 core
+    std::filesystem::path vs_path = "resources/shaders/Default-VS.glsl";
+    std::filesystem::path fs_path = "resources/shaders/Default-FS.glsl";
+    std::filesystem::path shader_binary_path = "resources/shaders/bin/Default.glsl";
 
-        layout(location = 0) in vec3 aPos;
-        layout(location = 1) in vec3 aCol;
+    TIMGE::Shader vertex(TIMGE::Shader::VERTEX, vs_path);
+    TIMGE::Shader fragment(TIMGE::Shader::FRAGMENT, fs_path);
 
-        out vec3 Col;
-        void main()
-        {
-            gl_Position = vec4(aPos, 1.0);
-            Col = aCol;
-        }
-    )";
-
-    std::string_view fragment_shader = 
-    R"(
-        #version 330 core
-
-        in vec3 Col;
-        out vec4 FragColor;
-
-        void main() {
-            FragColor = vec4(Col, 1.0);
-        }
-    )";
-
-    TIMGE::Shader vertex(TIMGE::Shader::VERTEX, vertex_shader);
-    TIMGE::Shader fragment(TIMGE::Shader::FRAGMENT, fragment_shader);
-    TIMGE::ShaderProgram shader{&vertex, &fragment};
+    TIMGE::ShaderProgram shader{vertex, fragment};
+    if (!std::filesystem::exists(shader_binary_path)) {
+        shader.SaveBinary(shader_binary_path);
+    }
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -184,6 +167,7 @@ void Game::Update()
 
 void Game::Render() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    mMenu();
 }
 
 Game* Game::GetInstance() {

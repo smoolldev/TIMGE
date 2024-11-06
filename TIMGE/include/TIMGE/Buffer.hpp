@@ -1,14 +1,21 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
+#include "TIMGE/Exception.hpp"
 #include "TIMGE/Vertex.hpp"
-
-#include <glad/glad.h>
 
 #include <vector>
 
+#include <glad/glad.h>
+
 namespace TIMGE
 {
+    class BufferException : public Exception
+    {
+        public:
+            BufferException(const std::string& message);
+    };
+
     class Buffer
     {
         public:
@@ -31,13 +38,20 @@ namespace TIMGE
             virtual void Bind() = 0;
             virtual void Unbind() = 0;
         protected:
-            unsigned int mBuffer;
+            void mValidateBuffer();
+
+            GLuint mBuffer;
+
             UsageHint mUsageHint;
         private:
             void mGenerate();
             void mDelete();
+    };
 
-            int mNumberOfBuffers;
+    class VertexBufferException : public Exception
+    {
+        public:
+            VertexBufferException(const std::string& message);
     };
 
     class VertexBuffer : public Buffer
@@ -53,6 +67,25 @@ namespace TIMGE
             void Data(const std::vector<TexturedVertex>& vertices);
 
             void AttributePointer(unsigned int index);
+        private:
+            template<typename Type_T>
+            void mValidateSize(const std::vector<Type_T>& vertices)
+            {
+                GLint size = 0;
+
+                glGetBufferParameteriv(mBufferType, GL_BUFFER_SIZE, &size);
+                if (vertices.size() * sizeof(Type_T) != size) {
+                    throw VertexBufferException("Size of vertices does not equal size of data");
+                }
+            }
+
+            GLenum mBufferType;
+    };
+
+    class IndexBufferException : public Exception
+    {
+        public:
+            IndexBufferException(const std::string& message);
     };
 
     class IndexBuffer : public Buffer
@@ -64,6 +97,10 @@ namespace TIMGE
             void Unbind() override;
 
             void Data(const std::vector<unsigned int>& indices);
+        private:
+            void mValidateSize(const std::vector<unsigned int>& indices);
+
+            GLenum mBufferType;
     };
 }
 

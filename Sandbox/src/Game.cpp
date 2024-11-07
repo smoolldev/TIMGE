@@ -181,11 +181,11 @@ void Game::Run()
 
     //VAO.Unbind();
 
-    TIMGE::VertexBuffer vbo;
+    TIMGE::VertexBuffer vbo(vertices);
     //glGenBuffers(1, &VBO);
     vbo.Bind();
     //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    vbo.Data(vertices);
+    vbo.Data();
     //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(TIMGE::ColoredVertex), vertices.data(), GL_STATIC_DRAW);
     //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
